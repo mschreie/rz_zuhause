@@ -1,0 +1,46 @@
+---
+- name: register to CDN
+  redhat_subscription: 
+    state: present 
+    username: "{{ cdnuser }}"
+    password: "{{ cdnpasswd }}"
+    pool: '^Red Hat Satellite'
+
+- name: get subscription-manager attach status
+  shell: subscription-manager list | grep -i 'Status:' ; test ${PIPESTATUS[0]} -eq 0
+  register: attachresult
+  ignore_errors: True
+
+- name: enable repos
+  shell: 'subscription-manager repos --disable="*" {% for repo in repos %} --enable="{{repo}}" {% endfor %}'
+  when: repos is defined
+
+#    enablerepo=rhel-7-server-rpms,rhel-server-rhscl-7-rpms,rhel-7-server-satellite-6.2-rpms,rhel-7-server-rh-common-rpms
+
+- name: enable repos 
+  yum_repository: 
+    name=rhel-7-server-rpms,rhel-server-rhscl-7-rpms,rhel-7-server-satellite-6.2-rpms,rhel-7-server-rh-common-rpms
+    state=present
+
+
+- name: yum clean
+  shell: yum clean all
+    
+- name: install rpms 
+  yum: name="{{ item }}" state=present
+  with_items:
+    - rhevm-guest-agent-common
+    - chrony
+    - sos
+    - bind-utils
+    - satellite
+    - xauth
+    - screen
+    - firefox
+
+- name: update all packages
+  yum: name=* state=latest
+  notify: 
+    - Restart server
+    - Wait for server to restart 
+

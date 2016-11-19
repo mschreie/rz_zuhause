@@ -1,0 +1,13 @@
+# {{ ansible_managed }}
+#
+# resolver configuration file...
+#
+options         timeout:1 attempts:8 rotate
+domain          {{dns_domain}}
+search          {{dns_domain}} {{ dns_searchdomain | join (' ') }}
+ 
+{% for host in dns_nameservers %}
+nameserver {{host}}
+{% endfor %}
+
+

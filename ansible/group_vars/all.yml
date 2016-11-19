@@ -1,0 +1,21 @@
+# definitions specific to whole datacenter
+dns_domain: example.com
+dns_searchdomain: [coe.muc.redhat.com]
+dns_nameservers: [192.168.188.1]
+dns_reverse_domain: 20.16.172.in-addr.arpa
+organization: "Example Inc"
+organization_id: "Example_Inc"
+
+satellite_manifestfile: manifest.zip
+
+
+# definitions for management host 
+mgt_hostname: jump.{{ dns_domain }}
+mgt_ip: 172.16.20.1
+mgt_nic: vlan20
+mgt_dhcp_range: "172.16.10.50 172.16.10.99"
+
+
+
+# for all hosts always correct
+hostname: "{{ inventory_hostname_short }}.{{ dns_domain }}"
