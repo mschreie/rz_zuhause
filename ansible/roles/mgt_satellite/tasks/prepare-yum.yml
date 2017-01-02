@@ -17,12 +17,6 @@
 
 #    enablerepo=rhel-7-server-rpms,rhel-server-rhscl-7-rpms,rhel-7-server-satellite-6.2-rpms,rhel-7-server-rh-common-rpms
 
-- name: enable repos 
-  yum_repository: 
-    name=rhel-7-server-rpms,rhel-server-rhscl-7-rpms,rhel-7-server-satellite-6.2-rpms,rhel-7-server-rh-common-rpms
-    state=present
-
-
 - name: yum clean
   shell: yum clean all
     
@@ -37,10 +31,14 @@
     - xauth
     - screen
     - firefox
+    - pulp-admin-client
+
+- name: stop satellite
+  shell: /usr/bin/katello-service stop 
+  ignore_errors: True
 
 - name: update all packages
   yum: name=* state=latest
   notify: 
     - Restart server
     - Wait for server to restart 
-

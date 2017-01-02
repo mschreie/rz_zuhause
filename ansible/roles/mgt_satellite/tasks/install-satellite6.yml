@@ -1,9 +1,7 @@
 ---
 - name: run satellite-installer
-  shell: satellite-installer --capsule-dhcp=true --capsule-dns=true --capsule-tftp=true --capsule-dhcp-interface="{{ mgt_nic }}"  --capsule-dns-interface="{{ mgt_nic }}" --capsule-dns-forwarders "{{ mgt_ip }}" --capsule-dns-reverse "{{ dns_reverse_domain }}" --capsule-dns-zone "{{ dns_domain }}" --capsule-dhcp-range "{{ mgt_dhcp_range }}" --capsule-dhcp-gateway "{{ mgt_ip }}" --capsule-dhcp-nameservers "{{ mgt_ip }}" --capsule-tftp-servername "{{ hostname }}" --capsule-puppet true --capsule-puppetca true --foreman-admin-username admin --foreman-admin-password "{{ root_password }}" && touch /.katello-is-installed  creates=/.katello-is-installed
-  register: katello_installed
-
-
+  shell: satellite-installer --scenario=satellite --foreman-proxy-dhcp=true --foreman-proxy-dns=true --foreman-proxy-tftp=true --foreman-proxy-dhcp-interface="{{ mgt_nic }}"  --foreman-proxy-dns-interface="{{ mgt_nic }}" --foreman-proxy-dns-forwarders "{{ mgt_ip }}" --foreman-proxy-dns-reverse "{{ dns_reverse_domain }}" --foreman-proxy-dns-zone "{{ dns_domain }}" --foreman-proxy-dhcp-range "{{ mgt_dhcp_range }}" --foreman-proxy-dhcp-gateway "{{ mgt_ip }}" --foreman-proxy-dhcp-nameservers "{{ mgt_ip }}" --foreman-proxy-tftp-servername "{{ hostname }}" --capsule-puppet true --foreman-admin-username admin --foreman-admin-password "{{ root_password }}" && touch /.satellite-is-installed  creates=/.satellite-is-installed
+  register: satellite_installed
 
 
 
@@ -14,7 +12,7 @@
     owner=root
     group=root
     mode=0755
-##  when: katello_installed|changed
+##  when: satellite_installed|changed
 
 - name: hammer_cli_config
   template: src=cli_config.yml.j2
@@ -23,4 +21,4 @@
     group=root
     mode=0600
 #why is the following line commented out? when multiple installs run in parallel, ansible gets confused and resuses a connection to satellite on one physical machine when another is actually targetet. This meant that its hammer cli config did then exist, but with the wrong content... by commenting out we will always overwrite the config with the right content
-#  when: katello_installed|changed
+#  when: satellite_installed|changed

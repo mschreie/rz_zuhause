@@ -7,6 +7,7 @@ organization: "Example Inc"
 organization_id: "Example_Inc"
 
 satellite_manifestfile: manifest.zip
+# Repos for the Satellite Server itself:
 satellite_repos:
    - rhel-7-server-rpms
    - rhel-server-rhscl-7-rpms
@@ -18,9 +19,18 @@ satellite_repos:
 mgt_hostname: jump.{{ dns_domain }}
 mgt_ip: 172.16.20.1
 mgt_nic: vlan20
-mgt_dhcp_range: "172.16.10.50 172.16.10.99"
+mgt_dhcp_range: "172.16.20.50 172.16.20.99"
 
 
 
 # for all hosts always correct
 hostname: "{{ inventory_hostname_short }}.{{ dns_domain }}"
+
+
+# RED HAT SUBSCRIPTION POOLS
+
+satellite_subscription_pool_regex: "^(Red Hat Satellite Employee Subscription|Red Hat Satellite)$"
+rhel_subscription_pool_regex: "^(Employee SKU|Red Hat Enterprise Linux Server.*Unlimited guests.*)$"
+rhev_subscription_pool_regex: "^(Employee SKU|Red Hat Enterprise Virtualization.*|Red Hat Enterprise Linux Server.*Unlimited guests.*)$"
+
+

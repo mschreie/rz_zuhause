@@ -1,0 +1,54 @@
+---
+- hosts: localhost
+  gather_facts: false
+  become: true
+  tasks:
+    - set_fact:
+        iso_file: "{{ iso_file }}"
+        iso_file_checksum_file: "{{ iso_file_checksum_file }}"
+        new_iso_file: "{{ new_iso_file }}"
+        new_iso_volname: "{{ new_iso_volname }}"
+        content_dir: "{{ content_dir }}"
+        usb_device: "{{ usb_device }}"
+        destroy:    "{{ destroy }}"
+        mountpoint: "{{ mountpoint }}"
+      tags:
+        - always
+  vars_prompt:
+    - name: "iso_file"
+      prompt: "Please provide the filename of the iso-file"
+      default: "/Archive/ISOimages/rhel-server-7.3-x86_64-dvd.iso"
+      private: no
+    - name: "iso_file_checksum_file"
+      prompt: "Please provide the filename of the SHA256 checksum-file"
+      default: "/Archive/ISOimages/rhel-server-7.3-x86_64-dvd.iso.SHA256SUM"
+      ## default: "{{ iso_file }} .SHA256SUM"
+      private: no
+    - name: "mountpoint"
+      prompt: "What mountpoint can i use?"
+      default: "/var/tmp/iso_mnt"
+      private: no
+    - name: "content_dir"
+      prompt: "Into which directory can we extract the iso?"
+      default: "/var/tmp/iso_master"
+      private: no
+    - name: "new_iso_file"
+      prompt: "Please provide the filename of the new iso-file"
+      default: "/Archive/ISOimages/rhel-server-7.3-modified.iso"
+      private: no
+    - name: "new_iso_volname"
+      prompt: "Please provide a volume name for the new iso-file"
+      default: "RHEL_73_for_HP_G5"
+      private: no
+    - name: "usb_device"
+      prompt: "What is your USB device to use (e.g. /dev/sdb or /dev/sdc)?"
+      default: "nil"
+      private: no
+    - name: "destroy"
+      prompt: "All data on {{ usb_device }} will be destroyed. Ok? yes/no"
+      default: "no"
+      private: no
+- hosts: localhost
+  roles:
+    - create_usbinstall
+

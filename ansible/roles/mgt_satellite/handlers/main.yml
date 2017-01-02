@@ -1,0 +1,3 @@
+---
+- include: /home/mschreie/projects/rz_zuhause/ansible/handlers/main.yml
+

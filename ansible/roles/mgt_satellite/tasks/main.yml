@@ -5,7 +5,8 @@
     - include: prepare-ntp.yml
     - include: prepare-yum.yml
     - include: install-satellite6.yml
-
+    - include: create-organization.yml
+    - include: prepare-admin-user.yml
     - include: import_manifest.yml
     - include: enable_repo_and_sync.yml
     - include: wait-for-sync-tasks.yml

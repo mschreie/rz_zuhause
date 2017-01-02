@@ -1,0 +1,79 @@
+---
+### FIXME: mit bindmount reingehängte Dateien sind im ISO 0 Byte groß => copiere den content
+### FIXME: isolinux.bin hat falsche eigentümer/rechte
+- name: check device
+  local_action: shell /usr/bin/ls -ld "{{ usb_device }}" | grep '^b'
+
+- name: are we allowed to write on device
+  fail: msg="Not allowed to write on"
+  when:  not destroy 
+
+- name: extract checksum
+  local_action: shell /usr/bin/awk '{ print $1 }' "{{ iso_file_checksum_file }}"
+  register: checksum
+
+- name: check checksum
+  local_action: shell /usr/bin/sha256sum "{{ iso_file }}" | grep  "{{ checksum.stdout }}"
+
+- name: mount iso image
+  # local_action: /usr/bin/mount -o loop,ro "{{ iso_file }}"  "{{ mountpoint }}"
+  local_action: mount name="{{ mountpoint }}" src="{{ iso_file }}" opts=ro,loop fstype=iso9660 state=mounted
+  become: true
+
+- name: assure content_dir is there
+  local_action: file path="{{ content_dir }}" state=directory mode=0755
+  become: true
+
+- name: copy content to rw-filesystem
+  local_action: shell chdir="{{ mountpoint }}" tar cf - . | (cd "{{ content_dir }}" && tar xf - )
+  become: true
+
+  
+- name: change EFI/BOOT/grub.cfg
+  local_action: shell sed -i -e 's/\(linuxefi.*\)$/\1 hpsa.hpsa_allow_any=1/' "{{ content_dir }}/EFI/BOOT/grub.cfg" 
+  become: true
+
+- name: change isolinux/grub.conf
+  local_action: shell sed -i -e 's/\(kernel.*\)$/\1 hpsa.hpsa_allow_any=1/' "{{ content_dir }}/isolinux/grub.conf" 
+  become: true
+
+- name: change isolinux/isolinux.cfg
+  local_action: shell sed -i -e 's/\(append.*\)$/\1 hpsa.hpsa_allow_any=1/' "{{ content_dir }}/isolinux/isolinux.cfg" 
+  become: true
+
+- name: mkisofs
+  local_action: shell /usr/bin/mkisofs -o "{{ new_iso_file }}" -b "isolinux/isolinux.bin" -c "isolinux/boot.cat" -no-emul-boot -boot-load-size 4 -boot-info-table -input-charset default -J -R -V "{{ new_iso_volname }}" "{{ content_dir }}"
+  become: true
+
+- name: make iso usb bootable
+  local_action: shell /usr/bin/isohybrid "{{ new_iso_file }}"
+  become: true
+
+# don't use eject, it removes the device file as well
+- name: find mounted usb drive device names
+  local_action: shell  df -l  | grep  "{{ usb_device }}"  | cut -d' ' -f1 
+  register: devs
+  ignore_errors: yes
+
+- name: umount usb devices
+  local_action: mount name="{{ item }}" state=absent
+  ignore_errors: yes
+  become: true
+  with_items:
+    - "{{ devs.stdout }}" 
+
+- name: copy iso image to usb drive
+  local_action: shell /usr/bin/dd if="{{ new_iso_file }}" of="{{ usb_device }}" bs=4M
+  become: true
+
+- name: umount everything
+  local_action: mount name="{{ item }}" state=absent
+  become: true
+  with_items:
+    - "{{ mountpoint }}" 
+
+- name: remove content from content_dir
+  local_action: file name="{{ content_dir }}" state=absent
+  become: true
+  
+# new iso-file is not deleted

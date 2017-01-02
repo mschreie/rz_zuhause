@@ -3,7 +3,7 @@
   register: prods
 
 # "ignore_errors: yes" because hammer throws an error if we try to enable a repo, that is already enabled
-- name: enable RHEL repos
+- name: enable repos inside satellite
   command: 'hammer repository-set enable --organization "{{ organization }}" --product "{{ item.0.product }}" --basearch="{{ item.0.basearch }}" --name "{{ item.1.name }}"{% if item.1.releasever is defined %} --releasever "{{ item.1.releasever }}"{% endif %}'
   when: (republish is defined and republish) or item.0.product not in prods.stdout_lines
   with_subelements:
@@ -11,6 +11,6 @@
     - repos
   ignore_errors: yes
 
-- name: start sync tasks for RHEL repos
+- name: start sync tasks for repos
   command: 'hammer product synchronize --async --organization "{{ organization }}" --name "{{ item.product }}"'
   with_items: "{{ product_config }}"

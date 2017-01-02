@@ -1,0 +1,4 @@
+iso_source: https://access.cdn.redhat.com//content/origin/files/sha256/12/120acbca7b3d55465eb9f8ef53ad7365f2997d42d4f83d7cc285bf5c71e1131f/rhel-server-7.3-x86_64-dvd.iso?_auth_=1479742261_d1acd35d06529dfd370081ae5ac8afb8
+iso_image_file: rhel73binarydvd.iso
+iso_image_checksum: 120acbca7b3d55465eb9f8ef53ad7365f2997d42d4f83d7cc285bf5c71e1131f
+
