@@ -1,0 +1,1674 @@
+= {subject}: PREPARED FOR - {customer}
+Adrian Bradshaw <adrian@redhat.com>
+:subject: RHEV Setup and Configuration
+:description: Initial setup steps for RHEV
+:doctype: book
+:confidentiality: Confidential
+:customer:  Volkswagen IT Group Cloud
+:listing-caption: Listing
+:toc:
+:toclevels: 6
+:sectnums:
+:chapter-label:
+:icons: font
+ifdef::backend-pdf[]
+:pdf-page-size: A4
+:title-page-background-image: image:images/EngagementJournalCoverPageLogoNew.jpg[pdfwidth=8.0in,align=center]
+:pygments-style: tango
+//:source-highlighter: pygments
+:source-highlighter: coderay
+endif::[]
+:revnumber: 1.4.5
+
+//A simple http://asciidoc.org[AsciiDoc] document.
+
+== History and Revisions
+
+[cols=4,cols="1,1,3,4",options=header]
+|===
+|Version
+|Date
+|Authors
+|Changes
+
+
+|0.5
+|14/08/2015
+|Adrian Bradshaw adrian@redhat.com
+|Initial Draft
+
+|0.6
+|19.08.2015
+|Benjamin Haubeck bhaubeck@redhat.com
+|added chapter storage, monitoring, DWH
+
+|1.0
+|21.08.2015
+|Benjamin Haubeck bhaubeck@redhat.com
+|attached scripts, finalization
+
+|1.1
+|28.08.2015
+|Benjamin Haubeck bhaubeck@redhat.com
+|added chapter storage for VMs
+
+|1.2.
+|29.09.2015
+|Benjamin Haubeck bhaubeck@redhat.com
+|added troubleshooting tips for removing LUNs
+
+|1.3
+|23/10/2015
+|Adrian Bradshaw adrian@redhat.com
+|Updated
+
+|1.3.1
+|28/10/2015
+|Adrian Bradshaw adrian@redhat.com
+|Moved the migration bandwidth section
+
+|1.4.0
+|28/10/2015
+|Adrian Bradshaw adrian@redhat.com
+|Added an upgrade section
+
+|1.4.1
+|3/11/2015
+|Adrian Bradshaw adrian@redhat.com
+|Added HostPreparingForMaintenanceIdleTime information
+
+|1.4.2
+|3/11/2015
+|Adrian Bradshaw adrian@redhat.com
+|Added LUN scan timeout information
+
+|1.4.3
+|13.11.2015
+|Benjamin Haubeck bhaubeck@redhat.com
+|added recommendations for sizes of the storage domains
+
+|1.4.4
+|16.11.2015
+|Benjamin Haubeck bhaubeck@redhat.com
+|added hint for the password for the admin@internal for the engine-log-collector
+
+|1.4.5
+|19.11.2015
+|Benjamin Haubeck bhaubeck@redhat.com
+|added documentation of the new values for kdump
+
+|===
+
+== Preface
+=== Confidentiality, Copyright, and Disclaimer
+Copyright 2015 (C) Red Hat, Inc.  All Rights Reserved. No part of the work covered by the copyright herein may be reproduced or used in any form or by any means- graphic, electronic, or mechanical, including photocopying, recording, taping, or information storage and retrieval systems without permission in writing from Red Hat except as is required to share this information as provided with the aforementioned confidential parties.
+
+=== Additional Background and Related Documents
+This document also references additional information that can be found on Red Hat‘s documentation site at https://access.redhat.com/knowledge/docs/ and specifically at https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Virtualization/3.5/
+
+Documents specific to products covered in this solution include the following Guides
+
+* https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Virtualization/3.5/html/Installation_Guide/[RHEV 3.5 Installation Guide]
+* https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Virtualization/3.5/html-single/Administration_Guide/index.html[RHEV 3.5 Administration Guide]
+* https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Virtualization/3.5/html/User_Guide/index.html[RHEV 3.5 User Guide]
+* https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Virtualization/3.5/html-single/Technical_Guide/index.html[RHEV 3.5 Technical Guide]
+
+Additional information can be found on the RHEV upstream projects website (oVirt):
+
+http://www.ovirt.org/Documentation
+
+
+=== Terminology
+Some of the acronyms using in this document are included in the table below
+
+
+.Terminology Table
+[cols=2,cols="1,5",options=header]
+|===
+<|Term <|Definition
+
+|RHEV
+|Red Hat Enterprise Virtualisation
+
+|RHEV-M
+|Red Hat Enterprise Virtualisation Manager
+
+|RHEL-H
+|Red Hat Enterprise Linux Hypervisor
+
+|===
+
+
+== Summary
+
+This document describes the New Linux Platform (phase 1) setup. It contains both high level descriptions and detailed configuration information. It should contain all the information required to fully build the environment from the ground up.
+
+
+=== Background
+
+While VW group already had Linux deployed and in use, their new strategy describes a three phase approach towards modernising and standardising their Linux infrastructure.
+
+Phase One (which this document is part of) describes the management of their high value machines - primarily their database workloads and this will use traditional virtualisation via RHEV (Red Hat Enterprise Virtualisation)
+
+
+== Setup Overview
+
+Below is a high level overview of the setup.
+
+The RHEV-M instance is a VMware guest VM running RHEL 6.6 and version 3.5.3 of RHEV.
+
+The Hypervisors are RHEL 7.1 physical installs, connected to and configured by RHEV-M. The hypervisors are grouped together  within the RHEV-M settings. Initially there will be six HVs in the Intranet zone and eight in the B2x zone
+
+The guest VMs are (currently) RHEL7.1 instances tuned for a specific workload (Database workloads).
+
+image::images/rhev-high-level-setup.svg[]
+
+== Hardware
+
+As mentioned above, the RHEV-M management instances are VMware virtual machines.
+
+The hypervisors are Fujitsu RX4700 machines, with the following spec:
+
+=== CPU:
+	4 of 4 CPU sockets populated, 15 cores/30 threads per CPU
+	60 total cores, 120 total threads
+	Mfr:  Intel
+	Fam:  Xeon
+	Freq: 2500 MHz
+	Vers: Intel(R) Xeon(R) CPU E7-4880 v2 @ 2.50GHz
+
+=== Memory:
+	1572864 MB (1536 GB) total
+
+=== Disks:
+ 6 internal disks used as follows
+ Disks 1 - 2 - configured as RAID 1 and is used for the OS only
+ Disks 3 - 6 - configured as RAID 5 and will be used for Kdump primarily  and secondly for the export domain
+
+== IP addresses / Hostnames
+
+.Intranet Zone Cluster lxf101f102c001
+[cols=4,options=header]
+|===
+<| Hostname <|IP Address / VLAN <| ILOM Address <| Move Net Address/VLAN
+
+
+|lxf101s001.wob.sec.vw.vwg
+|10.208.24.30  (vlan207)
+|10.208.24.42
+|10.116.100.143 (vlan032)
+
+|lxf102s003.wob.sec.vw.vwg
+|10.208.24.56  (vlan207)
+|10.208.24.68
+|10.116.100.148 (vlan032)
+
+|lxf101s002.wob.sec.vw.vwg
+|10.208.24.31  (vlan207)
+|10.208.24.43
+|10.116.100.144 (vlan032)
+
+|lxf101s003.wob.sec.vw.vwg
+|10.208.24.32  (vlan207)
+|10.208.24.44
+|10.116.100.145 (vlan032)
+
+|lxf102s001.wob.sec.vw.vwg
+|10.208.24.54  (vlan207)
+|10.208.24.66
+|10.116.100.146 (vlan032)
+
+|lxf102s002.wob.sec.vw.vwg
+|10.208.24.55  (vlan207)
+|10.208.24.67
+|10.116.100.147 (vlan032)
+
+|===
+
+
+.B2X Zone Cluster lxf117f118c001
+[cols=4,options=header]
+|===
+<| Hostname <|IP Address / VLAN <| ILOM Address <| Move Net Address/VLAN
+
+|lxf117s001.wob.sec.vw.vwg
+|10.252.100.131 (vlan100)
+|10.252.100.41
+|10.116.80.84 (vlan033)
+
+|lxf117s002.wob.sec.vw.vwg
+|10.252.100.123 (vlan100)
+|10.252.100.43
+|10.116.80.84 (vlan033)
+
+|lxf117s003.wob.sec.vw.vwg
+|10.252.100.61 (vlan100)
+|10.252.100.64
+|10.116.80.86 (vlan033)
+
+|lxf117s004.wob.sec.vw.vwg
+|10.252.100.62 (vlan100)
+|10.252.100.65
+|10.116.80.87 (vlan033)
+
+|lxf118s001.wob.sec.vw.vwg
+|10.252.100.119 (vlan100)
+|10.252.100.70
+|10.116.80.88 (vlan033)
+
+|lxf118s002.wob.sec.vw.vwg
+|10.252.100.59 (vlan100)
+|10.252.100.72
+|10.116.80.89 (vlan033)
+
+|lxf118s003.wob.sec.vw.vwg
+|10.252.100.101 (vlan100)
+|10.252.100.77
+|10.116.80.90 (vlan033)
+
+|lxf118s004.wob.sec.vw.vwg
+|10.252.100.62 (vlan100)
+|10.252.100.66
+|10.116.80.91 (vlan033)
+
+|===
+
+== Naming Conventions
+
+VW has decided on the following naming conventions:
+
+=== Datacentre
+ Using Default
+
+=== Cluster
+ lxf<nn>f<mm>c<xxx>
+
+==== breakdown:
+ lx 	=> linux
+ f<nn> 	=> first farm
+ f<mm> 	=> second farm
+ c<xxx>	=> cluster number
+ e.g.: lxf101f102c001
+
+=== Storage Domain
+ S<xxx>M_lxf101f102c001_VPLEX
+
+==== Breakdown:
+ S<xxx> 	=> Storagedomain number
+  		=> Midrange storage (E = Entry Level, M = Midrange, H = High End)
+ lxf101f102c001 	=> Cluster name
+ VPLEX		=> VPLEX storage
+
+
+=== VMs / Servers
+	lxf<nnn>[psm]<xxx>
+
+==== Breakdown:
+
+ lx 	=> linux
+ f<nnn> 	=> farm no. nnn
+ [psm] 	=> p for partitions aka vms, s for hypervisors, m bare metal installed linux
+
+ Example:
+ Lxf117p001 	= virtual machine
+ Lxf117s001 	= hypervisor
+ Lxf117m001 	= linux on bare metal
+
+
+=== DNS Names
+
+
+First IP is always the name of the machine + correct domain ending:
+
+ Lxf117p001.qs2x.vwg or lxf101p001.wob.vw.vwg
+
+
+Second IP is always the name of the machine + b + correct domain ending. In B2X environment this is our administrative Interface
+
+ Lxf117p001b.wob.sec.vw.vwg
+
+
+Additional IPs are ...c, ...d, and so on.
+
+**For Hypervisors we have:**
+
+Migration (aka move, aka HeSyMo):
+
+ lxf117s001mo.b2x.vwg    10.116.80.84    10.116.80.0/23  B2X_Prod_QS_HeSyMo-DoE_IN_Move_UNIX
+
+
+HV itself:
+
+ lxf117s001.wob.sec.vw.vwg  10.252.100.131   10.252.100.0/23  B2X_Prod-Sys_Adminbereich_Database-Zone_Konsolen
+
+
+iRMC (aka iLOM):
+
+ lxf117s001lom.wob.sec.vw.vwg   10.252.100.41   10.252.100.0/23  B2X_Prod-Sys_Adminbereich_Database-Zone_Konsolen
+
+== Setup of RHEV-M
+Once the VMware virtual machine was created, packages required for RHEV.M were uploaded to VWs repository servers in each zone and made available. RHEV-M installation followed the usual procedure detailed in the install guide.
+
+ # yum install rhevm
+
+After the packages were installed, an answer file was created (this was optional but could be useful if RHEV-M is ever re-installed).
+
+Create an answer file
+
+ # engine-setup --generate-answer=/path/to/rhevm-answers.txt
+
+Use that answer file for the installation
+
+ # engine-setup --config-append=/path/to/rhevm-answers.txt
+
+== Configuration of RHEV
+Now that RHEV has had its initial configuration performed (via answer file), we now need to configure to the specific environment we are using it in. An important part of this is the VLAN configuration and network labels.
+
+=== Network/VLAN Configuration - DC
+On the main Data Centers tab, click on Default and select Logical Networks. Here we will create each of the networks that will be used in the environment, along with their VLAN ID.
+
+==== Additional Intranet Zone Note
+In the Intranet Zone only, and additional step is required before adding the Hypervisors. Edit the default rhevm network and add the VLAN information as in the screenshot below. (This is not required on B2X as there is only one VLAN on the admin interface.)
+
+image::images/IntraVLANConfigRHEVM.PNG[pdfwidth=50%]
+
+Next, for both zones, go through and add each of the networks required along with a  **Network Label**.
+
+
+Two **Network Labels** are in use
+
+* HeSyMo	Hello Sync Move Network (attached to bond2) Used for VM migrations
+* BackEnd	Backend Network (attached to bond1) The main user networks
+
+**Example Network Configurations using Labels**
+
+.Backend Network Label
+image::images/IntraVLANConfigBackend.PNG[pdfwidth=50%]
+
+.HeSyMo Network Label
+image::images/IntraVLANConfigHeSyMo.PNG[pdfwidth=50%]
+
+[cols=6,cols="2,7,1,5,2,2",options=header]
+|===
+<| Bond <| VW Network Name <| VLAN <| Network <| Label <| Type
+
+.7+|bond1
+|Unix-Back-end, V021, Standard Server
+|21
+|10.186.112.0/255.255.255.0
+|BackEnd
+|
+
+
+|Unix-Back-end, V022, Standard Server
+|22
+|10.186.113.0/255.255.255.0
+|BackEnd
+|
+
+
+|Unix-Back-end, V023, Standard Server
+|23
+|10.186.114.0/255.255.255.0
+|BackEnd
+|
+
+
+|Unix-Back-end, V024, Standard Server
+|24
+|10.186.115.0/255.255.255.0
+|BackEnd
+|
+
+
+|Unix-Back-end, V025, Standard Server
+|25
+|10.186.116.0/255.255.255.0
+|BackEnd
+|
+
+
+|Unix-Back-end, V224, Standard Server
+|224
+|10.186.224.0/255.255.254.0
+|BackEnd
+|
+
+
+|Unix-Back-end, V226, Standard Server
+|226
+|10.186.226.0/255.255.254.0
+|BackEnd
+|
+
+.2+|bond0
+|VLAN200 - Unix Konsolen
+|200
+|10.208.0.0/255.255.252.0
+|
+|
+
+
+|VLAN207 - Unix Konsolen
+|207
+|10.208.24.0/255.255.254.0
+|
+|DISPLAY
+
+.5+|bond2
+|Prod_HeSyMo-DoE_ITU_hello_UNIX
+|12
+|10.116.96.0/255.255.255.0
+|HeSeMo
+|
+
+
+|Prod_HeSyMo-DoE_ITU_sync_UNIX
+|13
+|10.116.97.0/255.255.255.0
+|HeSeMo
+|
+
+
+|QS_HeSyMo-DoE_ITU_hello_UNIX
+|22
+|10.116.224.0/255.255.255.0
+|HeSeMo
+|
+
+|QS_HeSyMo-DoE_ITU_sync_UNIX
+|23
+|10.116.225.0/255.255.255.0
+|HeSeMo
+|
+
+
+|Prod_QS_HeSyMo-DoE_ITU_move_UNIX
+|32
+|10.116.100.0/255.255.252.0
+|HeSeMo
+|MOVE
+
+|===
+
+.B2X Networks
+[cols=6,cols="2,7,1,5,2,2",options=header]
+|===
+<| Bond <| VW Network Name <| VLAN <| Network <| Label <| Type
+
+|bond1
+|B2X_Prod-Sys_Adminbereich_Database-Zone
+|7
+|10.252.84.0/255.255.252.0
+|BackEnd
+|
+
+
+
+|
+|B2X_Prod-Sys_Nutzbereich_Database-Zone
+|8
+|10.253.80.0/255.255.252.0
+|BackEnd
+|
+
+|
+|B2X_QS-Sys_Adminbereich_Database-Zone
+|27
+|10.252.184.0/255.255.252.0
+|BackEnd
+|
+
+|
+|B2X_QS-Sys_Nutzbereich_Database-Zone
+|28
+|10.253.208.0/255.255.252.0
+|BackEnd
+|
+
+|bond0
+|B2X_Prod-Sys_Adminbereich_Database-Zone_Konsolen
+|100
+|10.252.100.0/255.255.254.0
+|
+|DISPLAY
+
+|bond2
+|B2X_Prod_HeSyMo-DoE_IN_DBZ_Hello_UNIX
+|13
+|10.116.73.0/255.255.255.0
+|HeSeMo
+|
+
+|
+|B2X_Prod_HeSyMo-DoE_IN_DBZ_Sync_UNIX
+|15
+|10.116.75.0/255.255.255.0
+|HeSeMo
+|
+
+|
+|B2X_QS_HeSyMo-DoE_IN_DBZ_Hello_UNIX
+|23
+|10.116.184.0/255.255.255.0
+|HeSeMo
+|
+
+|
+|B2X_QS_HeSyMo-DoE_IN_DBZ_Sync_UNIX
+|25
+|10.116.186.0/255.255.255.0
+|HeSeMo
+|
+
+|
+|B2X_Prod_QS_HeSyMo-DoE_IN_Move_UNIX
+|33
+|10.116.80.0/255.255.254.0
+|HeSeMo
+|MOVE
+
+|===
+
+
+=== Network/VLAN Configuration - Cluster
+
+Once the networks are created at the DC level, next we need to make sure that we configure RHEV to use the correct VLAN for the move network. This is done at the Cluster level.
+
+Click on the Cluster tab and then go to the Logical Networks tab and click on Manage Networks.  Ensure that you have selected the radio button for the Migration Network as shown below for **vlan033**
+
+.B2X Networks (Cluster Level)
+image::images/b2xMigrationNetworkSetting.PNG[pdfwidth=50%]
+
+=== LDAP Configuration
+LDAP-Authentication is working with the little issue that all users, that are searched for in LDAP got shown twice. Once because of their user entry in the directory and the second entry is their own individual group. As long as these individual groups are only containing the corresponding user, this is only a cosmetical issue, as it works regardless of which entry is chosen. But if you chose the group (second line, see screenshot below) then the icon in RHEV-M for the user is not a single person but a group of persons. So we chose the user entry (first line) for every user that is added to the environments as documented in the screenshot:
+
+.Adding a LDAP user to RHEV-M
+image::images/addLDAP-Users.PNG[pdfwidth=50%]
+
+NOTE: The first entry is the user, the second is his individual group.
+
+**LDAP servers**
+
+* B2X: uxldapclb.wob.sec.vw.vwg
+* Intranet: uxldapint.wob.vw.vwg
+
+
+**Required Packages**
+
+* ovirt-engine-extension-aaa-ldap
+* unboundid-ldapsdk
+
+
+ # yum install ovirt-engine-extension-aaa-ldap unboundid-ldapsdk
+
+**Certificates**
+The LDAP admins can deliver the certificate for the encryption of the authentication.
+
+Configuration files
+Start with the default configuration:
+
+ # cp -r /usr/share/ovirt-engine-extension-aaa-ldap/examples/simple/. /etc/ovirt-engine
+ vi /etc/ovirt-engine/aaa/profile1.properties
+
+In the appendix is the complete file of one of the RHEV-Managers.
+At least these lines has to be edited:
+
+----
+vars.server
+baseDN
+vars.user
+vars.password
+pool.default.serverset.single.port = 636
+pool.default.auth.simple.bindDN = ${global:vars.user}
+pool.default.auth.simple.password = ${global:vars.password}
+pool.default.ssl.startTLS = false
+pool.default.ssl.truststore.file = /etc/ovirt-engine/aaa/myrootca.jks
+pool.default.ssl.truststore.password = XXXYYYYY
+----
+
+
+And put in the additional lines, that are necessary for setting it up with the Oracle - LDAP - Server:
+
+----
+sequence-init.init.100-local-init-vars = local-init-vars
+sequence.local-init-vars.010.type = var-set
+sequence.local-init-vars.010.var-set.variable = simple_baseDN
+sequence.local-init-vars.010.var-set.value = o=vwg
+----
+
+Setting the permissions and storing the LDAPs certificate:
+
+ chown ovirt:ovirt /etc/ovirt-engine/aaa/profile1.properties
+ chmod 600 /etc/ovirt-engine/aaa/profile1.properties
+
+Import the certificate
+
+ $ keytool -importcert -noprompt -trustcacerts -alias myrootca -file myrootca.pem -keystore myrootca.jks -storepass changeit
+
+
+If the name of the Profile in the WebGUI should differ from “profile1” (RHEV default), then you have to rename the profile file according to the new name and change the references:
+
+for the RHEV-M in Intranet:
+
+ mv /etc/ovirt-engine/aaa/profile1.properties /etc/ovirt-engine/aaa/LDAPIntra.properties
+
+for the RHEV-M in B2X:
+
+ mv /etc/ovirt-engine/aaa/profile1.properties /etc/ovirt-engine/aaa/LDAPB2X.properties
+
+
+
+Here are the Configurations for VW:
+----
+# cat /etc/ovirt-engine/extensions.d/profile1-authn.properties
+ovirt.engine.extension.name = profile1-authn
+ovirt.engine.extension.bindings.method = jbossmodule
+ovirt.engine.extension.binding.jbossmodule.module = org.ovirt.engine-extensions.aaa.ldap
+ovirt.engine.extension.binding.jbossmodule.class = org.ovirt.engineextensions.aaa.ldap.AuthnExtension
+ovirt.engine.extension.provides = org.ovirt.engine.api.extensions.aaa.Authn
+ovirt.engine.aaa.authn.profile.name = LDAPIntra
+ovirt.engine.aaa.authn.authz.plugin = profile1-authz
+config.profile.file.1 = ../aaa/LDAPIntra.properties
+----
+----
+# cat /etc/ovirt-engine/extensions.d/profile1-authz.properties
+ovirt.engine.extension.name = profile1-authz
+ovirt.engine.extension.bindings.method = jbossmodule
+ovirt.engine.extension.binding.jbossmodule.module = org.ovirt.engine-extensions.aaa.ldap
+ovirt.engine.extension.binding.jbossmodule.class = org.ovirt.engineextensions.aaa.ldap.AuthzExtension
+ovirt.engine.extension.provides = org.ovirt.engine.api.extensions.aaa.Authz
+config.profile.file.1 = ../aaa/LDAPIntra.properties
+----
+
+
+Finally activate the Settings:
+
+
+ # service ovirt-engine restart
+
+
+[NOTE]
+====
+In B2X is an additional route necessary to contact the LDAP server:
+....
+# route add -net 10.252.52.0 netmask 255.255.255.0 gw 10.252.72.4
+....
+====
+
+
+**Links**
+
+https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Virtualization/3.5/html/Administration_Guide/sect-Directory_Users.html#Configuring_a_Generic_LDAP_Provider[LDAP in RHEV-M]
+
+https://github.com/oVirt/ovirt-engine-extension-aaa-ldap/blob/master/README[Using keytool to work with certificates]
+
+== Additional Settings
+Make sure to disable memory overcommit, memory balloon optimization and KSM. These are all done from the edit Cluster dialog
+
+.Disable Overcommit
+image::images/IntraCluisterDisableMemoryBaloon.PNG[pdfwidth=50%]
+
+Ensure that the Resilience Policy is set to Migrate Only Highly Available Virtual Machines
+
+.Migration Policy
+image::images/IntraClusterResiliance.PNG[pdfwidth=50%]
+
+Ensure that Enable HA Reservation **is** ticked
+
+.HA Reservation
+image::images/IntraClusterPolicy.PNG[pdfwidth=50%]
+
+=== KDump Configuration
+RHEV supports kdump integration, meaning that if a hypervisor crashes and performs a kdump, as it is configured to, RHEV-M will be sent notifications that it is currently in the process of doing a kdump and should not be fenced
+
+image::images/dont-fence-me.svg[]
+
+However, as Full DNS connectivity is not available to us, the following work around was performed to enable this feature to work.
+
+.Intranet
+ # engine-config -s FenceKdumpDestinationAddress=10.208.24.108
+
+.B2X
+ # engine-config -s FenceKdumpDestinationAddress=10.252.72.183
+
+This configuration means that the kdump configuration on the HVs are altered to not use the FQDN of RHEV-M but to use the IP address. The two relevant lines in the kdump configuration are shown below
+
+.Intranet kdump.conf snippet (lines added)
+----
+…
+fence_kdump_nodes 10.208.24.108
+fence_kdump_args -p 7410 -i 5
+----
+
+.Configure reserved memory for kdump kernel
+In +/etc/default/grub+ change the entry for the crashkernel entry from "auto" to "384M" for servers with 1,5 TB RAM:
+
+   GRUB_CMDLINE_LINUX="crashkernel=384M ipv6.disable=1 rd.lvm.lv=vg00/lvol1 rd.lvm.lv=vg00/swapvol rhgb quiet"
+
+We are calculating for RHEL7 hypervisors: 160 MB + 150 MB per TB RAM. The standard documentation is recommending smaller values as can be read here: https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/pdf/Kernel_Crash_Dump_Guide/Red_Hat_Enterprise_Linux-7-Kernel_Crash_Dump_Guide-en-US.pdf +
+But as we faced some issues with the OOM (Out-of-Memory Killer) with the recommended values we increased the variable part to 150 MB per TB RAM.
+
+.Write the new GRUB config
+
+	grub2-mkconfig -o /boot/grub2/grub.cfg
+
+.Kdump notification in the RHEV UI
+
+This will show up on the UI, if the HV becomes unresponsive and RHEV-M is considering fencing it, you will see this message that confirms that RHEV-M realises a kdump is in progress
+
+.Kdump Log Entry
+image::images/KdumpLogEntry.png[]
+
+NOTE: In this early state of the setup process the space under /var/crash might not big enough for the dump of the Hypervisor machines with 1.5 TB of RAM. But the configuration can still be done and in the chapter Storage Domain we will setup storage for the crash directory with sufficient space.
+
+=== Console Proxy Setup
+Having the RHEV clients web-browsers directly contacting the HVs where the VMs are running was not allowed at VW and so a proxy was setup on the RHEV-M.  Console connections from clients browsers now all go via the RHEV-M instance, where a proxy (listening on a single port - 6100) then proxies the connection to the relevant HV and from there to the VM instance as shown below
+
+image::images/rhev-console-access.svg[]
+
+To ensure that the Console Options default to noVNC and not Native and that the VNC Keyboard is set to de, we can issue this configuration commands
+
+ # engine-config -s ClientModeVncDefault=NoVnc
+ # engine-config -s VncKeyboardLayout=de
+
+After this, a restart of the ovirt engine is required (dont do now as there are other settings below)
+
+ # service ovirt-engine restart
+
+=== Migration Downtime
+
+The default “migration downtime” is 0 milliseconds, meaning that a VM migration will tolerate absolutely no small freeze times during a migration. However, this setting will only work on idle VMs. If the Vm has any type of workload at all, migrations will fail. During our tests we found that a value of 20,000 would enable VMs with DB workloads to successfully migrate. We decided on a default of 50000. This setting can be set globally via engine-config and also overridden on a per VM basis
+
+NOTE: Another setting (migration bandwidth also needs changing, but this is on the hypervisors and is covered later in this document, Chapter "Migration Bandwidth")
+
+To set the global defaults
+
+ # engine-config -s DefaultMaximumMigrationDowntime=50000
+
+After this, a restart of the ovirt engine is required (dont do now as there are other settings below)
+
+ # service ovirt-engine restart
+
+You can check this setting by hovering over the question mark next to the setting “Use custom migration downtime” in the settings of any VM in the “Host” tab:
+
+.Viewing the new migration default
+image::images/migrationDefault.png[pdfwidth=50%]
+
+=== Host Maintenance Idle Time
+
+The default time before retrying to put a host into maintenance is 300 (5 minutes). As we have large hypervisors and some very large guests, often this is not enough time to migrate all the VMs away. This means that every 5 minutes it will renew its attempt and place a fresh "Host was put into maintenance mode" message in the log every 5 minutes.
+
+After some discussion we decided to use a 30 minute idle time.
+
+ engine-config -s HostPreparingForMaintenanceIdleTime=1800
+
+After this, a restart of the ovirt engine is required (dont do now as there are other settings below)
+
+  # service ovirt-engine restart
+
+=== LUN Scan Timeout
+
+As we have many LUNs in our environment (at the time of writing over 150), the timeout for scanning available LUNs is too low. To change this value away from the default (180 seconds) we need to do the following
+
+ engine-config -s vdsTimeout=600
+
+After this, a restart the ovirt engine is required (dont do now as there are other settings below)
+
+   # service ovirt-engine restart
+
+=== Log Collector
+
+In the default configuration of the engine log collector the admin has to type in the password for the "admin@internal" user even if he is already authenticated. To prevent this put the additional line
+
+	passwd=<PASSWORD.of.admin@internal>
+
+into the file +/etc/ovirt-engine/logcollector.conf+.
+
+
+=== Disable Supported Languages
+
+Upon request from VM, we were asked for a way to disable the use of the German language in the WebUI as it was felt that it would be difficult to support. To implement this, the following changes are required
+
+Add the following two lines to the /etc/ovirt-engine/engine-config/engine-config.properties file
+
+----
+...
+UnsupportedLocalesFilter.description=A comma separated list of locale keys to remove
+UnsupportedLocalesFilter.type=String
+----
+
+After this, restart the ovirt engine
+
+ # service ovirt-engine restart
+
+Then set the following option and restart the ovirt-engine again
+
+ # engine-config -s UnsupportedLocalesFilter='de_DE'
+ # service ovirt-engine restart
+
+Now the language is not available in the Web UI.
+
+NOTE: It is still possible to switch to de_DE by changing a part of the URL manually and this information got stored in a cookie. As long as this cookie exists on that workstation, the display language will change to the language that is stored in the cookie nevertheless what you chose on the RHEV landing page.
+To switch back to english is simply done by deleting the cookie, login in RHEV-M again and make sure, that english (default value) is chosen on the login page.
+
+== Installation & Configuration of the HVs
+
+Overview of the HV installation
+
+The hypervisors are built using the standard RHEL 7 kickstart, within VWs existing build system. Goal of the configuration is for all the remaining customisation to be done via RHEV-M (either directly or via the API)
+
+In practice we have a script for adding the HV fully automatically and unattended to RHEV-M. This script is found in a separate document
+
+=== Adjustments of basic files before setting the hypervisor up
+
+There are a couple of files that need to be changed before we start, one will facilitate better performance for the VMs under heavy load (mon.conf) and one will exclude the local disks from multipath.
+
+In some cases it might happen, that the nested LVs and VGs are shown up on the hypervisor and causing some issues because of duplicate VG names. To avoid this this filter can be added to the /etc/lvm/lvm.conf on every hypervisor:
+
+./etc/lvm/lvm.conf
+
+----
+[ ... ]
+ global_filter = [ "a|/dev/[hsv]d.*|", "r|/dev/mapper/.*-.*|", "a|/dev/mapper/.*|", "r|.*|" ]
+[ ... ]
+----
+
+__Next file is the mom.conf, that will be not need to be changed in future versions of RHEV as it will be the default__
+
+./etc/vdsm/mom.conf
+----
+# ### DO NOT REMOVE THIS COMMENT -- MOM Configuration for VDSM ###
+
+[main]
+# The wake up frequency of the main daemon (in seconds)
+main-loop-interval: 15
+
+# The data collection interval for host statistics (in seconds)
+host-monitor-interval: 15
+
+# The data collection interval for guest statistics (in seconds)
+guest-monitor-interval: 15
+
+# The wake up frequency of the guest manager (in seconds).  The guest manager
+# sets up monitoring and control for newly-created guests and cleans up after
+# deleted guests.
+guest-manager-interval: 15
+
+# The interface MOM using to discover active guests and collect guest memory
+# statistics. There're two choices for it: libvirt or vdsm.
+hypervisor-interface: VDSM
+
+# The wake up frequency of the policy engine (in seconds).  During each
+# interval the policy engine evaluates the policy and passes the results
+# to each enabled controller plugin.
+policy-engine-interval: 30
+
+# A comma-separated list of Controller plugins to enable
+#controllers: Balloon, KSM, CpuTune
+controllers: Balloon, KSM
+
+# Sets the maximum number of statistic samples to keep for the purpose of
+# calculating moving averages.
+sample-history-length: 10
+
+# Set this to an existing, writable directory to enable plotting.  For each
+# invocation of the program a subdirectory momplot-NNN will be created where NNN
+# is a sequence number.  Within that directory, tab-delimited data files will be
+# created and updated with all data generated by the configured Collectors.
+plot-dir:
+
+# Activate the RPC server on the designated port (-1 to disable).  RPC is
+# disabled by default until authentication is added to the protocol.
+rpc-port: -1
+
+# At startup, load a policy from the given directory.  If empty, no policy is loaded
+policy-dir: /etc/vdsm/mom.d
+
+[logging]
+# Set the destination for program log messages.  This can be either 'stdio' or
+# a filename.  When the log goes to a file, log rotation will be done
+# automatically.
+log: /var/log/vdsm/mom.log
+
+# Set the logging verbosity level.  The following levels are supported:
+# 5 or debug: 	Debugging messages
+# 4 or info:  	Detailed messages concerning normal program operation
+# 3 or warn:  	Warning messages (program operation may be impacted)
+# 2 or error: 	Errors that severely impact program operation
+# 1 or critical:  Emergency conditions
+# This option can be specified by number or name.
+verbosity: info
+
+## The following two variables are used only when logging is directed to a file.
+# Set the maximum size of a log file (in bytes) before it is rotated.
+max-bytes: 2097152
+# Set the maximum number of rotated logs to retain.
+backup-count: 5
+
+[host]
+# A comma-separated list of Collector plugins to use for Host data collection.
+collectors: HostMemory, HostKSM, HostCpu
+
+[guest]
+# A comma-separated list of Collector plugins to use for Guest data collection.
+collectors: GuestQemuProc, GuestMemoryOptional, GuestBalloon, GuestCpuTune
+----
+
+
+
+.multipath.conf
+----
+
+defaults {
+	polling_interval        5
+	no_path_retry           fail
+	user_friendly_names     no
+	flush_on_last_del       yes
+	fast_io_fail_tmo        5
+	dev_loss_tmo            30
+	max_fds                 4096
+}
+
+devices {
+
+device {
+	vendor "EMC"
+	product "Invista"
+	product_blacklist "LUNZ"
+	path_grouping_policy "multibus"
+	path_checker "tur"
+	hardware_handler "0"
+	prio "const"
+	rr_weight "uniform"
+	features                "0"
+	no_path_retry           fail
+}
+}
+
+blacklist {
+device {
+		vendor FTS
+	product *
+	}
+}
+----
+
+
+Additionally in the B2X zone the /etc/hosts has to be extended so it contains every host in the cluster. In B2X this is necessary due to the lack of DNS. If one host can not resolve the other hosts by name, migration will not work.
+
+For completeness we will show how to manually add a HV to RHEV-M via the UI (this work has to be done via the scripts to ensure the consistency of all installations.
+
+=== Add to RHEV
+
+NOTE: This process needs root access to the HV temporarily, cf-engine will beleft to re-configure this later
+
+From the Web UI, go to the Hosts tab and click New
+
+image::images/NewHV1.PNG[pdfwidth=50%]
+
+Enter
+
+* the short name for the HV into the Name field
+* the FQDN into the Address field
+* the temporary root password into the Password box
+
+
+Next go to the Power Management tab
+
+image::images/NewHV2.PNG[pdfwidth=50%]
+
+* Tick the Enable Power Management checkbox
+* Ensure Kdump Integration is ticked
+* Enter the IP address of the ILOM board into the Address field
+* Enter the ILOM credentials into the Username & Password fields
+* Change the Type to Ipmilan
+* Finally click the Test button and make sure that you see a “Test Succeeded, on” message
+
+Click on OK, to have RHEV-M login to the HV and install the necessary packages and configuration necessary
+
+=== Post add task
+
+==== Migration Bandwidth
+
+The default setting for migration bandwidth is 32 MiB/s bandwidth which is equal to 256 Mb/s. For most workloads this is perfectly fine. However, in the VW setup we have some **large** VMs (VMs with 1TB of RAM). VMs of this size will necessitate additional configuration. As the migration network is on bond2, which has 10Gbps bonded interfaces, we should increase the migration bandwidth to facilitate the migration of this VM. We should change this to 120 MiB/s.
+
+. Temporarily disable the power management of the hosts.
+
+. Add the below parameter in the [vars] section of /etc/vdsm/vdsm.conf
+
+ [vars]
+ ...
+ migration_max_bandwidth = 120
+
+. Restart the vdsmd service
+
+ /etc/init.d/vdsmd restart
+
+. Re-enable power management for the hosts
+
+
+=== Label the interfaces in RHEV
+
+Once the HV is successfully added, it will need its network interfaces configured. Again we use RHEV-M UI to perform these changes.
+
+With the host selected on the Hosts tab, click Network Interfaces in the lower pane to see an overview of the current network settings
+
+We are going to setup three bonds and assign labels to those bonds. Once the bonds are labeled the VLANs will associate themselves to the correct interfaces
+
+==== First Bond (rhevm)
+
+Click on Setup Host Network and in the dialog that pops up, you should be able to see interfaces enp8s0f0 and enp8s0f1. (These are the management interfaces and will be setup as an active passive (mode 1) bond).
+
+In the Interfaces tab, drag enp8s0f1 onto of enp8s0f0 and let go. This will bring up the bonding dialog
+
+image::images/HV-BondSetup1.PNG[pdfwidth=50%]
+
+Make sure (Mode 1) Active Backup is selected and the Bond Name is set to bond0 and hit ok, leaving Labels empty for this bond. Then click OK
+
+Once back on the Setup Host Networks Dialog, make sure that rhevm is in the Assigned Logical Networks column next to bond0 and select the small pencil icon, on the far right, next to rhevm
+
+image::images/smallPencil.PNG[pdfwidth=50%]
+
+This brings up the Edit Management Network dialog. Make sure to click Static and add the correct IP address details before hitting OK
+
+image::images/smallPencil2.PNG[pdfwidth=50%]
+
+==== Second Bond (Backend)
+
+Next we setup the Backend bond. This time drag ens3f0 and ens4f0 on top of each other and select (Mode 4) Dynamic link aggregation, for the Bond Name use bond1 and this time add the BackEnd label
+
+image::images/HV-BondSetup2.PNG[pdfwidth=50%]
+
+==== Third Bond (HeSyMo)
+
+Next we setup the HeSyMo bond. This time drag ens3f1 and ens4f1 on top of each other and select (Mode 4) Dynamic link aggregation, for the Bond Name use bond2 and this time add the HeSyMo label, then click on OK
+
+image::images/HV-BondSetup3.PNG[pdfwidth=50%]
+
+Before closing the Setup Host Networks dialog, scroll down and find the VLAN that is assigned as the move vlan. In the example below its vlan033.
+
+image::images/smallestPencil.PNG[pdfwidth=50%]
+
+Select the small pencil on the right and enter the IP address for the move network (note, the gateway is not required)
+
+image::images/moveVLAN.PNG[pdfwidth=50%]
+
+== Adding Storage to RHEV
+
+We will set up local storage for providing sufficient storage for every hypervisors dumps, set up storage for the export domain and set up the first standard storage domain based on Fibre Channel.
+We also attach a NFS-share as the ISO domain.
+The first data storage domain is the master storage domain. Without it the cluster cannot run, therefore we start with this. +
+The recommendations for the Size of the storage domains at Volkswagen are: +
+- one 8 TB LUN per Storage Domain +
+- up to 50 VMs per Storage Domain (that leads to at least 100 LVs in a Storage Domain, leaving enough space for extending VMs, using Snapshots, etc.) +
+
+To read more about the recommended sizes and technical limitations of RHEV storage domains go to: https://access.redhat.com/solutions/441203
+
+
+=== Fibre Channel Storage Domain
+The setup of the storage domain for all virtual OS disks and disks for the Oracle installation ("Oracle Binaries").
+
+In the GUI of the RHEV-M switch to the storage tab and click on “New Domain”, choose “Data / Fibre Channel” in the opened window, type in a name (see Naming Conventions for details about the naming schema) and choose one or more LUNs.
+
+image::images/storagedomain.PNG[pdfwidth=50%]
+
+After the storage domain was created we can add it to the cluster on the Data Center tab by clicking on the “Attach Data” button:
+
+image::images/attachData.png[pdfwidth=50%]
+
+=== ISO Domain
+We attach the NFS share
+
+ 10.208.1.61:/appl/vwlinux-data/files/install/iso/images/rhev
+
+as an ISO Domain to the defined data center.
+
+The NFS export directory must be configured for read write access and must be owned by vdsm:kvm. If these users do not exist on your external NFS server use the following command, assuming that /exports/iso is the directory to be used as an NFS share.
+
+ # chown -R 36:36 /exports/iso
+
+The permissions on the directory must be set to allow read and write access to both the owner and the group. The owner should also have execute access to the directory. The permissions are set using the chmod command. The following command arguments set the required permissions on the /exports/iso directory.
+
+ # chmod 0755 /exports/iso
+
+Now you can import the existing share via the “Import Domain” on the Storage Tab.
+
+After it is set up by RHEV it can be activated and attached to the data center.
+
+=== Export Storage Domain (optional)
+The export domain is needed for exporting and importing VMs.
+As the data on this storage domain is not needed to be backed up nor has it to be very reliable we chosen the RAID5 disk one of the hypervisors in each cluster for it.
+Later we will export this FS to every host in the cluster, so we only need to create the LV in one of them.
+We have made the decision to use the numerical fist host in every cluster as the exporting server for the export domain. For the zone “Intranet” this is the lxf101s001.
+
+We create a partition in the disk, create a PV and with that a VG and an LV on that VG.
+In this case most of the work is already done, as we already have set up a PV with a VG for the crash LV. The remaining space in that VG will be used for the export domain.
+
+Do the LVM stuff:
+
+ # lvcreate -l 100%FREE -n exportlv exp_crash
+
+Edit the fstab on that Hypervisor:
+
+
+ # /dev/mapper/exp_crash-export	/export 	xfs	defaults 	0 0
+
+Mount the FS
+
+ # mount	/export
+
+Create (if not already done) the user and group for the export domain and apply the memberships and permissions:
+
+----
+# groupadd kvm -g 36
+# useradd vdsm -u 36 -g 36
+#
+# chown -R vdsm:kvm /export
+# chmod 0755 /export
+----
+
+Install the NFS server packages and activate the services
+
+----
+# yum install -y nfs-utils
+#
+# systemctl enable rpcbind
+# systemctl enable nfs-server
+# systemctl start rpcbind
+# systemctl start nfs-server
+----
+
+Export the directory to every host in the cluster via NFS by writing the /etc/exports
+
+ # cat /etc/exports
+ /export       <IP.of.Host1>/255.255.255.255(rw) <IP.of.Host2>/255.255.255.255(rw)
+
+Whenever the Cluster gets extended the new host(s) has to be added.
+
+Starting the NFS server
+
+ # systemctl start nfs-server
+
+Adding the export domain in RHEV-M by using the “New Domain” button in the storage tab. RHEV-M informs then the Hypervisor about the details of the export domain:
+
+image::images/addingNFS-export.PNG[pdfwidth=50%]
+
+==== Creating the LV for /var/crash local to every Hypervisor
+Steps for set up space for /var/crash for HVs:
+
+Create a partition on /dev/sdb with the full size (roughly 2.5 TB):
+
+ # parted /dev/sdb mklabel gpt
+ # parted /dev/sdb mkpart primary 1m 100%
+
+Do the LVM and FS stuff:
+
+----
+# pvcreate /dev/sdb1
+# vgcreate exp_crash /dev/sdb1
+# lvcreate -L 1700G -n crash exp_crash
+# mkfs.xfs /dev/exp_crash/crash
+----
+
+As the Hypervisors have 1.5 TB of RAM we need a little bit more capacity to store a complete dump on disk. Therefor 1.7 TB are sufficient for these machines.
+
+Edit the fstab on every Hypervisor:
+
+ # /dev/mapper/exp_crash-crash	/var/crash	xfs	defaults 	0 0
+
+== Storage for VMs
+
+=== Adding Storage to VMs
+
+During the automated installation two internal disks were created and attached to the VM. These two disks are taken out of the Storage Domain.
+The installation scripts are taking care of it.
+
+If it is a VM for Oracle these scripts will also attach an direct attached LUN to the VM in the size according to the requested T-Shirt size of the VM (see VM Sizing - T-Shirt sizes).
+
+If a disk has to be attached after the creation of the VM, this can be done easily via the GUI.
+
+First chose the VM in the right environment and switch to the “Disks” subtab:
+
+image::images/attachingStorageToVMs.png[pdfwidth=50%]
+
+After clicking on “Add” a new window opens.
+First of all click on “External (Direct Lun)”, chose the right Storage Type (“Fibre Channel”) and chose the right Interface, in this case “VirtIO-SCSI”.
+We have made the decision to use “VirtIO-SCSI” for the external disks and “VirtIO” for the internal disks. Therefore it is easy to distinguish the internal disks from the external disks within the VM as the disk devices with the VirtIO interface are named /dev/sdX and the devices with the VirtIO-SCSI are named /dev/vdX.
+
+The disks that are greyed out are not applicable because they are already in use.
+Choose one of the free disks with the right size and leave the options untouched (the default is: activate is on, enable SCSI pass-through is on and everything else is off).
+
+image::images/attachingStorageToVMs2.png[pdfwidth=50%]
+
+=== Removing Storage from VMs
+Usually the disk should be removed from the VM by wiping all LVM information and data from it. This is done by using standard procedures within the VM.
+If this is not possible (anymore) we provide you with the information to clear the disk from the hypervisor level.
+
+NOTE: In the VM environment it is important, that the disks are seen as “free” by the API as every VM will be created with scripts using a API calls. This procedure guarantees that all VMs are set up according to the VW standards.
+
+==== Clean Removal
+If one of the external LUNs must be removed from a VM and the VM is still running, make sure, that you remove it clean from the system and - because of data security - overwrite the complete disk with zeros.
+If you just remove it from the VM (for example by using the GUI of RHEV-M) the disk will be marked as “free” if you search for unused disks in the GUI of RHEV-M but will not be recognised as free by using the scripts.
+
+If it is /dev/sda, that is to be removed and it has an LV on top of a partition, it should be removed this way:
+
+----
+umount all FS, that reside on LVs of the disk
+vgremove -f <vg-name>
+pvremove /dev/sda1
+using fdisk or gdisk for deleting the partition
+dd if=/dev/zero of=/dev/sda bs=100M
+----
+
+If you do not have used a partition you have to remove it this way:
+
+----
+umount all FS, that reside on LVs of the disk
+vgremove -f <vg-name>
+pvremove /dev/sda
+dd if=/dev/zero of=/dev/sda bs=100M
+----
+
+The dd is not technically necessary but it is mandatory in the VW environment to prevent from unauthorized / unwanted access to data, that might be on that disk.
+Depending on the size of the disk, this step can take some minutes.
+
+In every case switch after that to the RHEV-M and chose the VM and then the subtab “Disks” again and deactivate the disks:
+
+image::images/deactivateDisk1.png[pdfwidth=50%]
+
+You have to confirm this action in a popup window.
+After the disk is deactivated the button “Remove” is activated. Click on it and it opens another popup window.
+
+image::images/deactivateDisk2.png[pdfwidth=50%]
+
+It is important to activate the option “Remove permanently” to make sure, that new VMs can use this disk again.
+
+If you do not remove it permanently the disk is marked as “in use” but it is not attached to any VM. You can view these kind of disks in the “Disks” tab of RHEV-M, but they are not useable by API calls.
+
+Remove of a disk on hypervisor level (if VMs is crashed / deleted without decommissioning process)
+
+If it is not possible anymore to wipe the disk from within the VM, you can use this way to ensure, that the VM is seen as free by the UI and API:
+
+Look for the HV with the role SPM in the RHEV-M:
+
+image::images/deactivateDisk3.png[]
+
+In this case the lxf101s002 has the SPM (Storage Pool Manager) role.
+Login via ssh to this hypervisor and search for the corresponding disk. For every VM exists a VG on the system with this naming schema: vg_<VM-name>_01
+
+With the help of pvs you can determine the disk(s) on which the VG is placed:
+
+----
+[root@lxf102s001 ~]# pvs  |grep lxf102p026
+  /dev/mapper/360001440000000107071b5b4d8ebbf6d1  vg_lxf102p026_01                 	lvm2 a--  150.00g  40.00g
+[root@lxf102s001 ~]#
+----
+
+In this case it is the LUN with the WWN: 360001440000000107071b5b4d8ebbf6d1.
+Now we can wipe the disk directly on the Hypervisor (it is important, that you chose the one Hypervisor that has the SPM role):
+
+
+ [root@lxf102s001 ~]# dd if=/dev/zero of=/dev/mapper/360001440000000107071b5b4d8ebbf6d1 bs=100M
+
+It depends on the size of the disk how long this process will take.
+It will take also several minutes until the disk is recognized as “free” via API calls.
+
+
+NOTE:The LV- and VG metadata information (for example all output of “vgs” and “lvs”) on other than the SPM node of a cluster does not reflect the reality as if the node only scanning the specific device for changes if the VM is running or migrating to it. Only the SPM has all recent and valid information.
+
+If a disk is not showing up as free by using the scripts, but is seen as free by the GUI of RHEV, check the following details:
+
+* Does the GUI shows under Disks no attached VMs?
+This is just a double check to prevent data loss as if the following steps and the wiping of the LUN will be done on a low level and RHEV will not save us from any unwanted deletion of data.
+If there are attached VMs, something else went wrong or we are looking on the wrong disk…
+ * Using fdisk / gdisk on the hypervisor with the SPM role to check if there is still a partition on it. if so, delete it
+* asking dmsetup on the hypervisor with the SPM role if it still “sees” a partition on it:+
+----
+ dmsetup ls |grep <WWN>
+----
+:: check if there is a corresponding partition to that device, sometimes marked by a added “p” and the number of the partition (therefore usually “p1” at VW) and sometimes by only added the number of the partition (so usually “1”)
+
+* if dmsetup still reports a partition, delete it with:
+----
+dmsetup remove <WWN><part>
+----
+:: or if this fails:
+----
+dmsetup remove -f <WWN><part>
+----
+
+* Go on with wiping the disk (if not already done)
+* Disk should now be recognised as free in the GUI and by the API calls
+
+== VM Sizing - T-Shirt sizes
+
+Below are the initial sizing figures for Oracle DB workloads - this can, of course, be changed if necessary
+
+.T-Shirt Sizing - Memory & Cores
+[cols=4,options=header]
+|===
+| |L|M|S
+
+|Cores
+|8
+|4
+|2
+
+|Mem
+|24
+|12
+|6
+
+|===
+
+
+.T-Shirt Sizing - Raw LUN Size per Tier (GB)
+[cols=4,options=header]
+|===
+|Tier|L|M|S
+
+|T/Q
+|600
+|300
+|150
+
+|Prod
+|1200
+|600
+|300
+
+|===
+
+.T-Shirt Sizing - Mountpoint/LV Sizing
+[cols=4,options=header]
+|===
+
+|
+|L
+|M
+|S
+
+|/u00
+|
+|
+|
+
+|/u01/oradata/db
+|20
+|20
+|20
+
+|/u02/oradata/db
+|20
+|20
+|20
+
+|/u03/oradata/db
+|30
+|100
+|250
+
+|/u04/oradata/db
+|10
+|10
+|10
+
+|/u05/fra/db (T/Q)
+|30
+|100
+|250
+
+|/u05/fra/db (P)
+|90
+|300
+|750
+
+|===
+
+== Install of DWH & Reports
+
+Installing and Configuring Data Warehouse and Reports on the Red Hat Enterprise Virtualization Manager
+
+Install the rhevm-dwh package and the rhevm-reports package on the system where the Red Hat Enterprise Virtualization Manager is installed:
+
+ # yum install rhevm-dwh rhevm-reports
+
+Run the engine-setup command to begin configuration of Data Warehouse and Reports on the machine again. All already chosen parameters are shown for confirmation and two new options are available:
+
+ # engine-setup
+
+Follow the prompts to configure Data Warehouse and Reports:
+
+ Configure Data Warehouse on this host (Yes, No) [Yes]:
+ Configure Reports on this host (Yes, No) [Yes]:
+
+Decline the automatic firewall setup as we are not using any host based firewall in this environment:
+
+ Setup can automatically configure the firewall on this system.
+ Note: automatic configuration of the firewall may overwrite current settings.
+ Do you want Setup to configure the firewall? (Yes, No) [Yes]:
+
+Answer the following questions about the Data Warehouse database and the Reports database:
+
+----
+Where is the DWH database located? (Local, Remote) [Local]:
+Setup can configure the local postgresql server automatically for the DWH to run. This may conflict with existing applications.
+Would you like Setup to automatically configure postgresql and create DWH database, or prefer to perform that manually? (Automatic, Manual) [Automatic]:
+Where is the Reports database located? (Local, Remote) [Local]:
+Setup can configure the local postgresql server automatically for the Reports to run. This may conflict with existing applications.
+Would you like Setup to automatically configure postgresql and create Reports database, or prefer to perform that manually? (Automatic, Manual) [Automatic]:
+----
+
+Press Enter to choose the highlighted defaults, which are suitable for the VW environment.
+
+Set a password for the Reports administrative users (admin and superuser). Note that the reports system maintains its own set of credentials that are separate to those used for the Manager:
+
+ Reports power users password:
+
+You are prompted to enter the password a second time to confirm it.
+For the configuration to take effect, the ovirt-engine service must be restarted. The engine-setup command prompts you:
+
+ During execution engine service will be stopped (OK, Cancel) [OK]:
+
+Press Enter to proceed. The ovirt-engine service restarts automatically later in the command and confirm your installation settings:
+
+=== Next Steps
+Access the Reports Portal at +++https://rhevm-[bi]01.wob.sec.vw.vwg/ovirt-engine-reports+++.
+
+Log in using the user name admin and the password you set during reports installation. Note that the first time you log in to Red Hat Enterprise Virtualization Manager Reports, a number of web pages are generated and, as a result, your initial attempt to log in may take some time to complete.
+
+== Upgrading
+
+To upgrade RHEV, the following steps should be followed:
+
+NOTE: The information in this section comes from the https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Virtualization/3.5/html-single/Administration_Guide/index.html#chap-Updating_the_Red_Hat_Enterprise_Virtualization_Environment[Administration Guide]
+
+=== Minor Versions
+
+If you are only upgrading a minor version, say from 3.5.3 to 3.5.4, then follow these steps
+
+Run the following command on the machine on which the Red Hat Enterprise Virtualization Manager is installed:
+
+ # engine-upgrade-check
+
+If there are no updates are available, the command will output the text **No upgrade**
+
+----
+# engine-upgrade-check
+VERB: queue package rhevm-setup for update
+VERB: package rhevm-setup queued
+VERB: Building transaction
+VERB: Empty transaction
+VERB: Transaction Summary:
+No upgrade
+----
+
+If updates are available, the command will list the packages to be updated:
+
+----
+# engine-upgrade-check
+VERB: queue package rhevm-setup for update
+VERB: package rhevm-setup queued
+VERB: Building transaction
+VERB: Transaction built
+VERB: Transaction Summary:
+VERB:     updated    - rhevm-lib-3.3.2-0.50.el6ev.noarch
+VERB:     update     - rhevm-lib-3.4.0-0.13.el6ev.noarch
+VERB:     updated    - rhevm-setup-3.3.2-0.50.el6ev.noarch
+VERB:     update     - rhevm-setup-3.4.0-0.13.el6ev.noarch
+VERB:     install    - rhevm-setup-base-3.4.0-0.13.el6ev.noarch
+VERB:     install    - rhevm-setup-plugin-ovirt-engine-3.4.0-0.13.el6ev.noarch
+VERB:     updated    - rhevm-setup-plugins-3.3.1-1.el6ev.noarch
+VERB:     update     - rhevm-setup-plugins-3.4.0-0.5.el6ev.noarch
+Upgrade available
+----
+
+=== Other updates
+
+If going from 3.5.x to 3.6.0, follow the process below
+
+NOTE: Please be aware of the excellent https://access.redhat.com/labs/rhevupgradehelper/[RHEV Upgrade Helper] in the https://access.redhat.com/labs/[Red Hat labs] website
+
+IMPORTANT: Always update to the latest minor version of your current Red Hat Enterprise Virtualization Manager version before you upgrade to the next major version.
+
+Be aware that a number of steps are inolved
+
+* Stopping the ovirt-engine service.
+* Downloading and installing the updated packages.
+* Backing up and updating the database.
+* Performing post-installation configuration.
+* Starting the ovirt-engine service.
+
+Run the following command to update the rhevm-setup package:
+
+ # yum update rhevm-setup
+
+Run the following command to update the Red Hat Enterprise Virtualization Manager:
+
+ # engine-setup
+
+IMPORTANT: Active hosts are not updated by this process and must be updated separately. As a result, the virtual machines running on those hosts are not affected.
+
+IMPORTANT: The update process may take some time; allow time for the update process to complete and do not stop the process once initiated. Once the update is complete, you will also be instructed to separately update the Data Warehouse and Reports functionality. These additional steps are only required if you installed these features.
+
+=== Other Steps
+
+The following step **shouldnt** be required, however its worth verifying once the upgrade has completed
+
+ # yum -y update rhevm-log-collector-sos-plugins
+
+== Other Notes / Links
+
+https://access.redhat.com/labs/rhevmhdsc/[Reporting DB sizing tool]
+
+image::images/dbSizeCalc.png[]
+
+== Appendices
+
+=== Intranet RHEV-M Answer File
+
+.rhevm-answers.txt
+----
+# action=setup
+[environment:default]
+OVESETUP_DIALOG/confirmSettings=bool:True
+OVESETUP_CONFIG/applicationMode=str:virt
+OVESETUP_CONFIG/remoteEngineSetupStyle=none:None
+OVESETUP_CONFIG/adminPassword=str:SYkxHmj_h2
+OVESETUP_CONFIG/storageIsLocal=bool:False
+OVESETUP_CONFIG/firewallManager=none:None
+OVESETUP_CONFIG/remoteEngineHostRootPassword=none:None
+OVESETUP_CONFIG/updateFirewall=bool:False
+OVESETUP_CONFIG/remoteEngineHostSshPort=none:None
+OVESETUP_CONFIG/fqdn=str:rhevm-i01.wob.sec.vw.vwg
+OVESETUP_CONFIG/storageType=none:None
+OSETUP_RPMDISTRO/requireRollback=none:None
+OSETUP_RPMDISTRO/enableUpgrade=none:None
+OVESETUP_DB/database=str:engine
+OVESETUP_DB/fixDbViolations=none:None
+OVESETUP_DB/secured=bool:False
+OVESETUP_DB/host=str:localhost
+OVESETUP_DB/user=str:engine
+OVESETUP_DB/securedHostValidation=bool:False
+OVESETUP_DB/port=int:5432
+OVESETUP_ENGINE_CORE/enable=bool:True
+OVESETUP_CORE/engineStop=none:None
+OVESETUP_SYSTEM/memCheckEnabled=bool:True
+OVESETUP_SYSTEM/nfsConfigEnabled=bool:False
+OVESETUP_PKI/organization=str:wob.sec.vw.vwg
+OVESETUP_CONFIG/isoDomainMountPoint=none:None
+OVESETUP_CONFIG/engineHeapMax=str:3985M
+OVESETUP_CONFIG/isoDomainName=none:None
+OVESETUP_CONFIG/isoDomainACL=none:None
+OVESETUP_CONFIG/engineHeapMin=str:3985M
+OVESETUP_AIO/configure=none:None
+OVESETUP_AIO/storageDomainName=none:None
+OVESETUP_AIO/storageDomainDir=none:None
+OVESETUP_PROVISIONING/postgresProvisioningEnabled=bool:True
+OVESETUP_APACHE/configureRootRedirection=bool:True
+OVESETUP_APACHE/configureSsl=bool:True
+OVESETUP_RHEVM_SUPPORT/redhatSupportProxyPort=none:None
+OVESETUP_RHEVM_SUPPORT/redhatSupportProxy=none:None
+OVESETUP_RHEVM_SUPPORT/redhatSupportProxyUser=none:None
+OVESETUP_RHEVM_SUPPORT/configureRedhatSupportPlugin=bool:False
+OVESETUP_RHEVM_SUPPORT/redhatSupportProxyPassword=none:None
+OVESETUP_RHEVM_SUPPORT/redhatSupportProxyEnabled=bool:False
+OVESETUP_RHEVM_DIALOG/confirmUpgrade=bool:True
+OVESETUP_CONFIG/websocketProxyConfig=bool:True
+OVESETUP_ENGINE_CONFIG/fqdn=str:rhevm-i01.wob.sec.vw.vwg
+----
+
+<<<
+=== B2X RHEV-M Answer File
+
+.rhevm-answers.txt
+----
+# action=setup
+[environment:default]
+OVESETUP_DIALOG/confirmSettings=bool:True
+OVESETUP_CONFIG/applicationMode=str:virt
+OVESETUP_CONFIG/remoteEngineSetupStyle=none:None
+OVESETUP_CONFIG/adminPassword=str:9LYOpJQX5y
+OVESETUP_CONFIG/storageIsLocal=bool:False
+OVESETUP_CONFIG/firewallManager=none:None
+OVESETUP_CONFIG/remoteEngineHostRootPassword=none:None
+OVESETUP_CONFIG/updateFirewall=bool:False
+OVESETUP_CONFIG/remoteEngineHostSshPort=none:None
+OVESETUP_CONFIG/fqdn=str:rhevm-b01.wob.sec.vw.vwg
+OVESETUP_CONFIG/storageType=none:None
+OSETUP_RPMDISTRO/requireRollback=none:None
+OSETUP_RPMDISTRO/enableUpgrade=none:None
+OVESETUP_DB/database=str:engine
+OVESETUP_DB/fixDbViolations=none:None
+OVESETUP_DB/secured=bool:False
+OVESETUP_DB/host=str:localhost
+OVESETUP_DB/user=str:engine
+OVESETUP_DB/securedHostValidation=bool:False
+OVESETUP_DB/port=int:5432
+OVESETUP_ENGINE_CORE/enable=bool:True
+OVESETUP_CORE/engineStop=none:None
+OVESETUP_SYSTEM/memCheckEnabled=bool:True
+OVESETUP_SYSTEM/nfsConfigEnabled=bool:False
+OVESETUP_PKI/organization=str:wob.sec.vw.vwg
+OVESETUP_CONFIG/isoDomainMountPoint=none:None
+OVESETUP_CONFIG/engineHeapMax=str:3987M
+OVESETUP_CONFIG/isoDomainName=none:None
+OVESETUP_CONFIG/isoDomainACL=none:None
+OVESETUP_CONFIG/engineHeapMin=str:3987M
+OVESETUP_AIO/configure=none:None
+OVESETUP_AIO/storageDomainName=none:None
+OVESETUP_AIO/storageDomainDir=none:None
+OVESETUP_PROVISIONING/postgresProvisioningEnabled=bool:True
+OVESETUP_APACHE/configureRootRedirection=bool:True
+OVESETUP_APACHE/configureSsl=bool:True
+OVESETUP_RHEVM_SUPPORT/redhatSupportProxyPort=none:None
+OVESETUP_RHEVM_SUPPORT/redhatSupportProxy=none:None
+OVESETUP_RHEVM_SUPPORT/redhatSupportProxyUser=none:None
+OVESETUP_RHEVM_SUPPORT/configureRedhatSupportPlugin=bool:False
+OVESETUP_RHEVM_SUPPORT/redhatSupportProxyPassword=none:None
+OVESETUP_RHEVM_SUPPORT/redhatSupportProxyEnabled=bool:False
+OVESETUP_RHEVM_DIALOG/confirmUpgrade=bool:True
+OVESETUP_CONFIG/websocketProxyConfig=bool:True
+OVESETUP_ENGINE_CONFIG/fqdn=str:rhevm-b01.wob.sec.vw.vwg
+----

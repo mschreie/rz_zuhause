@@ -1,0 +1,27 @@
+-------- getting ILO2 up and running
+
+i liked the page 
+http://community.hpe.com/t5/ProLiant-Servers-ML-DL-SL/Upgrade-iLO2-firmware-on-a-DL380-G6-running-ESXi-4-1/td-p/5569499
+or
+http://techmolecules.blogspot.de/2014/08/four-ways-to-update-hp-ilo-firmware.html
+
+I've downloaded a win64 version of ILO firmware from: 
+http://h20564.www2.hpe.com/hpsc/swd/public/readIndex?sp4ts.oid=5294357&swLangOid=8&swEnvOid=4024
+
+unpacked the exe-file by running it and choosing "extract"
+
+Then i used the Web-GUI to upload the version into ILO.
+
+Having installed the following lisence:
+ILO 60-Tage lisence:
+34T6L-4C9PX-X8D9C-GYD26-8SQWM
+
+I could use the ILO->Remote Console -> Remote Console 
+"Access the system KVM from a Java applet-based console requiring the availability of a JVM."
+..... which is quite cool.
+
+
+------------------ getting G5 Server installed
+- set up "new Host" in Satellite 6
+- vi /var/lib/tftpboot/pxelinux.cfg/01-00-1c-c4-dd-d3-0e 
+

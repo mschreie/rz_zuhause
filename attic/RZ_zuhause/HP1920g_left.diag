@@ -1,0 +1,3633 @@
+
+=================================================================
+  ===============running CPU usage information===============
+=================================================================
+===== Current CPU usage info =====
+CPU Usage Stat. Cycle: 35 (Second)
+CPU Usage            : 7%
+CPU Usage Stat. Time : 2016-07-04  14:00:47
+CPU Usage Stat. Tick : 0x432(CPU Tick High) 0xba80bf64(CPU Tick Low)
+Actual Stat. Cycle   : 0x0(CPU Tick High) 0x262d3c6d(CPU Tick Low)
+
+TaskName        CPU        Runtime(CPU Tick High/CPU Tick Low)
+VIDL            93%               0/2399d685
+TICK             0%               0/  3bc310
+STMR             0%               0/   273c0
+LOS              0%               0/   42a70
+WA_M             3%               0/ 1515635
+SYSM             0%               0/    427e
+ LED             0%               0/    9cfc
+LED3             0%               0/   1d507
+LPDT             0%               0/     363
+MacV             0%               0/    252d
+AtkT             0%               0/     d8c
+NICR             0%               0/   bedfe
+Flow             0%               0/   a4300
+LinT             0%               0/   7ce83
+Rout             0%               0/   5c5c8
+IPCB             0%               0/   a77f4
+RPCQ             0%               0/  1d176f
+IPCM             0%               0/    74a4
+DrvT             0%               0/   14824
+ DEV             0%               0/   19541
+SOCK             0%               0/   1afaf
+ ACL             0%               0/    de40
+MacT             0%               0/    4b1f
+AgeT             0%               0/   13566
+LAGG             0%               0/    8fce
+MSTP             0%               0/  12b483
+GARP             0%               0/   4a2bf
+CLST             0%               0/   1c56b
+ NDP             0%               0/   146aa
+NTDP             0%               0/    8b7f
+HABP             0%               0/    6cc4
+LLDP             0%               0/   9ff48
+ ARP             0%               0/   6cdf7
+  IP             0%               0/  215131
+FSLH             0%               0/    a75f
+FSLR             0%               0/   3ba8f
+HTTP             0%               0/    525f
+NTPT             0%               0/   147ac
+VTYD             0%               0/   415b5
+  ND             0%               0/   827e5
+ ACM             0%               0/   25ef3
+  LS             0%               0/   2da30
+ RDS             0%               0/   1fa2e
+  SC             0%               0/    b042
+ NAT             0%               0/    4bfe
+STND             0%               0/   1b489
+ROUT             0%               0/  2d990c
+IFNT             0%               0/    85c7
+WEBS             0%               0/    f967
+HDQ0             0%               0/  10ceee
+
+=================================================
+  ===============display clock===============
+=================================================
+14:00:47 Amsterdam Mon 07/04/2016
+Time Zone : Amsterdam add 01:00:00
+===================================================
+  ===============display version===============
+===================================================
+HP Comware Platform Software
+Comware Software, Version 5.20.99, Release 1110
+Copyright (c) 2010-2015 Hewlett-Packard Development Company, L.P.
+HP 1920-24G Switch uptime is 0 week, 2 days, 22 hours, 29 minutes
+
+HP 1920-24G Switch
+128M    bytes DRAM
+32M     bytes Flash Memory
+Config Register points to Flash
+
+Hardware Version is REV.A
+Bootrom Version is 115
+[SubSlot 0] 24GE+4SFP Hardware Version is REV.A
+
+==========================================================
+  ===============display device verbose===============
+==========================================================
+ Slot 1
+SubSNo PortNum PCBVer  FPGAVer CPLDVer BootRomVer AddrLM Type       State
+0      28      Ver.A   NULL    000     115        IVL    SMBS28     Normal
+Slot 1 info:
+Status       : Normal
+Type         : SMBS28
+Software Ver : Release 1110
+PCB Ver      : Ver.A
+FPGA Ver     : NULL
+BootRom Ver  : 115
+CPLD Ver     : 000
+PortNum      : 28
+Chip         : 0
+Learning Mode: IVL
+=================================================================
+  ===============display current-configuration===============
+=================================================================
+#
+ version 5.20.99, Release 1110
+#
+ sysname HP 1920G Switch left
+#
+ clock timezone Amsterdam add 01:00:00
+#
+ domain default enable system
+#
+ ipv6
+#
+ telnet server enable
+#
+ password-recovery enable
+#
+vlan 1
+#
+vlan 10
+ description mgt
+#
+vlan 20
+ description storage
+#
+domain system
+ access-limit disable
+ state active
+ idle-cut disable
+ self-service-url disable
+#
+user-group system
+ group-attribute allow-guest
+#
+local-user admin
+ password cipher $c$3$6Ojdfi3Txy+22NDqDTpeoeVIKX5CWpNsQuuVew==
+ authorization-attribute level 3
+ service-type ssh telnet terminal
+ service-type web
+#
+ stp mode rstp
+ stp enable
+#
+interface Bridge-Aggregation1
+ port link-type hybrid
+ port hybrid vlan 10 20 tagged
+ port hybrid vlan 1 untagged
+ link-aggregation mode dynamic
+#
+interface NULL0
+#
+interface Vlan-interface1
+ ip address dhcp-alloc
+#
+interface GigabitEthernet1/0/1
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/2
+ port link-type hybrid
+ port hybrid vlan 10 20 tagged
+ port hybrid vlan 1 untagged
+ port auto-power-down
+#
+interface GigabitEthernet1/0/3
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/4
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/5
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/6
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/7
+ port link-type hybrid
+ port hybrid vlan 10 20 tagged
+ port hybrid vlan 1 untagged
+ port auto-power-down
+ stp edged-port enable
+ port link-aggregation group 1
+#
+interface GigabitEthernet1/0/8
+ port link-type hybrid
+ port hybrid vlan 10 20 tagged
+ port hybrid vlan 1 untagged
+ port auto-power-down
+ stp edged-port enable
+ port link-aggregation group 1
+#
+interface GigabitEthernet1/0/9
+ port access vlan 10
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/10
+ port access vlan 20
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/11
+ port access vlan 10
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/12
+ port access vlan 20
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/13
+ port access vlan 10
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/14
+ port access vlan 20
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/15
+ port access vlan 10
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/16
+ port access vlan 20
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/17
+ port access vlan 10
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/18
+ port access vlan 20
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/19
+ port access vlan 10
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/20
+ port access vlan 20
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/21
+ port access vlan 10
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/22
+ port access vlan 20
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/23
+ port access vlan 10
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/24
+ port access vlan 20
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/25
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/26
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/27
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/28
+ stp edged-port enable
+#
+ undo info-center logfile enable
+#
+ snmp-agent
+ snmp-agent local-engineid 383030303633413236353133453846373234354433333832
+ snmp-agent sys-info version v3
+#
+ ntp-service source-interface Vlan-interface1
+ ntp-service unicast-server 104.156.99.226
+ ntp-service unicast-server 107.170.224.8
+#
+ ssh server enable
+ sftp server enable
+#
+ ip https enable
+#
+ load xml-configuration
+#
+user-interface aux 0
+ authentication-mode scheme
+user-interface vty 0 15
+ authentication-mode scheme
+#
+return
+===============================================================
+  ===============display saved-configuration===============
+===============================================================
+#
+ version 5.20.99, Release 1110
+#
+ sysname HP 1920G Switch left
+#
+ clock timezone Amsterdam add 01:00:00
+#
+ domain default enable system
+#
+ ipv6
+#
+ telnet server enable
+#
+ password-recovery enable
+#
+vlan 1
+#
+vlan 10
+ description mgt
+#
+vlan 20
+ description storage
+#
+domain system
+ access-limit disable
+ state active
+ idle-cut disable
+ self-service-url disable
+#
+user-group system
+ group-attribute allow-guest
+#
+local-user admin
+ password cipher $c$3$6Ojdfi3Txy+22NDqDTpeoeVIKX5CWpNsQuuVew==
+ authorization-attribute level 3
+ service-type ssh telnet terminal
+ service-type web
+#
+ stp mode rstp
+ stp enable
+#
+interface Bridge-Aggregation1
+ port link-type hybrid
+ port hybrid vlan 10 20 tagged
+ port hybrid vlan 1 untagged
+ link-aggregation mode dynamic
+#
+interface NULL0
+#
+interface Vlan-interface1
+ ip address dhcp-alloc
+#
+interface GigabitEthernet1/0/1
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/2
+ port link-type hybrid
+ port hybrid vlan 10 20 tagged
+ port hybrid vlan 1 untagged
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/3
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/4
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/5
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/6
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/7
+ port link-type hybrid
+ port hybrid vlan 10 20 tagged
+ port hybrid vlan 1 untagged
+ port auto-power-down
+ stp edged-port enable
+ port link-aggregation group 1
+#
+interface GigabitEthernet1/0/8
+ port link-type hybrid
+ port hybrid vlan 10 20 tagged
+ port hybrid vlan 1 untagged
+ port auto-power-down
+ stp edged-port enable
+ port link-aggregation group 1
+#
+interface GigabitEthernet1/0/9
+ port access vlan 10
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/10
+ port access vlan 20
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/11
+ port access vlan 10
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/12
+ port access vlan 20
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/13
+ port access vlan 10
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/14
+ port access vlan 20
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/15
+ port access vlan 10
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/16
+ port access vlan 20
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/17
+ port access vlan 10
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/18
+ port access vlan 20
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/19
+ port access vlan 10
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/20
+ port access vlan 20
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/21
+ port access vlan 10
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/22
+ port access vlan 20
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/23
+ port access vlan 10
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/24
+ port access vlan 20
+ port auto-power-down
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/25
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/26
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/27
+ stp edged-port enable
+#
+interface GigabitEthernet1/0/28
+ stp edged-port enable
+#
+ undo info-center logfile enable
+#
+ ntp-service source-interface Vlan-interface1
+ ntp-service unicast-server 104.156.99.226
+ ntp-service unicast-server 107.170.224.8
+#
+ ssh server enable
+ sftp server enable
+#
+ ip https enable
+#
+ load xml-configuration
+#
+user-interface aux 0
+ authentication-mode scheme
+user-interface vty 0 15
+ authentication-mode scheme
+#
+return
+=====================================================
+  ===============display interface===============
+=====================================================
+ Bridge-Aggregation1 current state: DOWN
+ IP Packet Frame Type: PKTFMT_ETHNT_2, Hardware Address: e8f7-245d-338a
+ Description: Bridge-Aggregation1 Interface
+ Unknown-speed mode, unknown-duplex mode
+ Link speed type is autonegotiation, link duplex type is autonegotiation
+ PVID: 1
+ Port link-type: hybrid
+  Tagged   VLAN ID : 10, 20
+  Untagged VLAN ID : 1
+ Last clearing of counters:  Never
+ Last 300 seconds input:  0 packets/sec 0 bytes/sec    -%
+ Last 300 seconds output:  0 packets/sec 0 bytes/sec    -%
+ Input (total):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts
+ Input (normal):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts
+ Input:  0 input errors, 0 runts, - giants, - throttles
+	 0 CRC, - frame, 0 overruns, 0 aborts
+	 - ignored, - parity errors
+ Output (total): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output (normal): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output: 0 output errors, - underruns, - buffer failures
+	 0 aborts, 0 deferred, 0 collisions, - late collisions
+	 - lost carrier, - no carrier
+
+ GigabitEthernet1/0/1 current state: UP
+ IP Packet Frame Type: PKTFMT_ETHNT_2, Hardware Address: e8f7-245d-3384
+ Description: GigabitEthernet1/0/1 Interface
+ Loopback is not set
+ Media type is twisted pair, Port hardware type is 1000_BASE_T
+ 1000Mbps-speed mode, full-duplex mode
+ Link speed type is autonegotiation, link duplex type is autonegotiation
+ Flow-control is not enabled
+ The Maximum Frame Length is 9600
+ Broadcast MAX-ratio: 100%
+ Unicast MAX-ratio: 100%
+ Multicast MAX-ratio: 100%
+ PVID: 1
+ Mdi type: auto
+ Port link-type: access
+  Tagged   VLAN ID : none
+  Untagged VLAN ID : 1
+ Port priority: 0
+ Last clearing of counters:  Never
+ Peak value of input: 2021921 bytes/sec, at 2016-07-04 05:45:27
+ Peak value of output: 2045892 bytes/sec, at 2016-07-04 05:40:56
+ Last 300 seconds input:  2 packets/sec 422 bytes/sec 0%
+ Last 300 seconds output:  0 packets/sec 30 bytes/sec 0%
+ Input (total):  2818400 packets, 680851059 bytes
+	 239123 unicasts, 43711 broadcasts, 2535566 multicasts, 0 pauses
+ Input (normal):  2818400 packets, 680851059 bytes
+	 239123 unicasts, 43711 broadcasts, 2535566 multicasts, 0 pauses
+ Input:  0 input errors, 0 runts, - giants, - throttles
+	 0 CRC, - frame, 0 overruns, 0 aborts
+	 - ignored, - parity errors
+ Output (total): 2481571 packets, 613099387 bytes
+	 19666 unicasts, 543 broadcasts, 2461362 multicasts, 0 pauses
+ Output (normal): 2481571 packets, 613099387 bytes
+	 19666 unicasts, 543 broadcasts, 2461362 multicasts, 0 pauses
+ Output: 0 output errors, - underruns, - buffer failures
+	 0 aborts, 0 deferred, 0 collisions, - late collisions
+	 - lost carrier, - no carrier
+
+ GigabitEthernet1/0/2 current state: UP
+ IP Packet Frame Type: PKTFMT_ETHNT_2, Hardware Address: e8f7-245d-3385
+ Description: GigabitEthernet1/0/2 Interface
+ Loopback is not set
+ Media type is twisted pair, Port hardware type is 1000_BASE_T
+ 1000Mbps-speed mode, full-duplex mode
+ Link speed type is autonegotiation, link duplex type is autonegotiation
+ Flow-control is not enabled
+ The Maximum Frame Length is 9600
+ Broadcast MAX-ratio: 100%
+ Unicast MAX-ratio: 100%
+ Multicast MAX-ratio: 100%
+ PVID: 1
+ Mdi type: auto
+ Port link-type: hybrid
+  Tagged   VLAN ID : 10, 20
+  Untagged VLAN ID : 1
+ Port priority: 0
+ Last clearing of counters:  Never
+ Peak value of input: 2046361 bytes/sec, at 2016-07-04 05:45:27
+ Peak value of output: 2021345 bytes/sec, at 2016-07-04 05:40:51
+ Last 300 seconds input:  2 packets/sec 412 bytes/sec 0%
+ Last 300 seconds output:  0 packets/sec 14 bytes/sec 0%
+ Input (total):  2916102 packets, 686999277 bytes
+	 10016 unicasts, 44458 broadcasts, 2861628 multicasts, 0 pauses
+ Input (normal):  2916102 packets, 686999277 bytes
+	 10016 unicasts, 44458 broadcasts, 2861628 multicasts, 0 pauses
+ Input:  0 input errors, 0 runts, - giants, - throttles
+	 0 CRC, - frame, 0 overruns, 0 aborts
+	 - ignored, - parity errors
+ Output (total): 2363577 packets, 599803124 bytes
+	 227844 unicasts, 424 broadcasts, 2135309 multicasts, 0 pauses
+ Output (normal): 2363577 packets, 599803124 bytes
+	 227844 unicasts, 424 broadcasts, 2135309 multicasts, 0 pauses
+ Output: 0 output errors, - underruns, - buffer failures
+	 0 aborts, 0 deferred, 0 collisions, - late collisions
+	 - lost carrier, - no carrier
+
+ GigabitEthernet1/0/3 current state: DOWN
+ IP Packet Frame Type: PKTFMT_ETHNT_2, Hardware Address: e8f7-245d-3386
+ Description: GigabitEthernet1/0/3 Interface
+ Loopback is not set
+ Media type is twisted pair, Port hardware type is 1000_BASE_T
+ Unknown-speed mode, unknown-duplex mode
+ Link speed type is autonegotiation, link duplex type is autonegotiation
+ Flow-control is not enabled
+ The Maximum Frame Length is 9600
+ Broadcast MAX-ratio: 100%
+ Unicast MAX-ratio: 100%
+ Multicast MAX-ratio: 100%
+ PVID: 1
+ Mdi type: auto
+ Port link-type: access
+  Tagged   VLAN ID : none
+  Untagged VLAN ID : 1
+ Port priority: 0
+ Last clearing of counters:  Never
+ Peak value of input: 0 bytes/sec, at 00-00-00 00:00:00
+ Peak value of output: 0 bytes/sec, at 00-00-00 00:00:00
+ Last 300 seconds input:  0 packets/sec 0 bytes/sec -%
+ Last 300 seconds output:  0 packets/sec 0 bytes/sec -%
+ Input (total):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input (normal):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input:  0 input errors, 0 runts, - giants, - throttles
+	 0 CRC, - frame, 0 overruns, 0 aborts
+	 - ignored, - parity errors
+ Output (total): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output (normal): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output: 0 output errors, - underruns, - buffer failures
+	 0 aborts, 0 deferred, 0 collisions, - late collisions
+	 - lost carrier, - no carrier
+
+ GigabitEthernet1/0/4 current state: DOWN
+ IP Packet Frame Type: PKTFMT_ETHNT_2, Hardware Address: e8f7-245d-3387
+ Description: GigabitEthernet1/0/4 Interface
+ Loopback is not set
+ Media type is twisted pair, Port hardware type is 1000_BASE_T
+ Unknown-speed mode, unknown-duplex mode
+ Link speed type is autonegotiation, link duplex type is autonegotiation
+ Flow-control is not enabled
+ The Maximum Frame Length is 9600
+ Broadcast MAX-ratio: 100%
+ Unicast MAX-ratio: 100%
+ Multicast MAX-ratio: 100%
+ PVID: 1
+ Mdi type: auto
+ Port link-type: access
+  Tagged   VLAN ID : none
+  Untagged VLAN ID : 1
+ Port priority: 0
+ Last clearing of counters:  Never
+ Peak value of input: 0 bytes/sec, at 00-00-00 00:00:00
+ Peak value of output: 0 bytes/sec, at 00-00-00 00:00:00
+ Last 300 seconds input:  0 packets/sec 0 bytes/sec -%
+ Last 300 seconds output:  0 packets/sec 0 bytes/sec -%
+ Input (total):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input (normal):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input:  0 input errors, 0 runts, - giants, - throttles
+	 0 CRC, - frame, 0 overruns, 0 aborts
+	 - ignored, - parity errors
+ Output (total): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output (normal): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output: 0 output errors, - underruns, - buffer failures
+	 0 aborts, 0 deferred, 0 collisions, - late collisions
+	 - lost carrier, - no carrier
+
+ GigabitEthernet1/0/5 current state: DOWN
+ IP Packet Frame Type: PKTFMT_ETHNT_2, Hardware Address: e8f7-245d-3388
+ Description: GigabitEthernet1/0/5 Interface
+ Loopback is not set
+ Media type is twisted pair, Port hardware type is 1000_BASE_T
+ Unknown-speed mode, unknown-duplex mode
+ Link speed type is autonegotiation, link duplex type is autonegotiation
+ Flow-control is not enabled
+ The Maximum Frame Length is 9600
+ Broadcast MAX-ratio: 100%
+ Unicast MAX-ratio: 100%
+ Multicast MAX-ratio: 100%
+ PVID: 1
+ Mdi type: auto
+ Port link-type: access
+  Tagged   VLAN ID : none
+  Untagged VLAN ID : 1
+ Port priority: 0
+ Last clearing of counters:  Never
+ Peak value of input: 0 bytes/sec, at 00-00-00 00:00:00
+ Peak value of output: 0 bytes/sec, at 00-00-00 00:00:00
+ Last 300 seconds input:  0 packets/sec 0 bytes/sec -%
+ Last 300 seconds output:  0 packets/sec 0 bytes/sec -%
+ Input (total):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input (normal):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input:  0 input errors, 0 runts, - giants, - throttles
+	 0 CRC, - frame, 0 overruns, 0 aborts
+	 - ignored, - parity errors
+ Output (total): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output (normal): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output: 0 output errors, - underruns, - buffer failures
+	 0 aborts, 0 deferred, 0 collisions, - late collisions
+	 - lost carrier, - no carrier
+
+ GigabitEthernet1/0/6 current state: DOWN
+ IP Packet Frame Type: PKTFMT_ETHNT_2, Hardware Address: e8f7-245d-3389
+ Description: GigabitEthernet1/0/6 Interface
+ Loopback is not set
+ Media type is twisted pair, Port hardware type is 1000_BASE_T
+ Unknown-speed mode, unknown-duplex mode
+ Link speed type is autonegotiation, link duplex type is autonegotiation
+ Flow-control is not enabled
+ The Maximum Frame Length is 9600
+ Broadcast MAX-ratio: 100%
+ Unicast MAX-ratio: 100%
+ Multicast MAX-ratio: 100%
+ PVID: 1
+ Mdi type: auto
+ Port link-type: access
+  Tagged   VLAN ID : none
+  Untagged VLAN ID : 1
+ Port priority: 0
+ Last clearing of counters:  Never
+ Peak value of input: 0 bytes/sec, at 00-00-00 00:00:00
+ Peak value of output: 0 bytes/sec, at 00-00-00 00:00:00
+ Last 300 seconds input:  0 packets/sec 0 bytes/sec -%
+ Last 300 seconds output:  0 packets/sec 0 bytes/sec -%
+ Input (total):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input (normal):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input:  0 input errors, 0 runts, - giants, - throttles
+	 0 CRC, - frame, 0 overruns, 0 aborts
+	 - ignored, - parity errors
+ Output (total): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output (normal): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output: 0 output errors, - underruns, - buffer failures
+	 0 aborts, 0 deferred, 0 collisions, - late collisions
+	 - lost carrier, - no carrier
+
+ GigabitEthernet1/0/7 current state: DOWN
+ IP Packet Frame Type: PKTFMT_ETHNT_2, Hardware Address: e8f7-245d-338a
+ Description: GigabitEthernet1/0/7 Interface
+ Loopback is not set
+ Media type is twisted pair, Port hardware type is 1000_BASE_T
+ Unknown-speed mode, unknown-duplex mode
+ Link speed type is autonegotiation, link duplex type is autonegotiation
+ Flow-control is not enabled
+ The Maximum Frame Length is 9600
+ Broadcast MAX-ratio: 100%
+ Unicast MAX-ratio: 100%
+ Multicast MAX-ratio: 100%
+ PVID: 1
+ Mdi type: auto
+ Port link-type: hybrid
+  Tagged   VLAN ID : 10, 20
+  Untagged VLAN ID : 1
+ Port priority: 0
+ Last clearing of counters:  Never
+ Peak value of input: 0 bytes/sec, at 00-00-00 00:00:00
+ Peak value of output: 0 bytes/sec, at 00-00-00 00:00:00
+ Last 300 seconds input:  0 packets/sec 0 bytes/sec -%
+ Last 300 seconds output:  0 packets/sec 0 bytes/sec -%
+ Input (total):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input (normal):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input:  0 input errors, 0 runts, - giants, - throttles
+	 0 CRC, - frame, 0 overruns, 0 aborts
+	 - ignored, - parity errors
+ Output (total): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output (normal): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output: 0 output errors, - underruns, - buffer failures
+	 0 aborts, 0 deferred, 0 collisions, - late collisions
+	 - lost carrier, - no carrier
+
+ GigabitEthernet1/0/8 current state: DOWN
+ IP Packet Frame Type: PKTFMT_ETHNT_2, Hardware Address: e8f7-245d-338b
+ Description: GigabitEthernet1/0/8 Interface
+ Loopback is not set
+ Media type is twisted pair, Port hardware type is 1000_BASE_T
+ Unknown-speed mode, unknown-duplex mode
+ Link speed type is autonegotiation, link duplex type is autonegotiation
+ Flow-control is not enabled
+ The Maximum Frame Length is 9600
+ Broadcast MAX-ratio: 100%
+ Unicast MAX-ratio: 100%
+ Multicast MAX-ratio: 100%
+ PVID: 1
+ Mdi type: auto
+ Port link-type: hybrid
+  Tagged   VLAN ID : 10, 20
+  Untagged VLAN ID : 1
+ Port priority: 0
+ Last clearing of counters:  Never
+ Peak value of input: 0 bytes/sec, at 00-00-00 00:00:00
+ Peak value of output: 0 bytes/sec, at 00-00-00 00:00:00
+ Last 300 seconds input:  0 packets/sec 0 bytes/sec -%
+ Last 300 seconds output:  0 packets/sec 0 bytes/sec -%
+ Input (total):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input (normal):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input:  0 input errors, 0 runts, - giants, - throttles
+	 0 CRC, - frame, 0 overruns, 0 aborts
+	 - ignored, - parity errors
+ Output (total): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output (normal): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output: 0 output errors, - underruns, - buffer failures
+	 0 aborts, 0 deferred, 0 collisions, - late collisions
+	 - lost carrier, - no carrier
+
+ GigabitEthernet1/0/9 current state: DOWN
+ IP Packet Frame Type: PKTFMT_ETHNT_2, Hardware Address: e8f7-245d-338c
+ Description: GigabitEthernet1/0/9 Interface
+ Loopback is not set
+ Media type is twisted pair, Port hardware type is 1000_BASE_T
+ Unknown-speed mode, unknown-duplex mode
+ Link speed type is autonegotiation, link duplex type is autonegotiation
+ Flow-control is not enabled
+ The Maximum Frame Length is 9600
+ Broadcast MAX-ratio: 100%
+ Unicast MAX-ratio: 100%
+ Multicast MAX-ratio: 100%
+ PVID: 10
+ Mdi type: auto
+ Port link-type: access
+  Tagged   VLAN ID : none
+  Untagged VLAN ID : 10
+ Port priority: 0
+ Last clearing of counters:  Never
+ Peak value of input: 0 bytes/sec, at 00-00-00 00:00:00
+ Peak value of output: 0 bytes/sec, at 00-00-00 00:00:00
+ Last 300 seconds input:  0 packets/sec 0 bytes/sec -%
+ Last 300 seconds output:  0 packets/sec 0 bytes/sec -%
+ Input (total):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input (normal):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input:  0 input errors, 0 runts, - giants, - throttles
+	 0 CRC, - frame, 0 overruns, 0 aborts
+	 - ignored, - parity errors
+ Output (total): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output (normal): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output: 0 output errors, - underruns, - buffer failures
+	 0 aborts, 0 deferred, 0 collisions, - late collisions
+	 - lost carrier, - no carrier
+
+ GigabitEthernet1/0/10 current state: DOWN
+ IP Packet Frame Type: PKTFMT_ETHNT_2, Hardware Address: e8f7-245d-338d
+ Description: GigabitEthernet1/0/10 Interface
+ Loopback is not set
+ Media type is twisted pair, Port hardware type is 1000_BASE_T
+ Unknown-speed mode, unknown-duplex mode
+ Link speed type is autonegotiation, link duplex type is autonegotiation
+ Flow-control is not enabled
+ The Maximum Frame Length is 9600
+ Broadcast MAX-ratio: 100%
+ Unicast MAX-ratio: 100%
+ Multicast MAX-ratio: 100%
+ PVID: 20
+ Mdi type: auto
+ Port link-type: access
+  Tagged   VLAN ID : none
+  Untagged VLAN ID : 20
+ Port priority: 0
+ Last clearing of counters:  Never
+ Peak value of input: 0 bytes/sec, at 00-00-00 00:00:00
+ Peak value of output: 0 bytes/sec, at 00-00-00 00:00:00
+ Last 300 seconds input:  0 packets/sec 0 bytes/sec -%
+ Last 300 seconds output:  0 packets/sec 0 bytes/sec -%
+ Input (total):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input (normal):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input:  0 input errors, 0 runts, - giants, - throttles
+	 0 CRC, - frame, 0 overruns, 0 aborts
+	 - ignored, - parity errors
+ Output (total): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output (normal): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output: 0 output errors, - underruns, - buffer failures
+	 0 aborts, 0 deferred, 0 collisions, - late collisions
+	 - lost carrier, - no carrier
+
+ GigabitEthernet1/0/11 current state: DOWN
+ IP Packet Frame Type: PKTFMT_ETHNT_2, Hardware Address: e8f7-245d-338e
+ Description: GigabitEthernet1/0/11 Interface
+ Loopback is not set
+ Media type is twisted pair, Port hardware type is 1000_BASE_T
+ Unknown-speed mode, unknown-duplex mode
+ Link speed type is autonegotiation, link duplex type is autonegotiation
+ Flow-control is not enabled
+ The Maximum Frame Length is 9600
+ Broadcast MAX-ratio: 100%
+ Unicast MAX-ratio: 100%
+ Multicast MAX-ratio: 100%
+ PVID: 10
+ Mdi type: auto
+ Port link-type: access
+  Tagged   VLAN ID : none
+  Untagged VLAN ID : 10
+ Port priority: 0
+ Last clearing of counters:  Never
+ Peak value of input: 0 bytes/sec, at 00-00-00 00:00:00
+ Peak value of output: 0 bytes/sec, at 00-00-00 00:00:00
+ Last 300 seconds input:  0 packets/sec 0 bytes/sec -%
+ Last 300 seconds output:  0 packets/sec 0 bytes/sec -%
+ Input (total):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input (normal):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input:  0 input errors, 0 runts, - giants, - throttles
+	 0 CRC, - frame, 0 overruns, 0 aborts
+	 - ignored, - parity errors
+ Output (total): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output (normal): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output: 0 output errors, - underruns, - buffer failures
+	 0 aborts, 0 deferred, 0 collisions, - late collisions
+	 - lost carrier, - no carrier
+
+ GigabitEthernet1/0/12 current state: DOWN
+ IP Packet Frame Type: PKTFMT_ETHNT_2, Hardware Address: e8f7-245d-338f
+ Description: GigabitEthernet1/0/12 Interface
+ Loopback is not set
+ Media type is twisted pair, Port hardware type is 1000_BASE_T
+ Unknown-speed mode, unknown-duplex mode
+ Link speed type is autonegotiation, link duplex type is autonegotiation
+ Flow-control is not enabled
+ The Maximum Frame Length is 9600
+ Broadcast MAX-ratio: 100%
+ Unicast MAX-ratio: 100%
+ Multicast MAX-ratio: 100%
+ PVID: 20
+ Mdi type: auto
+ Port link-type: access
+  Tagged   VLAN ID : none
+  Untagged VLAN ID : 20
+ Port priority: 0
+ Last clearing of counters:  Never
+ Peak value of input: 0 bytes/sec, at 00-00-00 00:00:00
+ Peak value of output: 0 bytes/sec, at 00-00-00 00:00:00
+ Last 300 seconds input:  0 packets/sec 0 bytes/sec -%
+ Last 300 seconds output:  0 packets/sec 0 bytes/sec -%
+ Input (total):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input (normal):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input:  0 input errors, 0 runts, - giants, - throttles
+	 0 CRC, - frame, 0 overruns, 0 aborts
+	 - ignored, - parity errors
+ Output (total): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output (normal): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output: 0 output errors, - underruns, - buffer failures
+	 0 aborts, 0 deferred, 0 collisions, - late collisions
+	 - lost carrier, - no carrier
+
+ GigabitEthernet1/0/13 current state: DOWN
+ IP Packet Frame Type: PKTFMT_ETHNT_2, Hardware Address: e8f7-245d-3390
+ Description: GigabitEthernet1/0/13 Interface
+ Loopback is not set
+ Media type is twisted pair, Port hardware type is 1000_BASE_T
+ Unknown-speed mode, unknown-duplex mode
+ Link speed type is autonegotiation, link duplex type is autonegotiation
+ Flow-control is not enabled
+ The Maximum Frame Length is 9600
+ Broadcast MAX-ratio: 100%
+ Unicast MAX-ratio: 100%
+ Multicast MAX-ratio: 100%
+ PVID: 10
+ Mdi type: auto
+ Port link-type: access
+  Tagged   VLAN ID : none
+  Untagged VLAN ID : 10
+ Port priority: 0
+ Last clearing of counters:  Never
+ Peak value of input: 0 bytes/sec, at 00-00-00 00:00:00
+ Peak value of output: 0 bytes/sec, at 00-00-00 00:00:00
+ Last 300 seconds input:  0 packets/sec 0 bytes/sec -%
+ Last 300 seconds output:  0 packets/sec 0 bytes/sec -%
+ Input (total):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input (normal):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input:  0 input errors, 0 runts, - giants, - throttles
+	 0 CRC, - frame, 0 overruns, 0 aborts
+	 - ignored, - parity errors
+ Output (total): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output (normal): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output: 0 output errors, - underruns, - buffer failures
+	 0 aborts, 0 deferred, 0 collisions, - late collisions
+	 - lost carrier, - no carrier
+
+ GigabitEthernet1/0/14 current state: DOWN
+ IP Packet Frame Type: PKTFMT_ETHNT_2, Hardware Address: e8f7-245d-3391
+ Description: GigabitEthernet1/0/14 Interface
+ Loopback is not set
+ Media type is twisted pair, Port hardware type is 1000_BASE_T
+ Unknown-speed mode, unknown-duplex mode
+ Link speed type is autonegotiation, link duplex type is autonegotiation
+ Flow-control is not enabled
+ The Maximum Frame Length is 9600
+ Broadcast MAX-ratio: 100%
+ Unicast MAX-ratio: 100%
+ Multicast MAX-ratio: 100%
+ PVID: 20
+ Mdi type: auto
+ Port link-type: access
+  Tagged   VLAN ID : none
+  Untagged VLAN ID : 20
+ Port priority: 0
+ Last clearing of counters:  Never
+ Peak value of input: 0 bytes/sec, at 00-00-00 00:00:00
+ Peak value of output: 0 bytes/sec, at 00-00-00 00:00:00
+ Last 300 seconds input:  0 packets/sec 0 bytes/sec -%
+ Last 300 seconds output:  0 packets/sec 0 bytes/sec -%
+ Input (total):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input (normal):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input:  0 input errors, 0 runts, - giants, - throttles
+	 0 CRC, - frame, 0 overruns, 0 aborts
+	 - ignored, - parity errors
+ Output (total): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output (normal): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output: 0 output errors, - underruns, - buffer failures
+	 0 aborts, 0 deferred, 0 collisions, - late collisions
+	 - lost carrier, - no carrier
+
+ GigabitEthernet1/0/15 current state: DOWN
+ IP Packet Frame Type: PKTFMT_ETHNT_2, Hardware Address: e8f7-245d-3392
+ Description: GigabitEthernet1/0/15 Interface
+ Loopback is not set
+ Media type is twisted pair, Port hardware type is 1000_BASE_T
+ Unknown-speed mode, unknown-duplex mode
+ Link speed type is autonegotiation, link duplex type is autonegotiation
+ Flow-control is not enabled
+ The Maximum Frame Length is 9600
+ Broadcast MAX-ratio: 100%
+ Unicast MAX-ratio: 100%
+ Multicast MAX-ratio: 100%
+ PVID: 10
+ Mdi type: auto
+ Port link-type: access
+  Tagged   VLAN ID : none
+  Untagged VLAN ID : 10
+ Port priority: 0
+ Last clearing of counters:  Never
+ Peak value of input: 0 bytes/sec, at 00-00-00 00:00:00
+ Peak value of output: 0 bytes/sec, at 00-00-00 00:00:00
+ Last 300 seconds input:  0 packets/sec 0 bytes/sec -%
+ Last 300 seconds output:  0 packets/sec 0 bytes/sec -%
+ Input (total):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input (normal):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input:  0 input errors, 0 runts, - giants, - throttles
+	 0 CRC, - frame, 0 overruns, 0 aborts
+	 - ignored, - parity errors
+ Output (total): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output (normal): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output: 0 output errors, - underruns, - buffer failures
+	 0 aborts, 0 deferred, 0 collisions, - late collisions
+	 - lost carrier, - no carrier
+
+ GigabitEthernet1/0/16 current state: DOWN
+ IP Packet Frame Type: PKTFMT_ETHNT_2, Hardware Address: e8f7-245d-3393
+ Description: GigabitEthernet1/0/16 Interface
+ Loopback is not set
+ Media type is twisted pair, Port hardware type is 1000_BASE_T
+ Unknown-speed mode, unknown-duplex mode
+ Link speed type is autonegotiation, link duplex type is autonegotiation
+ Flow-control is not enabled
+ The Maximum Frame Length is 9600
+ Broadcast MAX-ratio: 100%
+ Unicast MAX-ratio: 100%
+ Multicast MAX-ratio: 100%
+ PVID: 20
+ Mdi type: auto
+ Port link-type: access
+  Tagged   VLAN ID : none
+  Untagged VLAN ID : 20
+ Port priority: 0
+ Last clearing of counters:  Never
+ Peak value of input: 0 bytes/sec, at 00-00-00 00:00:00
+ Peak value of output: 0 bytes/sec, at 00-00-00 00:00:00
+ Last 300 seconds input:  0 packets/sec 0 bytes/sec -%
+ Last 300 seconds output:  0 packets/sec 0 bytes/sec -%
+ Input (total):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input (normal):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input:  0 input errors, 0 runts, - giants, - throttles
+	 0 CRC, - frame, 0 overruns, 0 aborts
+	 - ignored, - parity errors
+ Output (total): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output (normal): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output: 0 output errors, - underruns, - buffer failures
+	 0 aborts, 0 deferred, 0 collisions, - late collisions
+	 - lost carrier, - no carrier
+
+ GigabitEthernet1/0/17 current state: UP
+ IP Packet Frame Type: PKTFMT_ETHNT_2, Hardware Address: e8f7-245d-3394
+ Description: GigabitEthernet1/0/17 Interface
+ Loopback is not set
+ Media type is twisted pair, Port hardware type is 1000_BASE_T
+ 100Mbps-speed mode, full-duplex mode
+ Link speed type is autonegotiation, link duplex type is autonegotiation
+ Flow-control is not enabled
+ The Maximum Frame Length is 9600
+ Broadcast MAX-ratio: 100%
+ Unicast MAX-ratio: 100%
+ Multicast MAX-ratio: 100%
+ PVID: 10
+ Mdi type: auto
+ Port link-type: access
+  Tagged   VLAN ID : none
+  Untagged VLAN ID : 10
+ Port priority: 0
+ Last clearing of counters:  Never
+ Peak value of input: 0 bytes/sec, at 00-00-00 00:00:00
+ Peak value of output: 49 bytes/sec, at 2016-07-01 15:36:18
+ Last 300 seconds input:  0 packets/sec 0 bytes/sec 0%
+ Last 300 seconds output:  0 packets/sec 45 bytes/sec 0%
+ Input (total):  141 packets, 9024 bytes
+	 0 unicasts, 141 broadcasts, 0 multicasts, 0 pauses
+ Input (normal):  141 packets, 9024 bytes
+	 0 unicasts, 141 broadcasts, 0 multicasts, 0 pauses
+ Input:  0 input errors, 0 runts, - giants, - throttles
+	 0 CRC, - frame, 0 overruns, 0 aborts
+	 - ignored, - parity errors
+ Output (total): 139920 packets, 11546989 bytes
+	 0 unicasts, 422 broadcasts, 139498 multicasts, 0 pauses
+ Output (normal): 139920 packets, 11546989 bytes
+	 0 unicasts, 422 broadcasts, 139498 multicasts, 0 pauses
+ Output: 0 output errors, - underruns, - buffer failures
+	 0 aborts, 0 deferred, 0 collisions, - late collisions
+	 - lost carrier, - no carrier
+
+ GigabitEthernet1/0/18 current state: UP
+ IP Packet Frame Type: PKTFMT_ETHNT_2, Hardware Address: e8f7-245d-3395
+ Description: GigabitEthernet1/0/18 Interface
+ Loopback is not set
+ Media type is twisted pair, Port hardware type is 1000_BASE_T
+ 100Mbps-speed mode, full-duplex mode
+ Link speed type is autonegotiation, link duplex type is autonegotiation
+ Flow-control is not enabled
+ The Maximum Frame Length is 9600
+ Broadcast MAX-ratio: 100%
+ Unicast MAX-ratio: 100%
+ Multicast MAX-ratio: 100%
+ PVID: 20
+ Mdi type: auto
+ Port link-type: access
+  Tagged   VLAN ID : none
+  Untagged VLAN ID : 20
+ Port priority: 0
+ Last clearing of counters:  Never
+ Peak value of input: 0 bytes/sec, at 00-00-00 00:00:00
+ Peak value of output: 49 bytes/sec, at 2016-07-01 15:36:23
+ Last 300 seconds input:  0 packets/sec 0 bytes/sec 0%
+ Last 300 seconds output:  0 packets/sec 45 bytes/sec 0%
+ Input (total):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input (normal):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input:  0 input errors, 0 runts, - giants, - throttles
+	 0 CRC, - frame, 0 overruns, 0 aborts
+	 - ignored, - parity errors
+ Output (total): 139498 packets, 11519981 bytes
+	 0 unicasts, 0 broadcasts, 139498 multicasts, 0 pauses
+ Output (normal): 139498 packets, 11519981 bytes
+	 0 unicasts, 0 broadcasts, 139498 multicasts, 0 pauses
+ Output: 0 output errors, - underruns, - buffer failures
+	 0 aborts, 0 deferred, 0 collisions, - late collisions
+	 - lost carrier, - no carrier
+
+ GigabitEthernet1/0/19 current state: UP
+ IP Packet Frame Type: PKTFMT_ETHNT_2, Hardware Address: e8f7-245d-3396
+ Description: GigabitEthernet1/0/19 Interface
+ Loopback is not set
+ Media type is twisted pair, Port hardware type is 1000_BASE_T
+ 100Mbps-speed mode, full-duplex mode
+ Link speed type is autonegotiation, link duplex type is autonegotiation
+ Flow-control is not enabled
+ The Maximum Frame Length is 9600
+ Broadcast MAX-ratio: 100%
+ Unicast MAX-ratio: 100%
+ Multicast MAX-ratio: 100%
+ PVID: 10
+ Mdi type: auto
+ Port link-type: access
+  Tagged   VLAN ID : none
+  Untagged VLAN ID : 10
+ Port priority: 0
+ Last clearing of counters:  Never
+ Peak value of input: 0 bytes/sec, at 00-00-00 00:00:00
+ Peak value of output: 49 bytes/sec, at 2016-07-01 15:36:18
+ Last 300 seconds input:  0 packets/sec 0 bytes/sec 0%
+ Last 300 seconds output:  0 packets/sec 45 bytes/sec 0%
+ Input (total):  141 packets, 9024 bytes
+	 0 unicasts, 141 broadcasts, 0 multicasts, 0 pauses
+ Input (normal):  141 packets, 9024 bytes
+	 0 unicasts, 141 broadcasts, 0 multicasts, 0 pauses
+ Input:  0 input errors, 0 runts, - giants, - throttles
+	 0 CRC, - frame, 0 overruns, 0 aborts
+	 - ignored, - parity errors
+ Output (total): 139920 packets, 11546989 bytes
+	 0 unicasts, 422 broadcasts, 139498 multicasts, 0 pauses
+ Output (normal): 139920 packets, 11546989 bytes
+	 0 unicasts, 422 broadcasts, 139498 multicasts, 0 pauses
+ Output: 0 output errors, - underruns, - buffer failures
+	 0 aborts, 0 deferred, 0 collisions, - late collisions
+	 - lost carrier, - no carrier
+
+ GigabitEthernet1/0/20 current state: UP
+ IP Packet Frame Type: PKTFMT_ETHNT_2, Hardware Address: e8f7-245d-3397
+ Description: GigabitEthernet1/0/20 Interface
+ Loopback is not set
+ Media type is twisted pair, Port hardware type is 1000_BASE_T
+ 100Mbps-speed mode, full-duplex mode
+ Link speed type is autonegotiation, link duplex type is autonegotiation
+ Flow-control is not enabled
+ The Maximum Frame Length is 9600
+ Broadcast MAX-ratio: 100%
+ Unicast MAX-ratio: 100%
+ Multicast MAX-ratio: 100%
+ PVID: 20
+ Mdi type: auto
+ Port link-type: access
+  Tagged   VLAN ID : none
+  Untagged VLAN ID : 20
+ Port priority: 0
+ Last clearing of counters:  Never
+ Peak value of input: 0 bytes/sec, at 00-00-00 00:00:00
+ Peak value of output: 49 bytes/sec, at 2016-07-01 15:36:23
+ Last 300 seconds input:  0 packets/sec 0 bytes/sec 0%
+ Last 300 seconds output:  0 packets/sec 45 bytes/sec 0%
+ Input (total):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input (normal):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input:  0 input errors, 0 runts, - giants, - throttles
+	 0 CRC, - frame, 0 overruns, 0 aborts
+	 - ignored, - parity errors
+ Output (total): 139498 packets, 11519981 bytes
+	 0 unicasts, 0 broadcasts, 139498 multicasts, 0 pauses
+ Output (normal): 139498 packets, 11519981 bytes
+	 0 unicasts, 0 broadcasts, 139498 multicasts, 0 pauses
+ Output: 0 output errors, - underruns, - buffer failures
+	 0 aborts, 0 deferred, 0 collisions, - late collisions
+	 - lost carrier, - no carrier
+
+ GigabitEthernet1/0/21 current state: UP
+ IP Packet Frame Type: PKTFMT_ETHNT_2, Hardware Address: e8f7-245d-3398
+ Description: GigabitEthernet1/0/21 Interface
+ Loopback is not set
+ Media type is twisted pair, Port hardware type is 1000_BASE_T
+ 100Mbps-speed mode, full-duplex mode
+ Link speed type is autonegotiation, link duplex type is autonegotiation
+ Flow-control is not enabled
+ The Maximum Frame Length is 9600
+ Broadcast MAX-ratio: 100%
+ Unicast MAX-ratio: 100%
+ Multicast MAX-ratio: 100%
+ PVID: 10
+ Mdi type: auto
+ Port link-type: access
+  Tagged   VLAN ID : none
+  Untagged VLAN ID : 10
+ Port priority: 0
+ Last clearing of counters:  Never
+ Peak value of input: 0 bytes/sec, at 00-00-00 00:00:00
+ Peak value of output: 49 bytes/sec, at 2016-07-01 15:36:18
+ Last 300 seconds input:  0 packets/sec 0 bytes/sec 0%
+ Last 300 seconds output:  0 packets/sec 45 bytes/sec 0%
+ Input (total):  140 packets, 8960 bytes
+	 0 unicasts, 140 broadcasts, 0 multicasts, 0 pauses
+ Input (normal):  140 packets, 8960 bytes
+	 0 unicasts, 140 broadcasts, 0 multicasts, 0 pauses
+ Input:  0 input errors, 0 runts, - giants, - throttles
+	 0 CRC, - frame, 0 overruns, 0 aborts
+	 - ignored, - parity errors
+ Output (total): 139921 packets, 11547053 bytes
+	 0 unicasts, 423 broadcasts, 139498 multicasts, 0 pauses
+ Output (normal): 139921 packets, 11547053 bytes
+	 0 unicasts, 423 broadcasts, 139498 multicasts, 0 pauses
+ Output: 0 output errors, - underruns, - buffer failures
+	 0 aborts, 0 deferred, 0 collisions, - late collisions
+	 - lost carrier, - no carrier
+
+ GigabitEthernet1/0/22 current state: UP
+ IP Packet Frame Type: PKTFMT_ETHNT_2, Hardware Address: e8f7-245d-3399
+ Description: GigabitEthernet1/0/22 Interface
+ Loopback is not set
+ Media type is twisted pair, Port hardware type is 1000_BASE_T
+ 100Mbps-speed mode, full-duplex mode
+ Link speed type is autonegotiation, link duplex type is autonegotiation
+ Flow-control is not enabled
+ The Maximum Frame Length is 9600
+ Broadcast MAX-ratio: 100%
+ Unicast MAX-ratio: 100%
+ Multicast MAX-ratio: 100%
+ PVID: 20
+ Mdi type: auto
+ Port link-type: access
+  Tagged   VLAN ID : none
+  Untagged VLAN ID : 20
+ Port priority: 0
+ Last clearing of counters:  Never
+ Peak value of input: 0 bytes/sec, at 00-00-00 00:00:00
+ Peak value of output: 49 bytes/sec, at 2016-07-01 15:36:23
+ Last 300 seconds input:  0 packets/sec 0 bytes/sec 0%
+ Last 300 seconds output:  0 packets/sec 45 bytes/sec 0%
+ Input (total):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input (normal):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input:  0 input errors, 0 runts, - giants, - throttles
+	 0 CRC, - frame, 0 overruns, 0 aborts
+	 - ignored, - parity errors
+ Output (total): 139498 packets, 11519981 bytes
+	 0 unicasts, 0 broadcasts, 139498 multicasts, 0 pauses
+ Output (normal): 139498 packets, 11519981 bytes
+	 0 unicasts, 0 broadcasts, 139498 multicasts, 0 pauses
+ Output: 0 output errors, - underruns, - buffer failures
+	 0 aborts, 0 deferred, 0 collisions, - late collisions
+	 - lost carrier, - no carrier
+
+ GigabitEthernet1/0/23 current state: UP
+ IP Packet Frame Type: PKTFMT_ETHNT_2, Hardware Address: e8f7-245d-339a
+ Description: GigabitEthernet1/0/23 Interface
+ Loopback is not set
+ Media type is twisted pair, Port hardware type is 1000_BASE_T
+ 100Mbps-speed mode, full-duplex mode
+ Link speed type is autonegotiation, link duplex type is autonegotiation
+ Flow-control is not enabled
+ The Maximum Frame Length is 9600
+ Broadcast MAX-ratio: 100%
+ Unicast MAX-ratio: 100%
+ Multicast MAX-ratio: 100%
+ PVID: 10
+ Mdi type: auto
+ Port link-type: access
+  Tagged   VLAN ID : none
+  Untagged VLAN ID : 10
+ Port priority: 0
+ Last clearing of counters:  Never
+ Peak value of input: 0 bytes/sec, at 00-00-00 00:00:00
+ Peak value of output: 49 bytes/sec, at 2016-07-01 15:36:18
+ Last 300 seconds input:  0 packets/sec 0 bytes/sec 0%
+ Last 300 seconds output:  0 packets/sec 45 bytes/sec 0%
+ Input (total):  141 packets, 9024 bytes
+	 0 unicasts, 141 broadcasts, 0 multicasts, 0 pauses
+ Input (normal):  141 packets, 9024 bytes
+	 0 unicasts, 141 broadcasts, 0 multicasts, 0 pauses
+ Input:  0 input errors, 0 runts, - giants, - throttles
+	 0 CRC, - frame, 0 overruns, 0 aborts
+	 - ignored, - parity errors
+ Output (total): 139920 packets, 11546989 bytes
+	 0 unicasts, 422 broadcasts, 139498 multicasts, 0 pauses
+ Output (normal): 139920 packets, 11546989 bytes
+	 0 unicasts, 422 broadcasts, 139498 multicasts, 0 pauses
+ Output: 0 output errors, - underruns, - buffer failures
+	 0 aborts, 0 deferred, 0 collisions, - late collisions
+	 - lost carrier, - no carrier
+
+ GigabitEthernet1/0/24 current state: UP
+ IP Packet Frame Type: PKTFMT_ETHNT_2, Hardware Address: e8f7-245d-339b
+ Description: GigabitEthernet1/0/24 Interface
+ Loopback is not set
+ Media type is twisted pair, Port hardware type is 1000_BASE_T
+ 100Mbps-speed mode, full-duplex mode
+ Link speed type is autonegotiation, link duplex type is autonegotiation
+ Flow-control is not enabled
+ The Maximum Frame Length is 9600
+ Broadcast MAX-ratio: 100%
+ Unicast MAX-ratio: 100%
+ Multicast MAX-ratio: 100%
+ PVID: 20
+ Mdi type: auto
+ Port link-type: access
+  Tagged   VLAN ID : none
+  Untagged VLAN ID : 20
+ Port priority: 0
+ Last clearing of counters:  Never
+ Peak value of input: 0 bytes/sec, at 00-00-00 00:00:00
+ Peak value of output: 49 bytes/sec, at 2016-07-01 15:36:23
+ Last 300 seconds input:  0 packets/sec 0 bytes/sec 0%
+ Last 300 seconds output:  0 packets/sec 45 bytes/sec 0%
+ Input (total):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input (normal):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input:  0 input errors, 0 runts, - giants, - throttles
+	 0 CRC, - frame, 0 overruns, 0 aborts
+	 - ignored, - parity errors
+ Output (total): 139498 packets, 11519981 bytes
+	 0 unicasts, 0 broadcasts, 139498 multicasts, 0 pauses
+ Output (normal): 139498 packets, 11519981 bytes
+	 0 unicasts, 0 broadcasts, 139498 multicasts, 0 pauses
+ Output: 0 output errors, - underruns, - buffer failures
+	 0 aborts, 0 deferred, 0 collisions, - late collisions
+	 - lost carrier, - no carrier
+
+ GigabitEthernet1/0/25 current state: DOWN
+ IP Packet Frame Type: PKTFMT_ETHNT_2, Hardware Address: e8f7-245d-339c
+ Description: GigabitEthernet1/0/25 Interface
+ Loopback is not set
+ Media type is optical fiber, Port hardware type is No connector
+ Unknown-speed mode, unknown-duplex mode
+ Link speed type is autonegotiation, link duplex type is autonegotiation
+ Flow-control is not enabled
+ The Maximum Frame Length is 9600
+ Broadcast MAX-ratio: 100%
+ Unicast MAX-ratio: 100%
+ Multicast MAX-ratio: 100%
+ PVID: 1
+ Port link-type: access
+  Tagged   VLAN ID : none
+  Untagged VLAN ID : 1
+ Port priority: 0
+ Last clearing of counters:  Never
+ Peak value of input: 0 bytes/sec, at 00-00-00 00:00:00
+ Peak value of output: 0 bytes/sec, at 00-00-00 00:00:00
+ Last 300 seconds input:  0 packets/sec 0 bytes/sec -%
+ Last 300 seconds output:  0 packets/sec 0 bytes/sec -%
+ Input (total):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input (normal):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input:  0 input errors, 0 runts, - giants, - throttles
+	 0 CRC, - frame, 0 overruns, 0 aborts
+	 - ignored, - parity errors
+ Output (total): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output (normal): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output: 0 output errors, - underruns, - buffer failures
+	 0 aborts, 0 deferred, 0 collisions, - late collisions
+	 - lost carrier, - no carrier
+
+ GigabitEthernet1/0/26 current state: DOWN
+ IP Packet Frame Type: PKTFMT_ETHNT_2, Hardware Address: e8f7-245d-339d
+ Description: GigabitEthernet1/0/26 Interface
+ Loopback is not set
+ Media type is optical fiber, Port hardware type is No connector
+ Unknown-speed mode, unknown-duplex mode
+ Link speed type is autonegotiation, link duplex type is autonegotiation
+ Flow-control is not enabled
+ The Maximum Frame Length is 9600
+ Broadcast MAX-ratio: 100%
+ Unicast MAX-ratio: 100%
+ Multicast MAX-ratio: 100%
+ PVID: 1
+ Port link-type: access
+  Tagged   VLAN ID : none
+  Untagged VLAN ID : 1
+ Port priority: 0
+ Last clearing of counters:  Never
+ Peak value of input: 0 bytes/sec, at 00-00-00 00:00:00
+ Peak value of output: 0 bytes/sec, at 00-00-00 00:00:00
+ Last 300 seconds input:  0 packets/sec 0 bytes/sec -%
+ Last 300 seconds output:  0 packets/sec 0 bytes/sec -%
+ Input (total):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input (normal):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input:  0 input errors, 0 runts, - giants, - throttles
+	 0 CRC, - frame, 0 overruns, 0 aborts
+	 - ignored, - parity errors
+ Output (total): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output (normal): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output: 0 output errors, - underruns, - buffer failures
+	 0 aborts, 0 deferred, 0 collisions, - late collisions
+	 - lost carrier, - no carrier
+
+ GigabitEthernet1/0/27 current state: DOWN
+ IP Packet Frame Type: PKTFMT_ETHNT_2, Hardware Address: e8f7-245d-339e
+ Description: GigabitEthernet1/0/27 Interface
+ Loopback is not set
+ Media type is optical fiber, Port hardware type is No connector
+ Unknown-speed mode, unknown-duplex mode
+ Link speed type is autonegotiation, link duplex type is autonegotiation
+ Flow-control is not enabled
+ The Maximum Frame Length is 9600
+ Broadcast MAX-ratio: 100%
+ Unicast MAX-ratio: 100%
+ Multicast MAX-ratio: 100%
+ PVID: 1
+ Port link-type: access
+  Tagged   VLAN ID : none
+  Untagged VLAN ID : 1
+ Port priority: 0
+ Last clearing of counters:  Never
+ Peak value of input: 0 bytes/sec, at 00-00-00 00:00:00
+ Peak value of output: 0 bytes/sec, at 00-00-00 00:00:00
+ Last 300 seconds input:  0 packets/sec 0 bytes/sec -%
+ Last 300 seconds output:  0 packets/sec 0 bytes/sec -%
+ Input (total):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input (normal):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input:  0 input errors, 0 runts, - giants, - throttles
+	 0 CRC, - frame, 0 overruns, 0 aborts
+	 - ignored, - parity errors
+ Output (total): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output (normal): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output: 0 output errors, - underruns, - buffer failures
+	 0 aborts, 0 deferred, 0 collisions, - late collisions
+	 - lost carrier, - no carrier
+
+ GigabitEthernet1/0/28 current state: DOWN
+ IP Packet Frame Type: PKTFMT_ETHNT_2, Hardware Address: e8f7-245d-339f
+ Description: GigabitEthernet1/0/28 Interface
+ Loopback is not set
+ Media type is optical fiber, Port hardware type is No connector
+ Unknown-speed mode, unknown-duplex mode
+ Link speed type is autonegotiation, link duplex type is autonegotiation
+ Flow-control is not enabled
+ The Maximum Frame Length is 9600
+ Broadcast MAX-ratio: 100%
+ Unicast MAX-ratio: 100%
+ Multicast MAX-ratio: 100%
+ PVID: 1
+ Port link-type: access
+  Tagged   VLAN ID : none
+  Untagged VLAN ID : 1
+ Port priority: 0
+ Last clearing of counters:  Never
+ Peak value of input: 0 bytes/sec, at 00-00-00 00:00:00
+ Peak value of output: 0 bytes/sec, at 00-00-00 00:00:00
+ Last 300 seconds input:  0 packets/sec 0 bytes/sec -%
+ Last 300 seconds output:  0 packets/sec 0 bytes/sec -%
+ Input (total):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input (normal):  0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Input:  0 input errors, 0 runts, - giants, - throttles
+	 0 CRC, - frame, 0 overruns, 0 aborts
+	 - ignored, - parity errors
+ Output (total): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output (normal): 0 packets, 0 bytes
+	 0 unicasts, 0 broadcasts, 0 multicasts, 0 pauses
+ Output: 0 output errors, - underruns, - buffer failures
+	 0 aborts, 0 deferred, 0 collisions, - late collisions
+	 - lost carrier, - no carrier
+
+NULL0 current state: UP
+Line protocol current state: UP (spoofing)
+Description: NULL0 Interface
+The Maximum Transmit Unit is 1500
+Internet protocol processing : disabled
+Physical is NULL DEV
+ Last clearing of counters:  Never
+    Last 300 seconds input rate: 0 bytes/sec, 0 bits/sec, 0 packets/sec
+    Last 300 seconds output rate: 0 bytes/sec, 0 bits/sec, 0 packets/sec
+    0 packets input, 0 bytes, 0 drops
+    0 packets output, 0 bytes, 0 drops
+
+Vlan-interface1 current state: UP
+Line protocol current state: UP
+Description: Vlan-interface1 Interface
+The Maximum Transmit Unit is 1500
+Internet Address is 192.168.188.137/24, acquired via DHCP
+IP Packet Frame Type: PKTFMT_ETHNT_2,  Hardware Address: e8f7-245d-3382
+IPv6 Packet Frame Type: PKTFMT_ETHNT_2,  Hardware Address: e8f7-245d-3382
+ Last clearing of counters:  Never
+    Last 300 seconds input rate: 0 bytes/sec, 0 bits/sec, 0 packets/sec
+    Last 300 seconds output rate: 0 bytes/sec, 0 bits/sec, 0 packets/sec
+    0 packets input, 0 bytes, 0 drops
+    0 packets output, 0 bytes, 0 drops
+
+==================================================
+  ===============display memory===============
+==================================================
+System Total Memory(bytes): 66131280
+Total Used Memory(bytes): 27741412
+Used Rate: 41%
+======================================================================
+  ===============running task information on slot 1===============
+======================================================================
+name      Tid Vid TSize Mod priority    Status       Total/Max/Last(Millsecs)
+================================================================================
+ VFS 83275e00   1   40   N   100        queblock          0/         0/        0
+ CBU 83275a00   2   40   N   100        queblock          0/         0/        0
+VIDL 83275800   3   40   P     1    preemptready  236686377/         9/        2
+TICK 83275600   4   40   P   250    preemptready    1539436/         0/        0
+STMR 83275400   5   40   N   150      eventblock      76656/        15/        0
+SLdT 83275200   6   40   N   180      eventblock          0/         0/        0
+LOS  83275000   7    8   N   100        semblock     105285/         0/        0
+WA_M 8025fe00   8    8   N   100        semblock    8539136/        71/       34
+Link 8025fc00   9    8   N   100      eventblock          0/         0/        0
+SYSM 8025fa00  10   16   N   100      eventblock       6514/         0/        0
+ LED 8025f800  11   16   N   180      eventblock      16361/         0/        0
+LED3 8025f600  12   16   N   180      eventblock      47356/         0/        0
+LPDT 8025f400  13    8   N   100           sleep        196/         0/        0
+MacV 8025f200  14   40   N   100           sleep       3680/         0/        0
+AtkT 8025f000  15    8   N   100           sleep       1161/         0/        0
+NICR 8025ee00  16   16   N   100      eventblock     239013/       164/        1
+Flow 8025ec00  17   40   N   100           sleep     267553/         6/        5
+LinT 8025ea00  18   40   N   100      eventblock     197804/         4/        0
+Rout 8025e800  19   40   N   100           sleep      92113/         1/        1
+VMON 8025e600  20   40   N   100      eventblock          0/         0/        0
+  VP 8025e400  21   40   N   140      eventblock        112/         0/        0
+IPCB 8025e200  22   40   N   140      eventblock     260444/         0/        0
+IPCD 8025e000  23   40   N   100      eventblock          0/         0/        0
+RPCQ 8025de00  24   40   N   140      eventblock     748306/         0/        0
+RPCD 8025dc00  25   40   N   140      eventblock          0/         0/        0
+ PAT 8025da00  26   40   N   100      eventblock          0/         0/        0
+MGRP 8025d800  27   40   N   100      eventblock          0/         0/        0
+IPCM 8025d600  28   40   N   100      eventblock      11547/         0/        0
+ CFM 8025d400  29   40   N   100        queblock       5049/       671/      105
+ CFA 8025d200  30   40   N   100        queblock          0/         0/        0
+LINE 8025d000  31   40   N   100      eventblock          0/         0/        0
+INFO 8025ce00  32   40   N   100      eventblock         92/         2/        1
+INFA 8025cc00  33   40   N   100      eventblock          0/         0/        0
+DrvT 8025ca00  34   40   N   100      eventblock      33022/         0/        0
+HAMT 8025c800  35   40   N   110      eventblock          1/         0/        0
+HACT 8025c600  36   40   N   110      eventblock          0/         0/        0
+ DEV 8025c400  37   40   N   140      eventblock      40771/         0/        0
+WORK 8025c200  38   40   N   100      eventblock          0/         0/        0
+SOCK 8025c000  39   40   N   100      eventblock       2408/         5/        0
+ ACL 8025be00  40   40   N   100      eventblock      22041/         0/        0
+VLAN 8025bc00  41   40   N   100      eventblock         38/         1/        0
+ mac 8025ba00  42   40   N   100      eventblock          6/         5/        5
+MacT 8025b800  43   40   N   100      eventblock       7458/         0/        0
+AgeT 8025b600  44   40   N   100      eventblock      30632/         4/        0
+LAGG 8025b400  45   40   N   140      eventblock      12961/        10/        0
+MSTP 8025b200  46   40   N   100      eventblock     486845/     14730/        0
+GARP 8025b000  47   40   N   100      eventblock     119016/         0/        0
+CLST 8025ae00  48   40   N   100      eventblock      45330/         0/        0
+ NDP 8025ac00  49   40   N   100      eventblock      26067/         2/        0
+NTDP 8025aa00  50   40   N   100      eventblock      13912/         0/        0
+HABP 8025a800  51   40   N   100      eventblock      10791/         0/        0
+LLDP 8025a600  52   40   N   100      eventblock     299589/     14730/        0
+ qos 8025a400  53   40   N   100      eventblock         43/         0/        0
+ ARP 8025a200  54   40   N   100      eventblock     170690/       115/        0
+  IP 8025a000  55   40   N   100      eventblock     856773/         2/        0
+FSLH 80259e00  56   40   N   100      eventblock      16327/         0/        0
+FSLR 80259c00  57   40   N   100      eventblock      95489/         0/        0
+HTTP 80259a00  58   20   N   100      eventblock        212/        10/        0
+NTPT 80259800  59   40   N   100      eventblock      32763/         1/        0
+VTYD 80259600  60   40   N   100      eventblock     115264/       101/        0
+DHCC 80259400  61   40   N   100      eventblock          9/         2/        0
+DHCP 80259200  62   40   N   100      eventblock          0/         0/        0
+DHSE 80259000  63   40   N   100      eventblock         18/         0/        0
+DHC6 8001ee00  64   40   N   100      eventblock          0/         0/        0
+DSP6 8001ec00  65   40   N   100      eventblock          0/         0/        0
+FIB6 8001ea00  66   40   N   100      eventblock          0/         0/        0
+ FIB 8001e800  67   40   N   100      eventblock         14/         3/        2
+  ND 8001e600  68   40   N   100      eventblock     223227/     14729/        0
+AGNT 8001e400  69   40   N   100      eventblock          1/         0/        0
+TRAP 8001e200  70   40   N   100      eventblock          1/         0/        0
+DT1X 8001e000  71   40   N   100      eventblock          0/         0/        0
+ ACM 8001de00  72   40   N   100      eventblock      49784/         0/        0
+  LS 8001dc00  73   40   N   100           sleep      73764/         9/        0
+RDSO 8001da00  74   40   N   100      eventblock          0/         0/        0
+ RDS 8001d800  75   40   N   100           sleep      51251/         0/        0
+  SC 8001d600  76   40   N   100      eventblock       1128/         1/        0
+ TAC 8001d400  77   40   N   100      eventblock          0/         0/        0
+PFLT 8001d200  78   40   N   100      eventblock          0/         0/        0
+MACA 8001d000  79   40   N   100      eventblock          0/         0/        0
+ NAT 8001ce00  80   40   N   100      eventblock       7515/         0/        0
+ PKI 8001cc00  81   40   N   100      eventblock          9/         0/        0
+IPGD 8001ca00  82   40   N   100      eventblock          0/         0/        0
+PKEY 8001c800  83   40   N   100      eventblock          0/         0/        0
+PSEC 8001c600  84   40   N   100      eventblock          1/         0/        0
+IGSP 8001c400  85   40   N   100      eventblock         82/         0/        0
+STND 8001c200  86    4   N   100      eventblock      43971/         0/        0
+ROUT 8001c000  87   40   N   100      eventblock    1173856/         3/        0
+IFNT 80001e00  88   40   N   100      eventblock      42786/     14729/        0
+IFUD 80001c00  89   40   N   100      eventblock          0/         0/        0
+WEBS 80001a00  90   40   N   100      eventblock        568/         5/        0
+HDQ0 80001800  91   20   N   100         running       3687/       302/        2
+=====================================================
+  ===============display logbuffer===============
+=====================================================
+Logging buffer configuration and contents:enabled
+Allowed max buffer size : 1024
+Actual buffer size : 512
+Channel number : 4 , Channel name : logbuffer
+Dropped messages : 0
+Overwritten messages : 0
+Current messages : 190
+
+%Apr 26 12:00:12:269 2000 HP 1920G Switch left IC/6/SYS_RESTART: System restarted --
+HP Platform Software.
+%Apr 26 12:00:20:441 2000 HP 1920G Switch left IFNET/3/LINK_UPDOWN: Aux0/0/1 link status is UP.
+%Apr 26 13:00:23:402 2000 HP 1920G Switch left MSTP/6/MSTP_ENABLE: STP is now enabled on the device.
+%Apr 26 13:00:28:652 2000 HP 1920G Switch left IFNET/3/LINK_UPDOWN: GigabitEthernet1/0/21 link status is UP.
+%Apr 26 13:00:28:653 2000 HP 1920G Switch left IFNET/3/LINK_UPDOWN: GigabitEthernet1/0/23 link status is UP.
+%Apr 26 13:00:28:665 2000 HP 1920G Switch left MSTP/6/MSTP_FORWARDING: Instance 0's port GigabitEthernet1/0/21 has been set to forwarding state.
+%Apr 26 13:00:28:665 2000 HP 1920G Switch left MSTP/6/MSTP_FORWARDING: Instance 0's port GigabitEthernet1/0/23 has been set to forwarding state.
+%Apr 26 13:00:28:678 2000 HP 1920G Switch left IFNET/3/LINK_UPDOWN: GigabitEthernet1/0/17 link status is UP.
+%Apr 26 13:00:28:685 2000 HP 1920G Switch left MSTP/6/MSTP_FORWARDING: Instance 0's port GigabitEthernet1/0/17 has been set to forwarding state.
+%Apr 26 13:00:28:826 2000 HP 1920G Switch left IFNET/3/LINK_UPDOWN: GigabitEthernet1/0/19 link status is UP.
+%Apr 26 13:00:28:833 2000 HP 1920G Switch left MSTP/6/MSTP_FORWARDING: Instance 0's port GigabitEthernet1/0/19 has been set to forwarding state.
+%Apr 26 13:00:28:946 2000 HP 1920G Switch left IFNET/3/LINK_UPDOWN: GigabitEthernet1/0/20 link status is UP.
+%Apr 26 13:00:28:946 2000 HP 1920G Switch left IFNET/3/LINK_UPDOWN: GigabitEthernet1/0/24 link status is UP.
+%Apr 26 13:00:28:958 2000 HP 1920G Switch left MSTP/6/MSTP_FORWARDING: Instance 0's port GigabitEthernet1/0/20 has been set to forwarding state.
+%Apr 26 13:00:28:959 2000 HP 1920G Switch left MSTP/6/MSTP_FORWARDING: Instance 0's port GigabitEthernet1/0/24 has been set to forwarding state.
+%Apr 26 13:00:28:962 2000 HP 1920G Switch left IFNET/3/LINK_UPDOWN: GigabitEthernet1/0/22 link status is UP.
+%Apr 26 13:00:28:969 2000 HP 1920G Switch left MSTP/6/MSTP_FORWARDING: Instance 0's port GigabitEthernet1/0/22 has been set to forwarding state.
+%Apr 26 13:00:29:119 2000 HP 1920G Switch left IFNET/3/LINK_UPDOWN: GigabitEthernet1/0/18 link status is UP.
+%Apr 26 13:00:29:126 2000 HP 1920G Switch left MSTP/6/MSTP_FORWARDING: Instance 0's port GigabitEthernet1/0/18 has been set to forwarding state.
+%Apr 26 13:00:29:169 2000 HP 1920G Switch left IFNET/3/LINK_UPDOWN: GigabitEthernet1/0/1 link status is UP.
+%Apr 26 13:00:29:177 2000 HP 1920G Switch left MSTP/6/MSTP_FORWARDING: Instance 0's port GigabitEthernet1/0/1 has been set to forwarding state.
+%Apr 26 13:00:29:177 2000 HP 1920G Switch left IFNET/3/LINK_UPDOWN: Vlan-interface1 link status is UP.
+%Apr 26 13:00:29:177 2000 HP 1920G Switch left IFNET/5/LINEPROTO_UPDOWN: Line protocol on the interface Vlan-interface1 is UP.
+%Apr 26 13:00:29:468 2000 HP 1920G Switch left MSTP/6/MSTP_DETECTED_TC: Instance 0's port GigabitEthernet1/0/1 detected a topology change.
+%Apr 26 13:00:29:719 2000 HP 1920G Switch left IFNET/3/LINK_UPDOWN: GigabitEthernet1/0/2 link status is UP.
+%Apr 26 13:00:29:727 2000 HP 1920G Switch left MSTP/6/MSTP_FORWARDING: Instance 0's port GigabitEthernet1/0/2 has been set to forwarding state.
+%Apr 26 13:00:29:737 2000 HP 1920G Switch left MSTP/6/MSTP_DETECTED_TC: Instance 0's port GigabitEthernet1/0/2 detected a topology change.
+%Apr 26 13:00:29:738 2000 HP 1920G Switch left MSTP/6/MSTP_DISCARDING: Instance 0's port GigabitEthernet1/0/2 has been set to discarding state.
+%Apr 26 13:00:29:749 2000 HP 1920G Switch left MSTP/6/MSTP_NOTIFIED_TC: Instance 0's port GigabitEthernet1/0/1 was notified of a topology change.
+%Apr 26 13:00:30:466 2000 HP 1920G Switch left LLDP/6/LLDP_CREATE_NEIGHBOR: New neighbor created on Port GigabitEthernet1/0/1 (IfIndex 18874368), Chassis ID is 5c8a-389e-e572, Port ID is GigabitEthernet1/0/1.
+%Apr 26 13:00:30:467 2000 HP 1920G Switch left LLDP/6/LLDP_CREATE_NEIGHBOR: New neighbor created on Port GigabitEthernet1/0/2 (IfIndex 18878464), Chassis ID is 5c8a-389e-e572, Port ID is GigabitEthernet1/0/2.
+%Apr 26 13:00:31:466 2000 HP 1920G Switch left MSTP/6/MSTP_NOTIFIED_TC: Instance 0's port GigabitEthernet1/0/1 was notified of a topology change.
+%Apr 26 13:00:59:448 2000 HP 1920G Switch left SC/6/SC_AAA_LAUNCH: -AAAType=AUTHEN-AAAScheme= local-Service=login-UserName=admin@system; AAA launched.
+%Apr 26 13:00:59:448 2000 HP 1920G Switch left SC/6/SC_AAA_SUCCESS: -AAAType=AUTHEN-AAAScheme= local-Service=login-UserName=admin@system; AAA is successful.
+%Apr 26 13:00:59:448 2000 HP 1920G Switch left SC/6/SC_AAA_LAUNCH: -AAAType=AUTHOR-AAAScheme= local-Service=login-UserName=admin@system; AAA launched.
+%Apr 26 13:00:59:448 2000 HP 1920G Switch left SC/6/SC_AAA_SUCCESS: -AAAType=AUTHOR-AAAScheme= local-Service=login-UserName=admin@system; AAA is successful.
+%Apr 26 13:00:59:450 2000 HP 1920G Switch left SC/6/SC_AAA_LAUNCH: -AAAType=ACCOUNT-AAAScheme= local-Service=login-UserName=admin@system; AAA launched.
+%Apr 26 13:00:59:450 2000 HP 1920G Switch left SC/6/SC_AAA_SUCCESS: -AAAType=ACCOUNT-AAAScheme= local-Service=login-UserName=admin@system; AAA is successful.
+%Apr 26 13:00:59:458 2000 HP 1920G Switch left WEB/4/WEBOPT_LOGIN_SUC: admin logged in from 192.168.188.103
+%Jul  1 15:32:45:365 2016 HP 1920G Switch left NTP/5/NTP_CHANGE_LEAP: System Leap Indicator changed from 3 to 0 after clock update.
+%Jul  1 15:32:45:365 2016 HP 1920G Switch left NTP/5/NTP_CHANGE_STRATUM: System stratum changed from 16 to 3 after clock update.
+%Jul  1 15:32:47:968 2016 HP 1920G Switch left WEB/4/WEBOPT_LOGOUT: admin logged out from 192.168.188.103
+%Jul  1 15:33:04:141 2016 HP 1920G Switch left SC/6/SC_AAA_LAUNCH: -AAAType=AUTHEN-AAAScheme= local-Service=login-UserName=admin@system; AAA launched.
+%Jul  1 15:33:04:142 2016 HP 1920G Switch left SC/6/SC_AAA_SUCCESS: -AAAType=AUTHEN-AAAScheme= local-Service=login-UserName=admin@system; AAA is successful.
+%Jul  1 15:33:04:142 2016 HP 1920G Switch left SC/6/SC_AAA_LAUNCH: -AAAType=AUTHOR-AAAScheme= local-Service=login-UserName=admin@system; AAA launched.
+%Jul  1 15:33:04:142 2016 HP 1920G Switch left SC/6/SC_AAA_SUCCESS: -AAAType=AUTHOR-AAAScheme= local-Service=login-UserName=admin@system; AAA is successful.
+%Jul  1 15:33:04:143 2016 HP 1920G Switch left SC/6/SC_AAA_LAUNCH: -AAAType=ACCOUNT-AAAScheme= local-Service=login-UserName=admin@system; AAA launched.
+%Jul  1 15:33:04:144 2016 HP 1920G Switch left SC/6/SC_AAA_SUCCESS: -AAAType=ACCOUNT-AAAScheme= local-Service=login-UserName=admin@system; AAA is successful.
+%Jul  1 15:33:04:151 2016 HP 1920G Switch left WEB/4/WEBOPT_LOGIN_SUC: admin logged in from 192.168.188.103
+%Jul  1 15:34:00:627 2016 HP 1920G Switch left CFGMAN/5/CFGMAN_CFGCHANGED: -EventIndex=1-CommandSource=1-ConfigSource=2-ConfigDestination=4; Configuration is changed.
+%Jul  1 15:34:00:627 2016 HP 1920G Switch left CFM/5/WEBOPT_CFM_SAVELOG: (by admin via web from host 192.168.188.103) Configuration is saved successfully.
+%Jul  1 15:34:00:628 2016 HP 1920G Switch left CFM/5/CFM_SAVECONFIG_SUCCESSFULLY: Configuration is saved successfully.
+%Jul  1 15:41:31:934 2016 HP 1920G Switch left CFGMAN/5/CFGMAN_CFGCHANGED: -EventIndex=2-CommandSource=2-ConfigSource=4-ConfigDestination=2; Configuration is changed.
+%Jul  1 16:21:32:017 2016 HP 1920G Switch left CFGMAN/5/CFGMAN_CFGCHANGED: -EventIndex=3-CommandSource=2-ConfigSource=4-ConfigDestination=2; Configuration is changed.
+%Jul  1 16:22:19:610 2016 HP 1920G Switch left SC/6/SC_AAA_LAUNCH: -AAAType=AUTHEN-AAAScheme= local-Service=login-UserName=admin@system; AAA launched.
+%Jul  1 16:22:19:610 2016 HP 1920G Switch left SC/6/SC_AAA_SUCCESS: -AAAType=AUTHEN-AAAScheme= local-Service=login-UserName=admin@system; AAA is successful.
+%Jul  1 16:22:19:610 2016 HP 1920G Switch left SC/6/SC_AAA_LAUNCH: -AAAType=AUTHOR-AAAScheme= local-Service=login-UserName=admin@system; AAA launched.
+%Jul  1 16:22:19:611 2016 HP 1920G Switch left SC/6/SC_AAA_SUCCESS: -AAAType=AUTHOR-AAAScheme= local-Service=login-UserName=admin@system; AAA is successful.
+%Jul  1 16:22:19:611 2016 HP 1920G Switch left SC/6/SC_AAA_LAUNCH: -AAAType=ACCOUNT-AAAScheme= local-Service=login-UserName=admin@system; AAA launched.
+%Jul  1 16:22:19:612 2016 HP 1920G Switch left SC/6/SC_AAA_SUCCESS: -AAAType=ACCOUNT-AAAScheme= local-Service=login-UserName=admin@system; AAA is successful.
+%Jul  1 16:22:19:630 2016 HP 1920G Switch left SSH/6/SSH_LOGIN: STEL user admin (IP: 192.168.188.103) logged in successfully.
+%Jul  1 16:22:19:728 2016 HP 1920G Switch left SHELL/5/SHELL_LOGIN: admin logged in from 192.168.188.103.
+%Jul  1 16:24:14:958 2016 HP 1920G Switch left SHELL/6/SHELL_CMD: -Task=vt0-IPAddr=192.168.188.103-User=admin; Command is _cmdline-mode on
+%Jul  1 16:25:03:730 2016 HP 1920G Switch left SHELL/6/SHELL_CMD: -Task=vt0-IPAddr=192.168.188.103-User=admin; Command is _cmdline-mode on
+%Jul  1 16:39:12:971 2016 HP 1920G Switch left SHELL/6/SHELL_CMD: -Task=vt0-IPAddr=192.168.188.103-User=admin; Command is display current-configuration
+%Jul  1 16:59:19:166 2016 HP 1920G Switch left CFGMAN/5/CFGMAN_EXIT: Exit from configuration mode.
+%Jul  1 16:59:19:167 2016 HP 1920G Switch left SHELL/5/SHELL_LOGOUT: admin logged out from 192.168.188.103.
+%Jul  1 16:59:19:167 2016 HP 1920G Switch left SSH/6/SSH_CONNECTION_CLOSE: STEL user admin (IP: 192.168.188.103) logged out because the SSH client closed the connection.
+%Jul  1 17:20:09:053 2016 HP 1920G Switch left WEB/4/WEBOPT_LOGOUT: admin logged out from 192.168.188.103
+%Jul  1 18:20:00:039 2016 HP 1920G Switch left SC/6/SC_AAA_LAUNCH: -AAAType=AUTHEN-AAAScheme= local-Service=login-UserName=admin@system; AAA launched.
+%Jul  1 18:20:00:040 2016 HP 1920G Switch left SC/6/SC_AAA_SUCCESS: -AAAType=AUTHEN-AAAScheme= local-Service=login-UserName=admin@system; AAA is successful.
+%Jul  1 18:20:00:040 2016 HP 1920G Switch left SC/6/SC_AAA_LAUNCH: -AAAType=AUTHOR-AAAScheme= local-Service=login-UserName=admin@system; AAA launched.
+%Jul  1 18:20:00:040 2016 HP 1920G Switch left SC/6/SC_AAA_SUCCESS: -AAAType=AUTHOR-AAAScheme= local-Service=login-UserName=admin@system; AAA is successful.
+%Jul  1 18:20:00:041 2016 HP 1920G Switch left SC/6/SC_AAA_LAUNCH: -AAAType=ACCOUNT-AAAScheme= local-Service=login-UserName=admin@system; AAA launched.
+%Jul  1 18:20:00:042 2016 HP 1920G Switch left SC/6/SC_AAA_SUCCESS: -AAAType=ACCOUNT-AAAScheme= local-Service=login-UserName=admin@system; AAA is successful.
+%Jul  1 18:20:00:061 2016 HP 1920G Switch left SSH/6/SSH_LOGIN: STEL user admin (IP: 192.168.188.103) logged in successfully.
+%Jul  1 18:20:00:162 2016 HP 1920G Switch left SHELL/5/SHELL_LOGIN: admin logged in from 192.168.188.103.
+%Jul  1 18:21:28:843 2016 HP 1920G Switch left SHELL/6/SHELL_CMD: -Task=vt0-IPAddr=192.168.188.103-User=admin; Command is _cmdline-mode on
+%Jul  1 18:21:56:168 2016 HP 1920G Switch left SHELL/6/SHELL_CMD: -Task=vt0-IPAddr=192.168.188.103-User=admin; Command is display current-configuration
+%Jul  1 18:34:35:238 2016 HP 1920G Switch left SHELL/6/SHELL_SECLOG: -Task=vt0-IPAddr=192.168.188.103-User=admin; Command is super
+%Jul  1 18:35:36:356 2016 HP 1920G Switch left SHELL/6/SHELL_CMD: -Task=vt0-IPAddr=192.168.188.103-User=admin; Command is pwd
+%Jul  1 18:35:49:212 2016 HP 1920G Switch left SHELL/6/SHELL_CMD: -Task=vt0-IPAddr=192.168.188.103-User=admin; Command is dir
+%Jul  1 18:38:19:915 2016 HP 1920G Switch left SHELL/6/SHELL_CMD: -Task=vt0-IPAddr=192.168.188.103-User=admin; Command is system-view
+%Jul  1 18:41:32:882 2016 HP 1920G Switch left SHELL/6/SHELL_CMD: -Task=vt0-IPAddr=192.168.188.103-User=admin; Command is interface GigabitEthernet1/0/2
+%Jul  1 18:42:15:327 2016 HP 1920G Switch left SHELL/6/SHELL_CMD: -Task=vt0-IPAddr=192.168.188.103-User=admin; Command is display stp
+%Jul  1 18:43:07:404 2016 HP 1920G Switch left SHELL/6/SHELL_CMD: -Task=vt0-IPAddr=192.168.188.103-User=admin; Command is stp edged-port disable
+%Jul  1 18:43:11:424 2016 HP 1920G Switch left SHELL/6/SHELL_CMD: -Task=vt0-IPAddr=192.168.188.103-User=admin; Command is quit
+%Jul  1 18:51:32:077 2016 HP 1920G Switch left CFGMAN/5/CFGMAN_CFGCHANGED: -EventIndex=4-CommandSource=2-ConfigSource=4-ConfigDestination=2; Configuration is changed.
+%Jul  1 18:53:11:680 2016 HP 1920G Switch left CFGMAN/5/CFGMAN_EXIT: Exit from configuration mode.
+%Jul  1 18:53:11:680 2016 HP 1920G Switch left SHELL/5/SHELL_LOGOUT: admin logged out from 192.168.188.103.
+%Jul  1 18:53:11:680 2016 HP 1920G Switch left SSH/6/SSH_CONNECTION_CLOSE: STEL user admin (IP: 192.168.188.103) logged out because the SSH client closed the connection.
+%Jul  1 22:07:26:971 2016 HP 1920G Switch left MSTP/6/MSTP_NOTIFIED_TC: Instance 0's port GigabitEthernet1/0/1 was notified of a topology change.
+%Jul  1 22:07:28:938 2016 HP 1920G Switch left MSTP/6/MSTP_NOTIFIED_TC: Instance 0's port GigabitEthernet1/0/1 was notified of a topology change.
+%Jul  4 05:40:06:716 2016 HP 1920G Switch left MSTP/5/MSTP_BPDU_RECEIVE_EXPIRY: Instance 0's port GigabitEthernet1/0/1 received no BPDU within the rcvdInfoWhile interval. Information of the port aged out.
+%Jul  4 05:40:06:716 2016 HP 1920G Switch left MSTP/6/MSTP_DISCARDING: Instance 0's port GigabitEthernet1/0/1 has been set to discarding state.
+%Jul  4 05:40:06:717 2016 HP 1920G Switch left MSTP/6/MSTP_FORWARDING: Instance 0's port GigabitEthernet1/0/2 has been set to forwarding state.
+%Jul  4 05:40:06:717 2016 HP 1920G Switch left MSTP/6/MSTP_DETECTED_TC: Instance 0's port GigabitEthernet1/0/2 detected a topology change.
+%Jul  4 05:40:06:717 2016 HP 1920G Switch left MSTP/5/MSTP_BPDU_RECEIVE_EXPIRY: Instance 0's port GigabitEthernet1/0/2 received no BPDU within the rcvdInfoWhile interval. Information of the port aged out.
+%Jul  4 05:40:36:723 2016 HP 1920G Switch left MSTP/6/MSTP_FORWARDING: Instance 0's port GigabitEthernet1/0/1 has been set to forwarding state.
+%Jul  4 05:40:48:904 2016 HP 1920G Switch left MSTP/6/MSTP_DISCARDING: Instance 0's port GigabitEthernet1/0/2 has been set to discarding state.
+%Jul  4 05:40:48:904 2016 HP 1920G Switch left MSTP/6/MSTP_NOTIFIED_TC: Instance 0's port GigabitEthernet1/0/1 was notified of a topology change.
+%Jul  4 05:40:48:905 2016 HP 1920G Switch left MSTP/6/MSTP_NOTIFIED_TC: Instance 0's port GigabitEthernet1/0/1 was notified of a topology change.
+%Jul  4 05:40:48:905 2016 HP 1920G Switch left MSTP/6/MSTP_NOTIFIED_TC: Instance 0's port GigabitEthernet1/0/1 was notified of a topology change.
+%Jul  4 05:40:48:905 2016 HP 1920G Switch left MSTP/6/MSTP_NOTIFIED_TC: Instance 0's port GigabitEthernet1/0/1 was notified of a topology change.
+%Jul  4 10:11:03:375 2016 HP 1920G Switch left SC/6/SC_AAA_LAUNCH: -AAAType=AUTHEN-AAAScheme= local-Service=login-UserName=admin@system; AAA launched.
+%Jul  4 10:11:03:375 2016 HP 1920G Switch left SC/6/SC_AAA_SUCCESS: -AAAType=AUTHEN-AAAScheme= local-Service=login-UserName=admin@system; AAA is successful.
+%Jul  4 10:11:03:375 2016 HP 1920G Switch left SC/6/SC_AAA_LAUNCH: -AAAType=AUTHOR-AAAScheme= local-Service=login-UserName=admin@system; AAA launched.
+%Jul  4 10:11:03:376 2016 HP 1920G Switch left SC/6/SC_AAA_SUCCESS: -AAAType=AUTHOR-AAAScheme= local-Service=login-UserName=admin@system; AAA is successful.
+%Jul  4 10:11:03:376 2016 HP 1920G Switch left SC/6/SC_AAA_LAUNCH: -AAAType=ACCOUNT-AAAScheme= local-Service=login-UserName=admin@system; AAA launched.
+%Jul  4 10:11:03:377 2016 HP 1920G Switch left SC/6/SC_AAA_SUCCESS: -AAAType=ACCOUNT-AAAScheme= local-Service=login-UserName=admin@system; AAA is successful.
+%Jul  4 10:11:03:400 2016 HP 1920G Switch left SSH/6/SSH_LOGIN: STEL user admin (IP: 192.168.188.103) logged in successfully.
+%Jul  4 10:11:03:503 2016 HP 1920G Switch left SHELL/5/SHELL_LOGIN: admin logged in from 192.168.188.103.
+%Jul  4 10:11:13:385 2016 HP 1920G Switch left SHELL/6/SHELL_CMD: -Task=vt0-IPAddr=192.168.188.103-User=admin; Command is _cmdline-mode on
+%Jul  4 10:11:30:707 2016 HP 1920G Switch left SHELL/6/SHELL_SECLOG: -Task=vt0-IPAddr=192.168.188.103-User=admin; Command is super
+%Jul  4 10:11:38:027 2016 HP 1920G Switch left SHELL/6/SHELL_CMD: -Task=vt0-IPAddr=192.168.188.103-User=admin; Command is system-view
+%Jul  4 10:12:27:242 2016 HP 1920G Switch left SHELL/6/SHELL_CMD: -Task=vt0-IPAddr=192.168.188.103-User=admin; Command is interface GigabitEthernet1/0/2
+%Jul  4 10:14:24:251 2016 HP 1920G Switch left SHELL/6/SHELL_CMD: -Task=vt0-IPAddr=192.168.188.103-User=admin; Command is display interface
+%Jul  4 10:18:03:722 2016 HP 1920G Switch left SHELL/6/SHELL_CMD: -Task=vt0-IPAddr=192.168.188.103-User=admin; Command is ping 172.16.20.201
+%Jul  4 10:18:10:153 2016 HP 1920G Switch left PING/6/PING_LOG: 172.16.20.201 ping statistics: 3 packet(s) transmitted; 0 packet(s) received; packet loss: 100.00%.
+%Jul  4 10:18:15:614 2016 HP 1920G Switch left SHELL/6/SHELL_CMD: -Task=vt0-IPAddr=192.168.188.103-User=admin; Command is ping 172.16.20.101
+%Jul  4 10:18:24:257 2016 HP 1920G Switch left PING/6/PING_LOG: 172.16.20.101 ping statistics: 4 packet(s) transmitted; 0 packet(s) received; packet loss: 100.00%.
+%Jul  4 10:18:31:933 2016 HP 1920G Switch left SHELL/6/SHELL_CMD: -Task=vt0-IPAddr=192.168.188.103-User=admin; Command is ping 172.16.10.101
+%Jul  4 10:18:40:577 2016 HP 1920G Switch left PING/6/PING_LOG: 172.16.10.101 ping statistics: 4 packet(s) transmitted; 0 packet(s) received; packet loss: 100.00%.
+%Jul  4 10:18:44:304 2016 HP 1920G Switch left SHELL/6/SHELL_CMD: -Task=vt0-IPAddr=192.168.188.103-User=admin; Command is ping 172.16.10.201
+%Jul  4 10:18:55:157 2016 HP 1920G Switch left PING/6/PING_LOG: 172.16.10.201 ping statistics: 5 packet(s) transmitted; 0 packet(s) received; packet loss: 100.00%.
+%Jul  4 10:28:55:527 2016 HP 1920G Switch left CFGMAN/5/CFGMAN_EXIT: Exit from configuration mode.
+%Jul  4 10:28:55:527 2016 HP 1920G Switch left SHELL/5/SHELL_LOGOUT: admin logged out from 192.168.188.103.
+%Jul  4 10:28:55:528 2016 HP 1920G Switch left SSH/6/SSH_CONNECTION_CLOSE: STEL user admin (IP: 192.168.188.103) logged out because the SSH client closed the connection.
+%Jul  4 10:41:25:664 2016 HP 1920G Switch left MSTP/6/MSTP_NOTIFIED_TC: Instance 0's port GigabitEthernet1/0/1 was notified of a topology change.
+%Jul  4 10:41:27:661 2016 HP 1920G Switch left MSTP/6/MSTP_NOTIFIED_TC: Instance 0's port GigabitEthernet1/0/1 was notified of a topology change.
+%Jul  4 10:42:45:739 2016 HP 1920G Switch left MSTP/6/MSTP_NOTIFIED_TC: Instance 0's port GigabitEthernet1/0/1 was notified of a topology change.
+%Jul  4 10:42:47:702 2016 HP 1920G Switch left MSTP/6/MSTP_NOTIFIED_TC: Instance 0's port GigabitEthernet1/0/1 was notified of a topology change.
+%Jul  4 11:29:33:943 2016 HP 1920G Switch left SC/6/SC_AAA_LAUNCH: -AAAType=AUTHEN-AAAScheme= local-Service=login-UserName=admin@system; AAA launched.
+%Jul  4 11:29:33:944 2016 HP 1920G Switch left SC/6/SC_AAA_SUCCESS: -AAAType=AUTHEN-AAAScheme= local-Service=login-UserName=admin@system; AAA is successful.
+%Jul  4 11:29:33:944 2016 HP 1920G Switch left SC/6/SC_AAA_LAUNCH: -AAAType=AUTHOR-AAAScheme= local-Service=login-UserName=admin@system; AAA launched.
+%Jul  4 11:29:33:944 2016 HP 1920G Switch left SC/6/SC_AAA_SUCCESS: -AAAType=AUTHOR-AAAScheme= local-Service=login-UserName=admin@system; AAA is successful.
+%Jul  4 11:29:33:946 2016 HP 1920G Switch left SC/6/SC_AAA_LAUNCH: -AAAType=ACCOUNT-AAAScheme= local-Service=login-UserName=admin@system; AAA launched.
+%Jul  4 11:29:33:946 2016 HP 1920G Switch left SC/6/SC_AAA_SUCCESS: -AAAType=ACCOUNT-AAAScheme= local-Service=login-UserName=admin@system; AAA is successful.
+%Jul  4 11:29:33:966 2016 HP 1920G Switch left SSH/6/SSH_LOGIN: STEL user admin (IP: 192.168.188.103) logged in successfully.
+%Jul  4 11:29:34:066 2016 HP 1920G Switch left SHELL/5/SHELL_LOGIN: admin logged in from 192.168.188.103.
+%Jul  4 11:29:58:044 2016 HP 1920G Switch left SHELL/6/SHELL_CMD: -Task=vt0-IPAddr=192.168.188.103-User=admin; Command is summary
+%Jul  4 11:30:58:825 2016 HP 1920G Switch left SHELL/6/SHELL_CMD: -Task=vt0-IPAddr=192.168.188.103-User=admin; Command is ping 172.16.10.101
+%Jul  4 11:31:09:889 2016 HP 1920G Switch left PING/6/PING_LOG: 172.16.10.101 ping statistics: 5 packet(s) transmitted; 0 packet(s) received; packet loss: 100.00%.
+%Jul  4 11:31:23:338 2016 HP 1920G Switch left SHELL/6/SHELL_CMD: -Task=vt0-IPAddr=192.168.188.103-User=admin; Command is ping 172.16.10.201
+%Jul  4 11:31:34:399 2016 HP 1920G Switch left PING/6/PING_LOG: 172.16.10.201 ping statistics: 5 packet(s) transmitted; 0 packet(s) received; packet loss: 100.00%.
+%Jul  4 11:36:51:101 2016 HP 1920G Switch left SHELL/6/SHELL_CMD: -Task=vt0-IPAddr=192.168.188.103-User=admin; Command is _cmdline-mode on
+%Jul  4 11:37:01:183 2016 HP 1920G Switch left SHELL/6/SHELL_SECLOG: -Task=vt0-IPAddr=192.168.188.103-User=admin; Command is super
+%Jul  4 11:37:16:487 2016 HP 1920G Switch left SHELL/6/SHELL_CMD: -Task=vt0-IPAddr=192.168.188.103-User=admin; Command is system-view
+%Jul  4 11:40:13:514 2016 HP 1920G Switch left SHELL/6/SHELL_CMD: -Task=vt0-IPAddr=192.168.188.103-User=admin; Command is ping -a 172.16.10.9 172.16.10.101
+%Jul  4 11:40:24:571 2016 HP 1920G Switch left PING/6/PING_LOG: 172.16.10.101 ping statistics: 5 packet(s) transmitted; 0 packet(s) received; packet loss: 100.00%.
+%Jul  4 11:40:40:753 2016 HP 1920G Switch left SHELL/6/SHELL_CMD: -Task=vt0-IPAddr=192.168.188.103-User=admin; Command is ping -a 172.16.10.9 172.16.10.201
+%Jul  4 11:40:51:841 2016 HP 1920G Switch left PING/6/PING_LOG: 172.16.10.201 ping statistics: 5 packet(s) transmitted; 0 packet(s) received; packet loss: 100.00%.
+%Jul  4 11:52:48:571 2016 HP 1920G Switch left CFGMAN/5/CFGMAN_EXIT: Exit from configuration mode.
+%Jul  4 11:52:48:572 2016 HP 1920G Switch left SHELL/5/SHELL_LOGOUT: admin logged out from 192.168.188.103.
+%Jul  4 11:52:48:572 2016 HP 1920G Switch left SSH/6/SSH_CONNECTION_CLOSE: STEL user admin (IP: 192.168.188.103) logged out because the SSH client closed the connection.
+%Jul  4 12:01:00:532 2016 HP 1920G Switch left SSH/6/SSH_AUTH_TIMEOUT: SSH user admin (IP: 192.168.188.103) failed to log in because of authentication timeout.
+%Jul  4 12:42:45:300 2016 HP 1920G Switch left SC/6/SC_AAA_LAUNCH: -AAAType=AUTHEN-AAAScheme= local-Service=login-UserName=admin@system; AAA launched.
+%Jul  4 12:42:45:300 2016 HP 1920G Switch left SC/6/SC_AAA_SUCCESS: -AAAType=AUTHEN-AAAScheme= local-Service=login-UserName=admin@system; AAA is successful.
+%Jul  4 12:42:45:301 2016 HP 1920G Switch left SC/6/SC_AAA_LAUNCH: -AAAType=AUTHOR-AAAScheme= local-Service=login-UserName=admin@system; AAA launched.
+%Jul  4 12:42:45:301 2016 HP 1920G Switch left SC/6/SC_AAA_SUCCESS: -AAAType=AUTHOR-AAAScheme= local-Service=login-UserName=admin@system; AAA is successful.
+%Jul  4 12:42:45:302 2016 HP 1920G Switch left SC/6/SC_AAA_LAUNCH: -AAAType=ACCOUNT-AAAScheme= local-Service=login-UserName=admin@system; AAA launched.
+%Jul  4 12:42:45:302 2016 HP 1920G Switch left SC/6/SC_AAA_SUCCESS: -AAAType=ACCOUNT-AAAScheme= local-Service=login-UserName=admin@system; AAA is successful.
+%Jul  4 12:42:45:323 2016 HP 1920G Switch left SSH/6/SSH_LOGIN: STEL user admin (IP: 192.168.188.103) logged in successfully.
+%Jul  4 12:42:45:420 2016 HP 1920G Switch left SHELL/5/SHELL_LOGIN: admin logged in from 192.168.188.103.
+%Jul  4 12:43:02:612 2016 HP 1920G Switch left SHELL/6/SHELL_CMD: -Task=vt0-IPAddr=192.168.188.103-User=admin; Command is _cmdline-mode on
+%Jul  4 12:43:14:192 2016 HP 1920G Switch left SHELL/6/SHELL_SECLOG: -Task=vt0-IPAddr=192.168.188.103-User=admin; Command is super
+%Jul  4 12:43:38:809 2016 HP 1920G Switch left SHELL/6/SHELL_CMD: -Task=vt0-IPAddr=192.168.188.103-User=admin; Command is system-view
+%Jul  4 13:02:36:075 2016 HP 1920G Switch left CFGMAN/5/CFGMAN_EXIT: Exit from configuration mode.
+%Jul  4 13:02:36:075 2016 HP 1920G Switch left SHELL/5/SHELL_LOGOUT: admin logged out from 192.168.188.103.
+%Jul  4 13:02:36:075 2016 HP 1920G Switch left SSH/6/SSH_CONNECTION_CLOSE: STEL user admin (IP: 192.168.188.103) logged out because the SSH client closed the connection.
+%Jul  4 13:07:09:238 2016 HP 1920G Switch left SC/6/SC_AAA_LAUNCH: -AAAType=AUTHEN-AAAScheme= local-Service=login-UserName=admin@system; AAA launched.
+%Jul  4 13:07:09:238 2016 HP 1920G Switch left SC/6/SC_AAA_SUCCESS: -AAAType=AUTHEN-AAAScheme= local-Service=login-UserName=admin@system; AAA is successful.
+%Jul  4 13:07:09:238 2016 HP 1920G Switch left SC/6/SC_AAA_LAUNCH: -AAAType=AUTHOR-AAAScheme= local-Service=login-UserName=admin@system; AAA launched.
+%Jul  4 13:07:09:239 2016 HP 1920G Switch left SC/6/SC_AAA_SUCCESS: -AAAType=AUTHOR-AAAScheme= local-Service=login-UserName=admin@system; AAA is successful.
+%Jul  4 13:07:09:239 2016 HP 1920G Switch left SC/6/SC_AAA_LAUNCH: -AAAType=ACCOUNT-AAAScheme= local-Service=login-UserName=admin@system; AAA launched.
+%Jul  4 13:07:09:240 2016 HP 1920G Switch left SC/6/SC_AAA_SUCCESS: -AAAType=ACCOUNT-AAAScheme= local-Service=login-UserName=admin@system; AAA is successful.
+%Jul  4 13:07:09:261 2016 HP 1920G Switch left SSH/6/SSH_LOGIN: STEL user admin (IP: 192.168.188.103) logged in successfully.
+%Jul  4 13:07:09:364 2016 HP 1920G Switch left SHELL/5/SHELL_LOGIN: admin logged in from 192.168.188.103.
+%Jul  4 13:07:15:612 2016 HP 1920G Switch left SHELL/6/SHELL_CMD: -Task=vt0-IPAddr=192.168.188.103-User=admin; Command is summary
+%Jul  4 13:09:05:371 2016 HP 1920G Switch left SHELL/6/SHELL_CMD: -Task=vt0-IPAddr=192.168.188.103-User=admin; Command is summary
+%Jul  4 13:12:13:550 2016 HP 1920G Switch left SC/6/SC_AAA_LAUNCH: -AAAType=AUTHEN-AAAScheme= local-Service=login-UserName=admin@system; AAA launched.
+%Jul  4 13:12:13:550 2016 HP 1920G Switch left SC/6/SC_AAA_SUCCESS: -AAAType=AUTHEN-AAAScheme= local-Service=login-UserName=admin@system; AAA is successful.
+%Jul  4 13:12:13:551 2016 HP 1920G Switch left SC/6/SC_AAA_LAUNCH: -AAAType=AUTHOR-AAAScheme= local-Service=login-UserName=admin@system; AAA launched.
+%Jul  4 13:12:13:551 2016 HP 1920G Switch left SC/6/SC_AAA_SUCCESS: -AAAType=AUTHOR-AAAScheme= local-Service=login-UserName=admin@system; AAA is successful.
+%Jul  4 13:12:13:552 2016 HP 1920G Switch left SC/6/SC_AAA_LAUNCH: -AAAType=ACCOUNT-AAAScheme= local-Service=login-UserName=admin@system; AAA launched.
+%Jul  4 13:12:13:552 2016 HP 1920G Switch left SC/6/SC_AAA_SUCCESS: -AAAType=ACCOUNT-AAAScheme= local-Service=login-UserName=admin@system; AAA is successful.
+%Jul  4 13:12:13:559 2016 HP 1920G Switch left WEB/4/WEBOPT_LOGIN_SUC: admin logged in from 192.168.188.103
+%Jul  4 13:21:32:628 2016 HP 1920G Switch left CFGMAN/5/CFGMAN_EXIT: Exit from configuration mode.
+%Jul  4 13:21:32:629 2016 HP 1920G Switch left SHELL/5/SHELL_LOGOUT: admin logged out from 192.168.188.103.
+%Jul  4 13:21:32:629 2016 HP 1920G Switch left SSH/6/SSH_CONNECTION_CLOSE: STEL user admin (IP: 192.168.188.103) logged out because the SSH client closed the connection.
+======================================================
+  ===============display trapbuffer===============
+======================================================
+Trapping buffer configuration and contents:enabled
+Allowed max buffer size : 1024
+Actual buffer size : 256
+Channel number : 3 , channel name : trapbuffer
+Dropped messages : 0
+Overwritten messages : 0
+Current messages : 44
+
+#Apr 26 13:00:27:898 2000 HP 1920G Switch left DEVM/4/SYSTEM WARM START:
+ Trap 1.3.6.1.4.1.25506.6.8.5: system warm start.
+
+#Apr 26 13:00:28:664 2000 HP 1920G Switch left MSTP/1/PFWD:
+ Trap 1.3.6.1.4.1.25506.8.35.14.0.1: Instance 0's Port 0.18956288 has been set to forwarding state!
+#Apr 26 13:00:28:665 2000 HP 1920G Switch left MSTP/1/PFWD:
+ Trap 1.3.6.1.4.1.25506.8.35.14.0.1: Instance 0's Port 0.18964480 has been set to forwarding state!
+#Apr 26 13:00:28:685 2000 HP 1920G Switch left MSTP/1/PFWD:
+ Trap 1.3.6.1.4.1.25506.8.35.14.0.1: Instance 0's Port 0.18939904 has been set to forwarding state!
+#Apr 26 13:00:28:832 2000 HP 1920G Switch left MSTP/1/PFWD:
+ Trap 1.3.6.1.4.1.25506.8.35.14.0.1: Instance 0's Port 0.18948096 has been set to forwarding state!
+#Apr 26 13:00:28:958 2000 HP 1920G Switch left MSTP/1/PFWD:
+ Trap 1.3.6.1.4.1.25506.8.35.14.0.1: Instance 0's Port 0.18952192 has been set to forwarding state!
+#Apr 26 13:00:28:958 2000 HP 1920G Switch left MSTP/1/PFWD:
+ Trap 1.3.6.1.4.1.25506.8.35.14.0.1: Instance 0's Port 0.18968576 has been set to forwarding state!
+#Apr 26 13:00:28:969 2000 HP 1920G Switch left MSTP/1/PFWD:
+ Trap 1.3.6.1.4.1.25506.8.35.14.0.1: Instance 0's Port 0.18960384 has been set to forwarding state!
+#Apr 26 13:00:29:126 2000 HP 1920G Switch left MSTP/1/PFWD:
+ Trap 1.3.6.1.4.1.25506.8.35.14.0.1: Instance 0's Port 0.18944000 has been set to forwarding state!
+#Apr 26 13:00:29:177 2000 HP 1920G Switch left MSTP/1/PFWD:
+ Trap 1.3.6.1.4.1.25506.8.35.14.0.1: Instance 0's Port 0.18874368 has been set to forwarding state!
+#Apr 26 13:00:29:726 2000 HP 1920G Switch left MSTP/1/PFWD:
+ Trap 1.3.6.1.4.1.25506.8.35.14.0.1: Instance 0's Port 0.18878464 has been set to forwarding state!
+#Apr 26 13:00:29:737 2000 HP 1920G Switch left MSTP/1/PDISC:
+ Trap 1.3.6.1.4.1.25506.8.35.14.0.2: Instance 0's Port 0.18878464 has been set to discarding state!
+#Apr 26 13:00:59:457 2000 HP 1920G Switch left SHELL/4/LOGIN:
+ Trap 1.3.6.1.4.1.25506.2.2.1.1.3.0.1:admin login from Web
+#Jul  1 15:32:47:975 2016 HP 1920G Switch left SHELL/4/LOGOUT:
+ Trap 1.3.6.1.4.1.25506.2.2.1.1.3.0.2:admin logout from Web
+#Jul  1 15:33:04:151 2016 HP 1920G Switch left SHELL/4/LOGIN:
+ Trap 1.3.6.1.4.1.25506.2.2.1.1.3.0.1:admin login from Web
+#Jul  1 16:21:32:017 2016 HP 1920G Switch left CFGMAN/4/TRAP:
+Trap 1.3.6.1.4.1.25506.2.4.2.1: configure changed, EventIndex=3, CommandSource=2, ConfigSource=4, ConfigDestination=2.
+#Jul  1 16:22:19:728 2016 HP 1920G Switch left SHELL/4/LOGIN:
+ Trap 1.3.6.1.4.1.25506.2.2.1.1.3.0.1:admin login from VTY
+#Jul  1 16:59:19:166 2016 HP 1920G Switch left SHELL/4/LOGOUT:
+ Trap 1.3.6.1.4.1.25506.2.2.1.1.3.0.2:admin logout from VTY
+#Jul  1 17:20:09:066 2016 HP 1920G Switch left SHELL/4/LOGOUT:
+ Trap 1.3.6.1.4.1.25506.2.2.1.1.3.0.2:admin logout from Web
+#Jul  1 18:20:00:161 2016 HP 1920G Switch left SHELL/4/LOGIN:
+ Trap 1.3.6.1.4.1.25506.2.2.1.1.3.0.1:admin login from VTY
+#Jul  1 18:51:32:076 2016 HP 1920G Switch left CFGMAN/4/TRAP:
+Trap 1.3.6.1.4.1.25506.2.4.2.1: configure changed, EventIndex=4, CommandSource=2, ConfigSource=4, ConfigDestination=2.
+#Jul  1 18:53:11:679 2016 HP 1920G Switch left SHELL/4/LOGOUT:
+ Trap 1.3.6.1.4.1.25506.2.2.1.1.3.0.2:admin logout from VTY
+#Jul  1 23:43:17:448 2016 HP 1920G Switch left SYSMIB/4/CLKCHANGE:
+Trap 1.3.6.1.4.1.25506.2.3.2.1: System clock changed.
+#Jul  2 07:35:16:787 2016 HP 1920G Switch left SYSMIB/4/CLKCHANGE:
+Trap 1.3.6.1.4.1.25506.2.3.2.1: System clock changed.
+#Jul  2 07:49:12:150 2016 HP 1920G Switch left SYSMIB/4/CLKCHANGE:
+Trap 1.3.6.1.4.1.25506.2.3.2.1: System clock changed.
+#Jul  2 08:05:21:798 2016 HP 1920G Switch left SYSMIB/4/CLKCHANGE:
+Trap 1.3.6.1.4.1.25506.2.3.2.1: System clock changed.
+#Jul  2 08:25:44:580 2016 HP 1920G Switch left SYSMIB/4/CLKCHANGE:
+Trap 1.3.6.1.4.1.25506.2.3.2.1: System clock changed.
+#Jul  2 10:59:34:909 2016 HP 1920G Switch left SYSMIB/4/CLKCHANGE:
+Trap 1.3.6.1.4.1.25506.2.3.2.1: System clock changed.
+#Jul  2 16:24:15:123 2016 HP 1920G Switch left SYSMIB/4/CLKCHANGE:
+Trap 1.3.6.1.4.1.25506.2.3.2.1: System clock changed.
+#Jul  2 16:48:48:018 2016 HP 1920G Switch left SYSMIB/4/CLKCHANGE:
+Trap 1.3.6.1.4.1.25506.2.3.2.1: System clock changed.
+#Jul  3 06:46:10:529 2016 HP 1920G Switch left SYSMIB/4/CLKCHANGE:
+Trap 1.3.6.1.4.1.25506.2.3.2.1: System clock changed.
+#Jul  4 05:40:06:715 2016 HP 1920G Switch left MSTP/1/PDISC:
+ Trap 1.3.6.1.4.1.25506.8.35.14.0.2: Instance 0's Port 0.18874368 has been set to discarding state!
+#Jul  4 05:40:06:716 2016 HP 1920G Switch left MSTP/1/PFWD:
+ Trap 1.3.6.1.4.1.25506.8.35.14.0.1: Instance 0's Port 0.18878464 has been set to forwarding state!
+#Jul  4 05:40:36:723 2016 HP 1920G Switch left MSTP/1/PFWD:
+ Trap 1.3.6.1.4.1.25506.8.35.14.0.1: Instance 0's Port 0.18874368 has been set to forwarding state!
+#Jul  4 05:40:48:904 2016 HP 1920G Switch left MSTP/1/PDISC:
+ Trap 1.3.6.1.4.1.25506.8.35.14.0.2: Instance 0's Port 0.18878464 has been set to discarding state!
+#Jul  4 10:11:03:502 2016 HP 1920G Switch left SHELL/4/LOGIN:
+ Trap 1.3.6.1.4.1.25506.2.2.1.1.3.0.1:admin login from VTY
+#Jul  4 10:28:55:527 2016 HP 1920G Switch left SHELL/4/LOGOUT:
+ Trap 1.3.6.1.4.1.25506.2.2.1.1.3.0.2:admin logout from VTY
+#Jul  4 11:29:34:066 2016 HP 1920G Switch left SHELL/4/LOGIN:
+ Trap 1.3.6.1.4.1.25506.2.2.1.1.3.0.1:admin login from VTY
+#Jul  4 11:52:48:571 2016 HP 1920G Switch left SHELL/4/LOGOUT:
+ Trap 1.3.6.1.4.1.25506.2.2.1.1.3.0.2:admin logout from VTY
+#Jul  4 12:42:45:419 2016 HP 1920G Switch left SHELL/4/LOGIN:
+ Trap 1.3.6.1.4.1.25506.2.2.1.1.3.0.1:admin login from VTY
+#Jul  4 13:02:36:074 2016 HP 1920G Switch left SHELL/4/LOGOUT:
+ Trap 1.3.6.1.4.1.25506.2.2.1.1.3.0.2:admin logout from VTY
+#Jul  4 13:07:09:364 2016 HP 1920G Switch left SHELL/4/LOGIN:
+ Trap 1.3.6.1.4.1.25506.2.2.1.1.3.0.1:admin login from VTY
+#Jul  4 13:12:13:559 2016 HP 1920G Switch left SHELL/4/LOGIN:
+ Trap 1.3.6.1.4.1.25506.2.2.1.1.3.0.1:admin login from Web
+#Jul  4 13:21:32:628 2016 HP 1920G Switch left SHELL/4/LOGOUT:
+ Trap 1.3.6.1.4.1.25506.2.2.1.1.3.0.2:admin logout from VTY
+=======================================================
+  ===============all history command===============
+=======================================================
+  Date       Time      User  Command
+  07/04/2016 13:09:05  vt0   192.168.188.103 admin
+  Cmd:summary
+
+  07/04/2016 13:07:15  vt0   192.168.188.103 admin
+  Cmd:summary
+
+  07/04/2016 12:43:38  vt0   192.168.188.103 admin
+  Cmd:system-view
+
+  07/04/2016 12:43:14  vt0   192.168.188.103 admin
+  Cmd:super
+
+  07/04/2016 12:43:02  vt0   192.168.188.103 admin
+  Cmd:_cmdline-mode on
+
+  07/04/2016 11:40:40  vt0   192.168.188.103 admin
+  Cmd:ping -a 172.16.10.9 172.16.10.201
+
+  07/04/2016 11:40:13  vt0   192.168.188.103 admin
+  Cmd:ping -a 172.16.10.9 172.16.10.101
+
+  07/04/2016 11:37:16  vt0   192.168.188.103 admin
+  Cmd:system-view
+
+  07/04/2016 11:37:01  vt0   192.168.188.103 admin
+  Cmd:super
+
+  07/04/2016 11:36:51  vt0   192.168.188.103 admin
+  Cmd:_cmdline-mode on
+
+  07/04/2016 11:31:23  vt0   192.168.188.103 admin
+  Cmd:ping 172.16.10.201
+
+  07/04/2016 11:30:58  vt0   192.168.188.103 admin
+  Cmd:ping 172.16.10.101
+
+  07/04/2016 11:29:58  vt0   192.168.188.103 admin
+  Cmd:summary
+
+  07/04/2016 10:18:44  vt0   192.168.188.103 admin
+  Cmd:ping 172.16.10.201
+
+  07/04/2016 10:18:31  vt0   192.168.188.103 admin
+  Cmd:ping 172.16.10.101
+
+  07/04/2016 10:18:15  vt0   192.168.188.103 admin
+  Cmd:ping 172.16.20.101
+
+  07/04/2016 10:18:03  vt0   192.168.188.103 admin
+  Cmd:ping 172.16.20.201
+
+  07/04/2016 10:14:24  vt0   192.168.188.103 admin
+  Cmd:display interface
+
+  07/04/2016 10:12:27  vt0   192.168.188.103 admin
+  Cmd:interface GigabitEthernet1/0/2
+
+  07/04/2016 10:11:38  vt0   192.168.188.103 admin
+  Cmd:system-view
+
+  07/04/2016 10:11:30  vt0   192.168.188.103 admin
+  Cmd:super
+
+  07/04/2016 10:11:13  vt0   192.168.188.103 admin
+  Cmd:_cmdline-mode on
+
+  07/01/2016 18:43:11  vt0   192.168.188.103 admin
+  Cmd:quit
+
+  07/01/2016 18:43:07  vt0   192.168.188.103 admin
+  Cmd:stp edged-port disable
+
+  07/01/2016 18:42:15  vt0   192.168.188.103 admin
+  Cmd:display stp
+
+  07/01/2016 18:41:32  vt0   192.168.188.103 admin
+  Cmd:interface GigabitEthernet1/0/2
+
+  07/01/2016 18:38:19  vt0   192.168.188.103 admin
+  Cmd:system-view
+
+  07/01/2016 18:35:49  vt0   192.168.188.103 admin
+  Cmd:dir
+
+  07/01/2016 18:35:36  vt0   192.168.188.103 admin
+  Cmd:pwd
+
+  07/01/2016 18:34:35  vt0   192.168.188.103 admin
+  Cmd:super
+
+  07/01/2016 18:21:56  vt0   192.168.188.103 admin
+  Cmd:display current-configuration
+
+  07/01/2016 18:21:28  vt0   192.168.188.103 admin
+  Cmd:_cmdline-mode on
+
+  07/01/2016 16:39:12  vt0   192.168.188.103 admin
+  Cmd:display current-configuration
+
+  07/01/2016 16:25:03  vt0   192.168.188.103 admin
+  Cmd:_cmdline-mode on
+
+  07/01/2016 16:24:14  vt0   192.168.188.103 admin
+  Cmd:_cmdline-mode on
+
+===============================================================
+  ===============error information on slot 1===============
+===============================================================
+========================================================
+  ===============ipc packet on node 1===============
+========================================================
+ChannelID  Sent-fragments  Sent-packets  Received-fragments  Received-packets
+-----------------------------------------------------------------------------
+14         0               0             0                   0
+15         0               0             0                   0
+16         0               0             0                   0
+17         0               0             0                   0
+19         0               0             0                   0
+25         0               0             0                   0
+26         0               0             0                   0
+27         0               0             0                   0
+33         0               0             0                   0
+34         0               0             0                   0
+43         0               0             0                   0
+45         0               0             0                   0
+53         0               0             0                   0
+62         0               0             0                   0
+65         0               0             0                   0
+66         0               0             0                   0
+75         0               0             0                   0
+76         0               0             0                   0
+86         0               0             0                   0
+87         0               0             0                   0
+88         0               0             0                   0
+89         0               0             0                   0
+91         0               0             0                   0
+93         0               0             0                   0
+94         0               0             0                   0
+95         0               0             0                   0
+96         0               0             0                   0
+97         0               0             0                   0
+98         0               0             0                   0
+99         0               0             0                   0
+100        0               0             0                   0
+101        0               0             0                   0
+102        0               0             0                   0
+120        0               0             0                   0
+122        0               0             0                   0
+123        0               0             0                   0
+126        0               0             0                   0
+132        0               0             0                   0
+139        0               0             0                   0
+140        0               0             0                   0
+147        0               0             0                   0
+148        0               0             0                   0
+154        0               0             0                   0
+155        0               0             0                   0
+156        0               0             0                   0
+165        0               0             0                   0
+166        0               0             0                   0
+172        0               0             0                   0
+176        0               0             0                   0
+178        0               0             0                   0
+184        0               0             0                   0
+189        0               0             0                   0
+=======================================================
+  ===============ipc queue on node 1===============
+=======================================================
+QueueType  QueueID Dst-NodeID   Length  FullTimes   Packet
+------------------------------------------------------------
+============================================================
+  ===============display switchover state===============
+============================================================
+=====================================================================
+  ===============display ipc link status on node 1===============
+=====================================================================
+------------------------------------------------------------------------
+ Heart timer handle:1025
+ Active sequence:1268903
+------------------------------------------------------------------------
+ Event flag (0/1-OFF/ON) Default OFF:
+Node state   Node state   Node state   Node state
+
+------------------------------------------------------------------------
+ Last Notify state (0/1/2-DOWN/UPDOWN/UP) Default DOWN:
+Node state   Node state   Node state   Node state
+
+------------------------------------------------------------------------
+ Node DownTimes LastDownTime        LastUpTime          ErrSyn ErrAck ActTimes
+------------------------------------------------------------------------
+ Node KeepTimer SynTimer FloodTimer Remv  RecvSqn   SynSqn State Event   RecvGap
+   1          0        0          0    0        0        0     2     0         0
+ TransEvent (0/1/2/3/4/5-idle/active/pktsyn/synack/kalive/tmrsyn)
+ RecvGap (max active recv tick gap)
+ SendGap (max active send tick gap, ms in int, 10ms in task) 202
+============================================================================
+  ===============display ipc send queue 1 state on node 1===============
+============================================================================
+=======================================================================================
+  ===============display ipc channel statistic information on node 1===============
+=======================================================================================
+-------------------------------------------------------------------------------
+    ChID  RecvQue RecvCbck FshByQue FshCback GroupCre  QueFull  ErrCode  LinkFal
+           UpDown NotiFail
+-------------------------------------------------------------------------------
+      1b        0        0        0        4        2        0        0       0
+                0        0
+      22        0        0        0        c        0        0        0       0
+                0        0
+      35        0        0        0        0        1        0        0       0
+                0        0
+      3e        0        0        0        1        2        0        0       0
+                0        0
+      65        0        0        0     7bee        0        0        0       0
+                0        0
+============================================================================================
+  ===============display ipc channel send statistic information on node 1===============
+============================================================================================
+------------------------------------------------------------------------------
+  ChID  NotInit  SendAll SendSucc SendFail  FragNum  NotFrag  DrvSend   ReDReq
+                                  InDownUp                   DSession   ReDTmr
+------------------------------------------------------------------------------
+    1b        0        4        0        4        0        0        0        0
+                                         0                          0        0
+    22        0        c        0        c        0        0        0        0
+                                         0                          0        0
+    3e        0        1        0        1        0        0        0        0
+                                         0                          0        0
+    65        0     7bee        0     7bee        0        0        0        0
+                                         0                          0        0
+======================================================================================
+  ===============display ipc driver statistic information on node 1===============
+======================================================================================
+                  Send success:0x       0
+                     Send fail:0x  135ca8
+          Create group success:0x       9
+             Create group fail:0x       0
+                Delete success:0x       0
+                   Delete fail:0x       0
+                Update success:0x       2
+                   Update fail:0x       0
+        Get peer group success:0x       2
+           Get peer group fail:0x       0
+           Get node id success:0x    c631
+              Get node id fail:0x       0
+                 Alloc success:0x  614c43
+                    Alloc fail:0x       0
+              Announce success:0x       0
+            Announce fail null:0x       0
+            Announce fail init:0x       0
+        Announce fail data all:0x       0
+       Announce fail data drop:0x       0
+  Announce fail data node down:0x       0
+        Announce fail data old:0x       0
+     Announce fail data repeat:0x       0
+        Announce fail data big:0x       0
+      Announce fail data other:0x       0
+       Announce fail flow-ctrl:0x       0
+          Announce fail resend:0x       0
+            Announce fail link:0x       0
+         Announce fail session:0x       0
+ Announce fail through default:0x       0
+         Transmit done success:0x       0
+            Transmit done fail:0x       0
+                   Free memory:0x  614c42
+               Register driver:0x       1
+               Register config:0x       2
+              Receive flowCtrl:0x       0
+                Receive RSDREQ:0x       0
+                 Send flowCtrl:0x       0
+===========================================================
+  ===============display ipv6 statistics===============
+===========================================================
+  IPv6 Protocol:
+
+    Sent packets:
+      Total:      0
+        Local sent out:       0            forwarded:           0
+        raw packets:          0            discarded:           0
+        routing failed:       0            fragments:           0
+        fragments failed:     0
+
+    Received packets:
+      Total:      0
+        local host:           0            hopcount exceeded:   0
+        format error:         0            option error:        0
+        protocol error:       0            fragments:           0
+        reassembled:          0            reassembly failed:   0
+        reassembly timeout:   0
+
+  ICMPv6 protocol:
+
+    Sent packets:
+      Total:      0
+        unreached:           0             too big:              0
+        hopcount exceeded:   0             reassembly timeout:   0
+        parameter problem:   0
+        echo request:        0             echo replied:         0
+        neighbor solicit:    0             neighbor advert:      0
+        router solicit:      0             router advert:        0
+        redirected:          0             router renumbering:   0
+      Send failed:
+        ratelimited:         0             other errors:         0
+
+    Received packets:
+      Total:      0
+        checksum error:      0             too short:            0
+        bad code:            0
+        unreached:           0             too big:              0
+        hopcount exceeded:   0             reassembly timeout:   0
+        parameter problem:   0             unknown error type:   0
+        echo request:        0             echo replied:         0
+        neighbor solicit:    0             neighbor advert:      0
+        router solicit:      0             router advert:        0
+        redirected:          0             router renumbering:   0
+        unknown info type:   0
+      Deliver failed:
+        bad length:          0             ratelimited:          0
+========================================================================
+  ===============display pagg data slot all proc_info===============
+========================================================================
+== LACP PROC INFO on Board 1 :
+Timer:ulhigh =0 ,ulLow = 14055, TASK ID = ffffffff
+call S_DRVM_SetPortBlockStatus ulIfIndex = 0x1200000, block status = 2,result = 0
+Timer:ulhigh =0 ,ulLow = 14070, TASK ID = ffffffff
+call S_DRVM_SetPortBlockStatus ulIfIndex = 0x1201000, block status = 2,result = 0
+Timer:ulhigh =0 ,ulLow = 14086, TASK ID = ffffffff
+call S_DRVM_SetPortBlockStatus ulIfIndex = 0x1202000, block status = 2,result = 0
+Timer:ulhigh =0 ,ulLow = 14102, TASK ID = ffffffff
+call S_DRVM_SetPortBlockStatus ulIfIndex = 0x1203000, block status = 2,result = 0
+Timer:ulhigh =0 ,ulLow = 14118, TASK ID = ffffffff
+call S_DRVM_SetPortBlockStatus ulIfIndex = 0x1204000, block status = 2,result = 0
+Timer:ulhigh =0 ,ulLow = 14134, TASK ID = ffffffff
+call S_DRVM_SetPortBlockStatus ulIfIndex = 0x1205000, block status = 2,result = 0
+Timer:ulhigh =0 ,ulLow = 14150, TASK ID = ffffffff
+call S_DRVM_SetPortBlockStatus ulIfIndex = 0x1206000, block status = 2,result = 0
+Timer:ulhigh =0 ,ulLow = 14166, TASK ID = ffffffff
+call S_DRVM_SetPortBlockStatus ulIfIndex = 0x1207000, block status = 2,result = 0
+Timer:ulhigh =0 ,ulLow = 14181, TASK ID = ffffffff
+call S_DRVM_SetPortBlockStatus ulIfIndex = 0x1208000, block status = 2,result = 0
+Timer:ulhigh =0 ,ulLow = 14196, TASK ID = ffffffff
+call S_DRVM_SetPortBlockStatus ulIfIndex = 0x1209000, block status = 2,result = 0
+Timer:ulhigh =0 ,ulLow = 14210, TASK ID = ffffffff
+call S_DRVM_SetPortBlockStatus ulIfIndex = 0x120a000, block status = 2,result = 0
+Timer:ulhigh =0 ,ulLow = 14225, TASK ID = ffffffff
+call S_DRVM_SetPortBlockStatus ulIfIndex = 0x120b000, block status = 2,result = 0
+Timer:ulhigh =0 ,ulLow = 14240, TASK ID = ffffffff
+call S_DRVM_SetPortBlockStatus ulIfIndex = 0x120c000, block status = 2,result = 0
+Timer:ulhigh =0 ,ulLow = 14255, TASK ID = ffffffff
+call S_DRVM_SetPortBlockStatus ulIfIndex = 0x120d000, block status = 2,result = 0
+Timer:ulhigh =0 ,ulLow = 14269, TASK ID = ffffffff
+call S_DRVM_SetPortBlockStatus ulIfIndex = 0x120e000, block status = 2,result = 0
+Timer:ulhigh =0 ,ulLow = 14284, TASK ID = ffffffff
+call S_DRVM_SetPortBlockStatus ulIfIndex = 0x120f000, block status = 2,result = 0
+Timer:ulhigh =0 ,ulLow = 14300, TASK ID = ffffffff
+call S_DRVM_SetPortBlockStatus ulIfIndex = 0x1210000, block status = 2,result = 0
+Timer:ulhigh =0 ,ulLow = 14316, TASK ID = ffffffff
+call S_DRVM_SetPortBlockStatus ulIfIndex = 0x1211000, block status = 2,result = 0
+Timer:ulhigh =0 ,ulLow = 14331, TASK ID = ffffffff
+call S_DRVM_SetPortBlockStatus ulIfIndex = 0x1212000, block status = 2,result = 0
+Timer:ulhigh =0 ,ulLow = 14347, TASK ID = ffffffff
+call S_DRVM_SetPortBlockStatus ulIfIndex = 0x1213000, block status = 2,result = 0
+Timer:ulhigh =0 ,ulLow = 14363, TASK ID = ffffffff
+call S_DRVM_SetPortBlockStatus ulIfIndex = 0x1214000, block status = 2,result = 0
+Timer:ulhigh =0 ,ulLow = 14379, TASK ID = ffffffff
+call S_DRVM_SetPortBlockStatus ulIfIndex = 0x1215000, block status = 2,result = 0
+Timer:ulhigh =0 ,ulLow = 14395, TASK ID = ffffffff
+call S_DRVM_SetPortBlockStatus ulIfIndex = 0x1216000, block status = 2,result = 0
+Timer:ulhigh =0 ,ulLow = 14411, TASK ID = ffffffff
+call S_DRVM_SetPortBlockStatus ulIfIndex = 0x1217000, block status = 2,result = 0
+Timer:ulhigh =0 ,ulLow = 14481, TASK ID = ffffffff
+call S_DRVM_SetPortBlockStatus ulIfIndex = 0x1218000, block status = 2,result = 0
+Timer:ulhigh =0 ,ulLow = 14554, TASK ID = ffffffff
+call S_DRVM_SetPortBlockStatus ulIfIndex = 0x1219000, block status = 2,result = 0
+Timer:ulhigh =0 ,ulLow = 14627, TASK ID = ffffffff
+call S_DRVM_SetPortBlockStatus ulIfIndex = 0x121a000, block status = 2,result = 0
+Timer:ulhigh =0 ,ulLow = 14700, TASK ID = ffffffff
+call S_DRVM_SetPortBlockStatus ulIfIndex = 0x121b000, block status = 2,result = 0
+Timer:ulhigh =0 ,ulLow = 15871, TASK ID = 1d
+call S_DRVM_CreateGroup 1
+Timer:ulhigh =0 ,ulLow = 15871, TASK ID = 1d
+call S_DRVM_CreateGroup 1, ret = 0
+Timer:ulhigh =0 ,ulLow = 18120, TASK ID = 1d
+call S_SetAggmode GroupID 1 mode 3
+Timer:ulhigh =0 ,ulLow = 18273, TASK ID = 2d
+call S_GM_AddPortToGroup 1 ulIfIndex = 0x1206000
+Timer:ulhigh =0 ,ulLow = 18280, TASK ID = 2d
+call S_DRVM_SetPortBlockStatus ulIfIndex = 0x1206000, block status = 1,result = 0
+Timer:ulhigh =0 ,ulLow = 18283, TASK ID = 2d
+call S_GM_AddPortToGroup buildrun ulIfIndex=0x1206000
+Timer:ulhigh =0 ,ulLow = 18283, TASK ID = 2d
+call S_GM_UpdateGroup 1
+Timer:ulhigh =0 ,ulLow = 18284, TASK ID = 2d
+call S_GM_UpdateGroup 1 ifindex = 0x1206000 is new unselected port
+Timer:ulhigh =0 ,ulLow = 18284, TASK ID = 2d
+call S_ServiceSlotRpt 0x2a60000
+Timer:ulhigh =0 ,ulLow = 18284, TASK ID = 2d
+call AI_RptIfEvent 1 bFastDownFlag = 0, ulRet = 0
+Timer:ulhigh =0 ,ulLow = 18284, TASK ID = 2d
+call S_AI_RptIfEvent 1, over
+Timer:ulhigh =0 ,ulLow = 18286, TASK ID = 1d
+call S_CLI_PrcsPortJoinGroup ulIfIndex=0x1206000
+Timer:ulhigh =0 ,ulLow = 18316, TASK ID = 2d
+call S_GM_AddPortToGroup 1 ulIfIndex = 0x1207000
+Timer:ulhigh =0 ,ulLow = 18323, TASK ID = 2d
+call S_DRVM_SetPortBlockStatus ulIfIndex = 0x1207000, block status = 1,result = 0
+Timer:ulhigh =0 ,ulLow = 18326, TASK ID = 2d
+call S_GM_AddPortToGroup buildrun ulIfIndex=0x1207000
+Timer:ulhigh =0 ,ulLow = 18326, TASK ID = 2d
+call S_GM_UpdateGroup 1
+Timer:ulhigh =0 ,ulLow = 18326, TASK ID = 2d
+call S_GM_UpdateGroup 1 ifindex = 0x1206000 is new unselected port
+Timer:ulhigh =0 ,ulLow = 18326, TASK ID = 2d
+call S_GM_UpdateGroup 1 ifindex = 0x1207000 is new unselected port
+Timer:ulhigh =0 ,ulLow = 18326, TASK ID = 2d
+call S_ServiceSlotRpt 0x2a60000
+Timer:ulhigh =0 ,ulLow = 18326, TASK ID = 2d
+call AI_RptIfEvent 1 bFastDownFlag = 0, ulRet = 0
+Timer:ulhigh =0 ,ulLow = 18326, TASK ID = 2d
+call S_AI_RptIfEvent 1, over
+Timer:ulhigh =0 ,ulLow = 18327, TASK ID = 1d
+call S_CLI_PrcsPortJoinGroup ulIfIndex=0x1207000
+Timer:ulhigh =0 ,ulLow = 21187, TASK ID = 2d
+call S_GM_UpdateGroup 1
+Timer:ulhigh =0 ,ulLow = 21187, TASK ID = 2d
+call S_GM_UpdateGroup 1 ifindex = 0x1206000 is new unselected port
+Timer:ulhigh =0 ,ulLow = 21187, TASK ID = 2d
+call S_GM_UpdateGroup 1 ifindex = 0x1207000 is new unselected port
+Timer:ulhigh =0 ,ulLow = 21187, TASK ID = 2d
+call S_ServiceSlotRpt 0x2a60000
+Timer:ulhigh =0 ,ulLow = 21187, TASK ID = 2d
+call AI_RptIfEvent 1 bFastDownFlag = 0, ulRet = 0
+Timer:ulhigh =0 ,ulLow = 21187, TASK ID = 2d
+call S_AI_RptIfEvent 1, over
+ End of Proc Record!
+
+======================================================================
+  ===============display pagg data slot all agginfo===============
+======================================================================
+=== LAGG Module Agginfo on Board 1 :
+-- Aggregation Group Index : 1
+- TRUE is 1,FALSE is 0.
+-- Aggregation IfIndex : 2a60000
+-- Aggregation Group Type : 3
+-- Loading Share Type : 1
+-- Need report drv message or Not : 0
+-- Current Drv Context 1 : 0x1
+-- Current Drv Context 2 : 0xffffffff
+-- Current Drv Context 3 : 0xffffffff
+-- Current Drv Context 4 : 0xffffffff
+-- Old Drv Context 1 : 0xffffffff
+-- Old Drv Context 2 : 0xffffffff
+-- Old Drv Context 3 : 0xffffffff
+-- Old Drv Context 4 : 0xffffffff
+-- Agg IfIndex ShutDownFlag: 0
+-- Agg ADMIN ShutDownFlag: 0
+- Agg MD5 : 8a1364aa29fb2b3d2dc4dfe38acb9f7
+- Agg HashKeyMode : 00000000000000
+-- AggBatchChgCount : 0
+-- LAGG_GM_BATCHCHGEXCEPTTIMERID : -1
+-- AggSequence Number : 4
+-- pucSlotSetAckMap : 0-
+-- pucSlotNeedRptAIEventMap : 0-
+-- pucMemberSlotMap : 128-
+-- bIsRptFastDownStatus : 0
+-- ulWaitCalcTimerID : -1
+-- ulWaitAckFlag : 0
+-- LAGG_GM_WAITACKEXCEPTTIMERID : -1
+-- usHaSmoothFlag : 65535
+- Current Member1: 0x1206000, Current Member2: 0x1207000,
+------------------------------------------
+=======================================================================
+  ===============display pagg data slot all portinfo===============
+=======================================================================
+== LAGG Module AggPortinfo on Board 1 :
+- PortIndex : 0x1206000,
+- AI IfIndex = 0x2a60000
+- Port short Index = 7
+- Port selected status = 2
+- ulMaxSelectNumber = 8
+- LAGG_PM_HARDWAREVALUE = 1
+- port MD5 : 8a1364aa29fb2b3d2dc4dfe38acb9f7
+- ulRecordSpeed = 0
+- ulRecordDuplex = 1 (Full=1,Half=2,Auto=3)
+- ulPhyState = 0
+- ucPortChgState = 0x0
+- ucNotAttachedReason = 3
+- usKey = 1
+- port block = 1
+- ucActorOperState = 45
+- ucPartnerOperState = 30
+- aucPartnerOperSysMac : 000000
+- usPartnerOperSysPri = 32768
+- usPartnerOperPortPri = 32768
+- usPartnerOperKey = 0
+- usPartnerOperPortNumber = 0
+- bIsIndividual = 0
+- MUX status = 1
+- RX status = 6
+- fsm selected status = 2
+------------------------------------------
+- PortIndex : 0x1207000,
+- AI IfIndex = 0x2a60000
+- Port short Index = 8
+- Port selected status = 2
+- ulMaxSelectNumber = 8
+- LAGG_PM_HARDWAREVALUE = 1
+- port MD5 : 8a1364aa29fb2b3d2dc4dfe38acb9f7
+- ulRecordSpeed = 0
+- ulRecordDuplex = 1 (Full=1,Half=2,Auto=3)
+- ulPhyState = 0
+- ucPortChgState = 0x0
+- ucNotAttachedReason = 3
+- usKey = 1
+- port block = 1
+- ucActorOperState = 45
+- ucPartnerOperState = 30
+- aucPartnerOperSysMac : 000000
+- usPartnerOperSysPri = 32768
+- usPartnerOperPortPri = 32768
+- usPartnerOperKey = 0
+- usPartnerOperPortNumber = 0
+- bIsIndividual = 0
+- MUX status = 1
+- RX status = 6
+- fsm selected status = 2
+------------------------------------------
+=====================================================
+  ===============display stp brief===============
+=====================================================
+ MSTID      Port                         Role  STP State     Protection
+   0        GigabitEthernet1/0/1         ROOT  FORWARDING    NONE
+   0        GigabitEthernet1/0/2         ALTE  DISCARDING    NONE
+   0        GigabitEthernet1/0/17        DESI  FORWARDING    NONE
+   0        GigabitEthernet1/0/18        DESI  FORWARDING    NONE
+   0        GigabitEthernet1/0/19        DESI  FORWARDING    NONE
+   0        GigabitEthernet1/0/20        DESI  FORWARDING    NONE
+   0        GigabitEthernet1/0/21        DESI  FORWARDING    NONE
+   0        GigabitEthernet1/0/22        DESI  FORWARDING    NONE
+   0        GigabitEthernet1/0/23        DESI  FORWARDING    NONE
+   0        GigabitEthernet1/0/24        DESI  FORWARDING    NONE
+===============================================
+  ===============display stp===============
+===============================================
+-------[CIST Global Info][Mode RSTP]-------
+CIST Bridge         :32768.e8f7-245d-3382
+Bridge Times        :Hello 2s MaxAge 20s FwDly 15s MaxHop 20
+CIST Root/ERPC      :32768.5c8a-389e-e572 / 20
+CIST RegRoot/IRPC   :32768.e8f7-245d-3382 / 0
+CIST RootPortId     :128.1
+BPDU-Protection     :disabled
+Bridge Config-
+Digest-Snooping     :disabled
+TC or TCN received  :24
+Time since last TC  :0 days 3h:18m:6s
+
+----[Port29(Bridge-Aggregation1)][DOWN]----
+ Port Protocol       :enabled
+ Port Role           :CIST Disabled Port
+ Port Priority       :128
+ Port Cost(Legacy)   :Config=auto / Active=200000
+ Desg. Bridge/Port   :32768.e8f7-245d-3382 / 128.29
+ Port Edged          :Config=disabled / Active=disabled
+ Point-to-point      :Config=auto / Active=false
+ Transmit Limit      :10 packets/hello-time
+ Protection Type     :None
+ MST BPDU Format     :Config=auto / Active=legacy
+ Port Config-
+ Digest-Snooping     :disabled
+ Num of Vlans Mapped :3
+ PortTimes           :Hello 2s MaxAge 20s FwDly 15s MsgAge 0s RemHop 20
+ BPDU Sent           :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+ BPDU Received       :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+
+----[Port1(GigabitEthernet1/0/1)][FORWARDING]----
+ Port Protocol       :enabled
+ Port Role           :CIST Root Port
+ Port Priority       :128
+ Port Cost(Legacy)   :Config=auto / Active=20
+ Desg. Bridge/Port   :32768.5c8a-389e-e572 / 128.1
+ Port Edged          :Config=enabled / Active=disabled
+ Point-to-point      :Config=auto / Active=true
+ Transmit Limit      :10 packets/hello-time
+ Protection Type     :None
+ MST BPDU Format     :Config=auto / Active=legacy
+ Port Config-
+ Digest-Snooping     :disabled
+ Num of Vlans Mapped :1
+ PortTimes           :Hello 2s MaxAge 20s FwDly 15s MsgAge 0s RemHop 0
+ BPDU Sent           :25
+          TCN: 0, Config: 0, RST: 25, MST: 0
+ BPDU Received       :126795
+          TCN: 0, Config: 0, RST: 126795, MST: 0
+
+----[Port2(GigabitEthernet1/0/2)][DISCARDING]----
+ Port Protocol       :enabled
+ Port Role           :CIST Alternate Port
+ Port Priority       :128
+ Port Cost(Legacy)   :Config=auto / Active=20
+ Desg. Bridge/Port   :32768.5c8a-389e-e572 / 128.2
+ Port Edged          :Config=disabled / Active=disabled
+ Point-to-point      :Config=auto / Active=true
+ Transmit Limit      :10 packets/hello-time
+ Protection Type     :None
+ MST BPDU Format     :Config=auto / Active=legacy
+ Port Config-
+ Digest-Snooping     :disabled
+ Num of Vlans Mapped :3
+ PortTimes           :Hello 2s MaxAge 20s FwDly 15s MsgAge 0s RemHop 0
+ BPDU Sent           :26
+          TCN: 0, Config: 0, RST: 26, MST: 0
+ BPDU Received       :126795
+          TCN: 0, Config: 0, RST: 126795, MST: 0
+
+----[Port3(GigabitEthernet1/0/3)][DOWN]----
+ Port Protocol       :enabled
+ Port Role           :CIST Disabled Port
+ Port Priority       :128
+ Port Cost(Legacy)   :Config=auto / Active=200000
+ Desg. Bridge/Port   :32768.e8f7-245d-3382 / 128.3
+ Port Edged          :Config=enabled / Active=enabled
+ Point-to-point      :Config=auto / Active=false
+ Transmit Limit      :10 packets/hello-time
+ Protection Type     :None
+ MST BPDU Format     :Config=auto / Active=legacy
+ Port Config-
+ Digest-Snooping     :disabled
+ Num of Vlans Mapped :1
+ PortTimes           :Hello 2s MaxAge 20s FwDly 15s MsgAge 0s RemHop 20
+ BPDU Sent           :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+ BPDU Received       :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+
+----[Port4(GigabitEthernet1/0/4)][DOWN]----
+ Port Protocol       :enabled
+ Port Role           :CIST Disabled Port
+ Port Priority       :128
+ Port Cost(Legacy)   :Config=auto / Active=200000
+ Desg. Bridge/Port   :32768.e8f7-245d-3382 / 128.4
+ Port Edged          :Config=enabled / Active=enabled
+ Point-to-point      :Config=auto / Active=false
+ Transmit Limit      :10 packets/hello-time
+ Protection Type     :None
+ MST BPDU Format     :Config=auto / Active=legacy
+ Port Config-
+ Digest-Snooping     :disabled
+ Num of Vlans Mapped :1
+ PortTimes           :Hello 2s MaxAge 20s FwDly 15s MsgAge 0s RemHop 20
+ BPDU Sent           :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+ BPDU Received       :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+
+----[Port5(GigabitEthernet1/0/5)][DOWN]----
+ Port Protocol       :enabled
+ Port Role           :CIST Disabled Port
+ Port Priority       :128
+ Port Cost(Legacy)   :Config=auto / Active=200000
+ Desg. Bridge/Port   :32768.e8f7-245d-3382 / 128.5
+ Port Edged          :Config=enabled / Active=enabled
+ Point-to-point      :Config=auto / Active=false
+ Transmit Limit      :10 packets/hello-time
+ Protection Type     :None
+ MST BPDU Format     :Config=auto / Active=legacy
+ Port Config-
+ Digest-Snooping     :disabled
+ Num of Vlans Mapped :1
+ PortTimes           :Hello 2s MaxAge 20s FwDly 15s MsgAge 0s RemHop 20
+ BPDU Sent           :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+ BPDU Received       :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+
+----[Port6(GigabitEthernet1/0/6)][DOWN]----
+ Port Protocol       :enabled
+ Port Role           :CIST Disabled Port
+ Port Priority       :128
+ Port Cost(Legacy)   :Config=auto / Active=200000
+ Desg. Bridge/Port   :32768.e8f7-245d-3382 / 128.6
+ Port Edged          :Config=enabled / Active=enabled
+ Point-to-point      :Config=auto / Active=false
+ Transmit Limit      :10 packets/hello-time
+ Protection Type     :None
+ MST BPDU Format     :Config=auto / Active=legacy
+ Port Config-
+ Digest-Snooping     :disabled
+ Num of Vlans Mapped :1
+ PortTimes           :Hello 2s MaxAge 20s FwDly 15s MsgAge 0s RemHop 20
+ BPDU Sent           :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+ BPDU Received       :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+
+----[Port7(GigabitEthernet1/0/7)][DOWN]----
+ Port Protocol       :enabled
+ Port Role           :CIST Disabled Port
+ Port Priority       :128
+ Port Cost(Legacy)   :Config=auto / Active=200000
+ Desg. Bridge/Port   :32768.e8f7-245d-3382 / 128.7
+ Port Edged          :Config=enabled / Active=enabled
+ Point-to-point      :Config=auto / Active=false
+ Transmit Limit      :10 packets/hello-time
+ Protection Type     :None
+ MST BPDU Format     :Config=auto / Active=legacy
+ Port Config-
+ Digest-Snooping     :disabled
+ Num of Vlans Mapped :3
+ PortTimes           :Hello 2s MaxAge 20s FwDly 15s MsgAge 0s RemHop 20
+ BPDU Sent           :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+ BPDU Received       :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+
+----[Port8(GigabitEthernet1/0/8)][DOWN]----
+ Port Protocol       :enabled
+ Port Role           :CIST Disabled Port
+ Port Priority       :128
+ Port Cost(Legacy)   :Config=auto / Active=200000
+ Desg. Bridge/Port   :32768.e8f7-245d-3382 / 128.8
+ Port Edged          :Config=enabled / Active=enabled
+ Point-to-point      :Config=auto / Active=false
+ Transmit Limit      :10 packets/hello-time
+ Protection Type     :None
+ MST BPDU Format     :Config=auto / Active=legacy
+ Port Config-
+ Digest-Snooping     :disabled
+ Num of Vlans Mapped :3
+ PortTimes           :Hello 2s MaxAge 20s FwDly 15s MsgAge 0s RemHop 20
+ BPDU Sent           :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+ BPDU Received       :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+
+----[Port9(GigabitEthernet1/0/9)][DOWN]----
+ Port Protocol       :enabled
+ Port Role           :CIST Disabled Port
+ Port Priority       :128
+ Port Cost(Legacy)   :Config=auto / Active=200000
+ Desg. Bridge/Port   :32768.e8f7-245d-3382 / 128.9
+ Port Edged          :Config=enabled / Active=enabled
+ Point-to-point      :Config=auto / Active=false
+ Transmit Limit      :10 packets/hello-time
+ Protection Type     :None
+ MST BPDU Format     :Config=auto / Active=legacy
+ Port Config-
+ Digest-Snooping     :disabled
+ Num of Vlans Mapped :1
+ PortTimes           :Hello 2s MaxAge 20s FwDly 15s MsgAge 0s RemHop 20
+ BPDU Sent           :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+ BPDU Received       :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+
+----[Port10(GigabitEthernet1/0/10)][DOWN]----
+ Port Protocol       :enabled
+ Port Role           :CIST Disabled Port
+ Port Priority       :128
+ Port Cost(Legacy)   :Config=auto / Active=200000
+ Desg. Bridge/Port   :32768.e8f7-245d-3382 / 128.10
+ Port Edged          :Config=enabled / Active=enabled
+ Point-to-point      :Config=auto / Active=false
+ Transmit Limit      :10 packets/hello-time
+ Protection Type     :None
+ MST BPDU Format     :Config=auto / Active=legacy
+ Port Config-
+ Digest-Snooping     :disabled
+ Num of Vlans Mapped :1
+ PortTimes           :Hello 2s MaxAge 20s FwDly 15s MsgAge 0s RemHop 20
+ BPDU Sent           :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+ BPDU Received       :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+
+----[Port11(GigabitEthernet1/0/11)][DOWN]----
+ Port Protocol       :enabled
+ Port Role           :CIST Disabled Port
+ Port Priority       :128
+ Port Cost(Legacy)   :Config=auto / Active=200000
+ Desg. Bridge/Port   :32768.e8f7-245d-3382 / 128.11
+ Port Edged          :Config=enabled / Active=enabled
+ Point-to-point      :Config=auto / Active=false
+ Transmit Limit      :10 packets/hello-time
+ Protection Type     :None
+ MST BPDU Format     :Config=auto / Active=legacy
+ Port Config-
+ Digest-Snooping     :disabled
+ Num of Vlans Mapped :1
+ PortTimes           :Hello 2s MaxAge 20s FwDly 15s MsgAge 0s RemHop 20
+ BPDU Sent           :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+ BPDU Received       :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+
+----[Port12(GigabitEthernet1/0/12)][DOWN]----
+ Port Protocol       :enabled
+ Port Role           :CIST Disabled Port
+ Port Priority       :128
+ Port Cost(Legacy)   :Config=auto / Active=200000
+ Desg. Bridge/Port   :32768.e8f7-245d-3382 / 128.12
+ Port Edged          :Config=enabled / Active=enabled
+ Point-to-point      :Config=auto / Active=false
+ Transmit Limit      :10 packets/hello-time
+ Protection Type     :None
+ MST BPDU Format     :Config=auto / Active=legacy
+ Port Config-
+ Digest-Snooping     :disabled
+ Num of Vlans Mapped :1
+ PortTimes           :Hello 2s MaxAge 20s FwDly 15s MsgAge 0s RemHop 20
+ BPDU Sent           :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+ BPDU Received       :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+
+----[Port13(GigabitEthernet1/0/13)][DOWN]----
+ Port Protocol       :enabled
+ Port Role           :CIST Disabled Port
+ Port Priority       :128
+ Port Cost(Legacy)   :Config=auto / Active=200000
+ Desg. Bridge/Port   :32768.e8f7-245d-3382 / 128.13
+ Port Edged          :Config=enabled / Active=enabled
+ Point-to-point      :Config=auto / Active=false
+ Transmit Limit      :10 packets/hello-time
+ Protection Type     :None
+ MST BPDU Format     :Config=auto / Active=legacy
+ Port Config-
+ Digest-Snooping     :disabled
+ Num of Vlans Mapped :1
+ PortTimes           :Hello 2s MaxAge 20s FwDly 15s MsgAge 0s RemHop 20
+ BPDU Sent           :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+ BPDU Received       :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+
+----[Port14(GigabitEthernet1/0/14)][DOWN]----
+ Port Protocol       :enabled
+ Port Role           :CIST Disabled Port
+ Port Priority       :128
+ Port Cost(Legacy)   :Config=auto / Active=200000
+ Desg. Bridge/Port   :32768.e8f7-245d-3382 / 128.14
+ Port Edged          :Config=enabled / Active=enabled
+ Point-to-point      :Config=auto / Active=false
+ Transmit Limit      :10 packets/hello-time
+ Protection Type     :None
+ MST BPDU Format     :Config=auto / Active=legacy
+ Port Config-
+ Digest-Snooping     :disabled
+ Num of Vlans Mapped :1
+ PortTimes           :Hello 2s MaxAge 20s FwDly 15s MsgAge 0s RemHop 20
+ BPDU Sent           :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+ BPDU Received       :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+
+----[Port15(GigabitEthernet1/0/15)][DOWN]----
+ Port Protocol       :enabled
+ Port Role           :CIST Disabled Port
+ Port Priority       :128
+ Port Cost(Legacy)   :Config=auto / Active=200000
+ Desg. Bridge/Port   :32768.e8f7-245d-3382 / 128.15
+ Port Edged          :Config=enabled / Active=enabled
+ Point-to-point      :Config=auto / Active=false
+ Transmit Limit      :10 packets/hello-time
+ Protection Type     :None
+ MST BPDU Format     :Config=auto / Active=legacy
+ Port Config-
+ Digest-Snooping     :disabled
+ Num of Vlans Mapped :1
+ PortTimes           :Hello 2s MaxAge 20s FwDly 15s MsgAge 0s RemHop 20
+ BPDU Sent           :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+ BPDU Received       :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+
+----[Port16(GigabitEthernet1/0/16)][DOWN]----
+ Port Protocol       :enabled
+ Port Role           :CIST Disabled Port
+ Port Priority       :128
+ Port Cost(Legacy)   :Config=auto / Active=200000
+ Desg. Bridge/Port   :32768.e8f7-245d-3382 / 128.16
+ Port Edged          :Config=enabled / Active=enabled
+ Point-to-point      :Config=auto / Active=false
+ Transmit Limit      :10 packets/hello-time
+ Protection Type     :None
+ MST BPDU Format     :Config=auto / Active=legacy
+ Port Config-
+ Digest-Snooping     :disabled
+ Num of Vlans Mapped :1
+ PortTimes           :Hello 2s MaxAge 20s FwDly 15s MsgAge 0s RemHop 20
+ BPDU Sent           :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+ BPDU Received       :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+
+----[Port17(GigabitEthernet1/0/17)][FORWARDING]----
+ Port Protocol       :enabled
+ Port Role           :CIST Designated Port
+ Port Priority       :128
+ Port Cost(Legacy)   :Config=auto / Active=200
+ Desg. Bridge/Port   :32768.e8f7-245d-3382 / 128.17
+ Port Edged          :Config=enabled / Active=enabled
+ Point-to-point      :Config=auto / Active=true
+ Transmit Limit      :10 packets/hello-time
+ Protection Type     :None
+ MST BPDU Format     :Config=auto / Active=legacy
+ Port Config-
+ Digest-Snooping     :disabled
+ Rapid transition    :true
+ Num of Vlans Mapped :1
+ PortTimes           :Hello 2s MaxAge 20s FwDly 15s MsgAge 1s RemHop 20
+ BPDU Sent           :126813
+          TCN: 0, Config: 0, RST: 126813, MST: 0
+ BPDU Received       :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+
+----[Port18(GigabitEthernet1/0/18)][FORWARDING]----
+ Port Protocol       :enabled
+ Port Role           :CIST Designated Port
+ Port Priority       :128
+ Port Cost(Legacy)   :Config=auto / Active=200
+ Desg. Bridge/Port   :32768.e8f7-245d-3382 / 128.18
+ Port Edged          :Config=enabled / Active=enabled
+ Point-to-point      :Config=auto / Active=true
+ Transmit Limit      :10 packets/hello-time
+ Protection Type     :None
+ MST BPDU Format     :Config=auto / Active=legacy
+ Port Config-
+ Digest-Snooping     :disabled
+ Rapid transition    :true
+ Num of Vlans Mapped :1
+ PortTimes           :Hello 2s MaxAge 20s FwDly 15s MsgAge 1s RemHop 20
+ BPDU Sent           :126813
+          TCN: 0, Config: 0, RST: 126813, MST: 0
+ BPDU Received       :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+
+----[Port19(GigabitEthernet1/0/19)][FORWARDING]----
+ Port Protocol       :enabled
+ Port Role           :CIST Designated Port
+ Port Priority       :128
+ Port Cost(Legacy)   :Config=auto / Active=200
+ Desg. Bridge/Port   :32768.e8f7-245d-3382 / 128.19
+ Port Edged          :Config=enabled / Active=enabled
+ Point-to-point      :Config=auto / Active=true
+ Transmit Limit      :10 packets/hello-time
+ Protection Type     :None
+ MST BPDU Format     :Config=auto / Active=legacy
+ Port Config-
+ Digest-Snooping     :disabled
+ Rapid transition    :true
+ Num of Vlans Mapped :1
+ PortTimes           :Hello 2s MaxAge 20s FwDly 15s MsgAge 1s RemHop 20
+ BPDU Sent           :126813
+          TCN: 0, Config: 0, RST: 126813, MST: 0
+ BPDU Received       :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+
+----[Port20(GigabitEthernet1/0/20)][FORWARDING]----
+ Port Protocol       :enabled
+ Port Role           :CIST Designated Port
+ Port Priority       :128
+ Port Cost(Legacy)   :Config=auto / Active=200
+ Desg. Bridge/Port   :32768.e8f7-245d-3382 / 128.20
+ Port Edged          :Config=enabled / Active=enabled
+ Point-to-point      :Config=auto / Active=true
+ Transmit Limit      :10 packets/hello-time
+ Protection Type     :None
+ MST BPDU Format     :Config=auto / Active=legacy
+ Port Config-
+ Digest-Snooping     :disabled
+ Rapid transition    :true
+ Num of Vlans Mapped :1
+ PortTimes           :Hello 2s MaxAge 20s FwDly 15s MsgAge 1s RemHop 20
+ BPDU Sent           :126813
+          TCN: 0, Config: 0, RST: 126813, MST: 0
+ BPDU Received       :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+
+----[Port21(GigabitEthernet1/0/21)][FORWARDING]----
+ Port Protocol       :enabled
+ Port Role           :CIST Designated Port
+ Port Priority       :128
+ Port Cost(Legacy)   :Config=auto / Active=200
+ Desg. Bridge/Port   :32768.e8f7-245d-3382 / 128.21
+ Port Edged          :Config=enabled / Active=enabled
+ Point-to-point      :Config=auto / Active=true
+ Transmit Limit      :10 packets/hello-time
+ Protection Type     :None
+ MST BPDU Format     :Config=auto / Active=legacy
+ Port Config-
+ Digest-Snooping     :disabled
+ Rapid transition    :true
+ Num of Vlans Mapped :1
+ PortTimes           :Hello 2s MaxAge 20s FwDly 15s MsgAge 1s RemHop 20
+ BPDU Sent           :126813
+          TCN: 0, Config: 0, RST: 126813, MST: 0
+ BPDU Received       :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+
+----[Port22(GigabitEthernet1/0/22)][FORWARDING]----
+ Port Protocol       :enabled
+ Port Role           :CIST Designated Port
+ Port Priority       :128
+ Port Cost(Legacy)   :Config=auto / Active=200
+ Desg. Bridge/Port   :32768.e8f7-245d-3382 / 128.22
+ Port Edged          :Config=enabled / Active=enabled
+ Point-to-point      :Config=auto / Active=true
+ Transmit Limit      :10 packets/hello-time
+ Protection Type     :None
+ MST BPDU Format     :Config=auto / Active=legacy
+ Port Config-
+ Digest-Snooping     :disabled
+ Rapid transition    :true
+ Num of Vlans Mapped :1
+ PortTimes           :Hello 2s MaxAge 20s FwDly 15s MsgAge 1s RemHop 20
+ BPDU Sent           :126813
+          TCN: 0, Config: 0, RST: 126813, MST: 0
+ BPDU Received       :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+
+----[Port23(GigabitEthernet1/0/23)][FORWARDING]----
+ Port Protocol       :enabled
+ Port Role           :CIST Designated Port
+ Port Priority       :128
+ Port Cost(Legacy)   :Config=auto / Active=200
+ Desg. Bridge/Port   :32768.e8f7-245d-3382 / 128.23
+ Port Edged          :Config=enabled / Active=enabled
+ Point-to-point      :Config=auto / Active=true
+ Transmit Limit      :10 packets/hello-time
+ Protection Type     :None
+ MST BPDU Format     :Config=auto / Active=legacy
+ Port Config-
+ Digest-Snooping     :disabled
+ Rapid transition    :true
+ Num of Vlans Mapped :1
+ PortTimes           :Hello 2s MaxAge 20s FwDly 15s MsgAge 1s RemHop 20
+ BPDU Sent           :126813
+          TCN: 0, Config: 0, RST: 126813, MST: 0
+ BPDU Received       :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+
+----[Port24(GigabitEthernet1/0/24)][FORWARDING]----
+ Port Protocol       :enabled
+ Port Role           :CIST Designated Port
+ Port Priority       :128
+ Port Cost(Legacy)   :Config=auto / Active=200
+ Desg. Bridge/Port   :32768.e8f7-245d-3382 / 128.24
+ Port Edged          :Config=enabled / Active=enabled
+ Point-to-point      :Config=auto / Active=true
+ Transmit Limit      :10 packets/hello-time
+ Protection Type     :None
+ MST BPDU Format     :Config=auto / Active=legacy
+ Port Config-
+ Digest-Snooping     :disabled
+ Rapid transition    :true
+ Num of Vlans Mapped :1
+ PortTimes           :Hello 2s MaxAge 20s FwDly 15s MsgAge 1s RemHop 20
+ BPDU Sent           :126813
+          TCN: 0, Config: 0, RST: 126813, MST: 0
+ BPDU Received       :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+
+----[Port25(GigabitEthernet1/0/25)][DOWN]----
+ Port Protocol       :enabled
+ Port Role           :CIST Disabled Port
+ Port Priority       :128
+ Port Cost(Legacy)   :Config=auto / Active=200000
+ Desg. Bridge/Port   :32768.e8f7-245d-3382 / 128.25
+ Port Edged          :Config=enabled / Active=enabled
+ Point-to-point      :Config=auto / Active=false
+ Transmit Limit      :10 packets/hello-time
+ Protection Type     :None
+ MST BPDU Format     :Config=auto / Active=legacy
+ Port Config-
+ Digest-Snooping     :disabled
+ Num of Vlans Mapped :1
+ PortTimes           :Hello 2s MaxAge 20s FwDly 15s MsgAge 0s RemHop 20
+ BPDU Sent           :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+ BPDU Received       :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+
+----[Port26(GigabitEthernet1/0/26)][DOWN]----
+ Port Protocol       :enabled
+ Port Role           :CIST Disabled Port
+ Port Priority       :128
+ Port Cost(Legacy)   :Config=auto / Active=200000
+ Desg. Bridge/Port   :32768.e8f7-245d-3382 / 128.26
+ Port Edged          :Config=enabled / Active=enabled
+ Point-to-point      :Config=auto / Active=false
+ Transmit Limit      :10 packets/hello-time
+ Protection Type     :None
+ MST BPDU Format     :Config=auto / Active=legacy
+ Port Config-
+ Digest-Snooping     :disabled
+ Num of Vlans Mapped :1
+ PortTimes           :Hello 2s MaxAge 20s FwDly 15s MsgAge 0s RemHop 20
+ BPDU Sent           :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+ BPDU Received       :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+
+----[Port27(GigabitEthernet1/0/27)][DOWN]----
+ Port Protocol       :enabled
+ Port Role           :CIST Disabled Port
+ Port Priority       :128
+ Port Cost(Legacy)   :Config=auto / Active=200000
+ Desg. Bridge/Port   :32768.e8f7-245d-3382 / 128.27
+ Port Edged          :Config=enabled / Active=enabled
+ Point-to-point      :Config=auto / Active=false
+ Transmit Limit      :10 packets/hello-time
+ Protection Type     :None
+ MST BPDU Format     :Config=auto / Active=legacy
+ Port Config-
+ Digest-Snooping     :disabled
+ Num of Vlans Mapped :1
+ PortTimes           :Hello 2s MaxAge 20s FwDly 15s MsgAge 0s RemHop 20
+ BPDU Sent           :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+ BPDU Received       :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+
+----[Port28(GigabitEthernet1/0/28)][DOWN]----
+ Port Protocol       :enabled
+ Port Role           :CIST Disabled Port
+ Port Priority       :128
+ Port Cost(Legacy)   :Config=auto / Active=200000
+ Desg. Bridge/Port   :32768.e8f7-245d-3382 / 128.28
+ Port Edged          :Config=enabled / Active=enabled
+ Point-to-point      :Config=auto / Active=false
+ Transmit Limit      :10 packets/hello-time
+ Protection Type     :None
+ MST BPDU Format     :Config=auto / Active=legacy
+ Port Config-
+ Digest-Snooping     :disabled
+ Num of Vlans Mapped :1
+ PortTimes           :Hello 2s MaxAge 20s FwDly 15s MsgAge 0s RemHop 20
+ BPDU Sent           :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+ BPDU Received       :0
+          TCN: 0, Config: 0, RST: 0, MST: 0
+==================================================
+  ===============display stp tc===============
+==================================================
+ -------------- STP slot 1 TC or TCN count -------------
+ MSTID      Port                       Receive      Send
+   0        GigabitEthernet1/0/1          12         5
+   0        GigabitEthernet1/0/2          12         3
+   0        GigabitEthernet1/0/17         0          0
+   0        GigabitEthernet1/0/18         0          0
+   0        GigabitEthernet1/0/19         0          0
+   0        GigabitEthernet1/0/20         0          0
+   0        GigabitEthernet1/0/21         0          0
+   0        GigabitEthernet1/0/22         0          0
+   0        GigabitEthernet1/0/23         0          0
+   0        GigabitEthernet1/0/24         0          0
+=======================================================
+  ===============display stp history===============
+=======================================================
+ --------------- STP slot 1 history trace ---------------
+ -------------------  Instance 0   ---------------------
+
+ Port GigabitEthernet1/0/2
+   Role change   : Desi->Alte
+   Time          : 2016/07/04 05:40:48
+   Port priority : 32768.5c8a-389e-e572 0 32768.e8f7-245d-3382 0
+                   32768.5c8a-389e-e572 128.2
+
+ Port GigabitEthernet1/0/1
+   Role change   : Desi->Root
+   Time          : 2016/07/04 05:40:48
+   Port priority : 32768.5c8a-389e-e572 0 32768.e8f7-245d-3382 0
+                   32768.5c8a-389e-e572 128.1
+
+ Port GigabitEthernet1/0/2
+   Role change   : Root->Desi (Aged)
+   Time          : 2016/07/04 05:40:06
+   Port priority : 32768.5c8a-389e-e572 0 32768.e8f7-245d-3382 0
+                   32768.5c8a-389e-e572 128.2
+
+ Port GigabitEthernet1/0/2
+   Role change   : Alte->Root
+   Time          : 2016/07/04 05:40:06
+   Port priority : 32768.5c8a-389e-e572 0 32768.e8f7-245d-3382 0
+                   32768.5c8a-389e-e572 128.2
+
+ Port GigabitEthernet1/0/1
+   Role change   : Root->Desi (Aged)
+   Time          : 2016/07/04 05:40:06
+   Port priority : 32768.5c8a-389e-e572 0 32768.e8f7-245d-3382 0
+                   32768.5c8a-389e-e572 128.1
+
+ Port GigabitEthernet1/0/2
+   Role change   : Desi->Alte
+   Time          : 2000/04/26 13:00:29
+   Port priority : 32768.5c8a-389e-e572 0 32768.e8f7-245d-3382 0
+                   32768.5c8a-389e-e572 128.2
+
+ Port GigabitEthernet1/0/1
+   Role change   : Desi->Root
+   Time          : 2000/04/26 13:00:29
+   Port priority : 32768.5c8a-389e-e572 0 32768.e8f7-245d-3382 0
+                   32768.5c8a-389e-e572 128.1
+===================================================
+  ===============display arp all===============
+===================================================
+                Type: S-Static    D-Dynamic
+IP Address       MAC Address     VLAN ID  Interface              Aging Type
+192.168.188.110  5c8a-389e-e572  1        GE1/0/1                12    D
+192.168.188.1    5c49-797d-0a94  1        GE1/0/1                19    D
+192.168.188.103  5c51-4fe8-cc77  1        GE1/0/1                19    D
+192.168.188.117  f41b-a152-f222  1        GE1/0/1                13    D
+192.168.188.155  0015-99a9-ea88  1        GE1/0/1                12    D
+192.168.188.114  84b1-53c2-b8de  1        GE1/0/1                12    D
+192.168.188.153  28a0-2bbd-03df  1        GE1/0/1                3     D
+192.168.188.102  001c-c4bd-edec  1        GE1/0/1                20    D
+=============================================================
+  ===============display arp specification===============
+=============================================================
+ARP Specification:
+Permitted Static ARP Number : 64
+Permitted Total ARP Number : 256
+Permitted Max Number perIf Configed: 256
+Default Permitted Max Number perIf: 256
+============================================================
+  ===============display arp error slot 1===============
+============================================================
+Dump Errors in ARP processing:
+ Error(s) in initialization: 1
+ Error(s) in malloc memory:  0
+ Error(s) in func parameter: 38
+ Error(s) in Send QueueMsg:  0
+ Error(s) in write taskevent: 0
+
+ Error(s) in malloc IPC msg: 0
+ Error(s) in malloc RPC msg: 0
+ Error(s) in Create IPCGroup: 0
+ Error(s) in Join IPCGroup: 0
+ Error(s) in Reg WaitList: 0
+ Error(s) in Get WaitList: 0
+ Error(s) in Set WaitList: 0
+ Error(s) in Create Timer: 0
+
+ Error(s) in Send ARP Request: 0
+ Error(s) in match static Entry: 0
+ Error(s) in Add Arp Entry: 0
+ Error(s) in Get Arp Entry: 0
+ Error(s) in Delete Arp Entry: 0
+ Error(s) in Hitting Arp Entry: 0
+ Error(s) in Add Entry For RenewTime: 0
+
+ Error(s) in Create IFCB: 0
+ Error(s) in Create Interface Link: 0
+ Error(s) in Create Interface LinkNode: 0
+ Error(s) in Create Unprobe node: 0
+ Error(s) in Create ref Node: 0
+ Error(s) in Add Reference : 0
+
+ Error(s) in Slot Insert : 0
+ Error(s) in Slot Remove : 0
+ Error(s) in IfIndex Insert : 0
+
+ Error(s) in Add Drv Dummy: 0
+ Error(s) in Del Drv Dummy: 0
+ Error(s) in Add Drv : 0
+ Error(s) in Del Drv : 0
+ Error(s) in Mod Drv : 0
+ Error(s) in Add ArpHost Drv : 0
+ Error(s) in Del ArpHost Drv : 0
+ Error(s) in Mod ArpHost Drv : 0
+
+ Error(s) in Get Vrf index: 0
+ Error(s) in Call IF_GetDataByIfIndex: 0
+ Error(s) in Get Device Data: 0
+ Error(s) in Get Vlan Data: 0
+ Error(s) in Get Lacp Data: 0
+ Error(s) in Get Interface Mac: 0
+
+ Error(s) in fast synchronization: 0
+ Error(s) in Cock Sing: 0
+ Error(s) in smoothing process: 0
+ Error(s) in Receive wrong HA Msg: 22
+ Error(s) in Process event: 0
+ Error(s) in Syn event: 0
+ Error(s) in Common: 13261
+===========================================================
+  ===============display arp info slot 1===============
+===========================================================
+ARP Information:
+Learning switcher: 1 (1 on, 0 off)
+CockSingStatus: 0
+ARPCockEndStatus: 0x00000000000000000
+ARP DataCollectState:
+   ulState: 2 (0 syn, 1 asy, 2 end)
+   LinkHeadWaitListHandle: 0
+   ListEntryWaitListHandle: 0
+   pstArpLinkHead: 0x0
+   pstLinkNode: 0x0
+   usArpNumSent: 0
+ARPSmoothFlag: 0
+ARP KeepConsistent:
+    WalkState: 0 (1 start  0 end)
+    LinkHeadWaitListHandle: 0
+    ListEntryWaitListHandle: 0
+    pstArpLinkHead: 0x0
+    pstLinkNode: 0x0
+ARP Cock Age:
+    WalkState: 0 (1 start  0 end)
+    LinkHeadWaitListHandle: 0
+    ListEntryWaitListHandle: 0
+    pstArpLinkHead: 0x0
+    pstLinkNode: 0x0
+    pstLinkNode: 0x0
+    WalkState: 0 (1 start  0 end)
+    LinkHeadWaitListHandle: 0
+    ListEntryWaitListHandle: 0
+    pstArpLinkHead: 0x0
+    pstLinkNode: 0x0
+ARP BlackHoleEnable: 0
+ARP Default BlackKeep: 0
+ARP BlackHoleKeep: 0
+ARP ProbeLink Max-Len: 0
+ARP Reload Timer: 10000 ms
+ARP SendSeq: 0
+ARP IPC Queue Len: 0
+ARP Detection Information
+    Max Vlan ID: 4094
+    Max config Vlan number: 1024
+    Current configed Vlan number: 0
+    Valid check config: 0
+    Vlan bit map length(byte): 512
+    Vlan bit map address: 0x83c2e7b0
+ARP RateLimit Information
+    Default rate limit: 4294967295
+    Min rate limit: 5
+    Max rate limit: 100
+ARP ActiveAck Information:
+    Enable: 0
+    Current ActiveAck Link Count: 0
+ARP SrcMAC ValidCheck: 0
+ARP SrcMACFixed Information:
+    Fixed Mode: 0
+    Current AgeTime: 300
+    Current Threshhold: 50
+    Current HashNode Count: 0
+    Current AttackLink Count: 0
+    Current ExcludeMac Count: 0
+    Max ExcludeMac Count: 10
+    Current DropMac Count: 0
+    Max DropMac Count: 200
+   Function Form DHCPC: 0x80aee690
+   Function Form DHCPR: 0x81535c00
+   Function Form PORTAL: 0x0
+ARP SlotNotifyInfo(0x83fbdc00) slot( )
+=================================================================
+  ===============display arp statistics slot 1===============
+=================================================================
+Dump ARP Statistics Data:
+All Valid ARP Number: 8
+All Static ARP Number     : 0
+Unresolved Incomplete Static  ARP Number : 0
+Resolved Incomplete Static  ARP Number : 0
+Valid complete Static  ARP Number : 0
+Invalid complete Static  ARP Number : 0
+All Dynamic(unresolved + resolved) ARP Number : 8
+Unresolved(Not Valid) Dynamic ARP Number : 0
+Resolved Dynamic ARP Number   : 8
+Multiport ARP Number          : 0
+Permitted Static ARP Number : 64
+Permitted Multiport ARP Number : 0
+Permitted Total ARP Number : 256
+Permitted Max Number perIf Configed: 256
+Default Permitted Max Number perIf: 256
+Permitted Dynamic ARP Number : 0
+ARP Input Counter         : 14717
+ARP Resolved Counter      : 9264
+Timer Entering Counter    : 0
+Failed Update Fdb Counter : 0
+Static Reload Timer       : 0
+ARP max ipc queue len     : 0
+Last Error Code           : 0
+ARP Drop Counter          : 0
+ARP Static Item Counter   : 0
+ARP Dynamic Item Counter  : 0
+ARP Dummy Counter         : 0
+ARP ProbeNode Counter     : 0
+ARP Probe Request Counter : 0
+ARP Mbuf Num              : 0
+========================================================
+  ===============display ip interface===============
+========================================================
+Vlan-interface1 current state :UP
+Line protocol current state :UP
+Internet Address is 192.168.188.137/24, acquired via DHCP
+Broadcast address : 192.168.188.255
+The Maximum Transmit Unit : 1500 bytes
+input packets : 9087, bytes : 888868, multicasts : 0
+output packets : 9265, bytes : 5778218, multicasts : 0
+ARP packet input number:       14668
+  Request packet:              14007
+  Reply packet:                  661
+  Unknown packet:                  0
+TTL invalid packet number:         0
+ICMP packet input number:          0
+  Echo reply:                      0
+  Unreachable:                     0
+  Source quench:                   0
+  Routing redirect:                0
+  Echo request:                    0
+  Router advert:                   0
+  Router solicit:                  0
+  Time exceed:                     0
+  IP header bad:                   0
+  Timestamp request:               0
+  Timestamp reply:                 0
+  Information request:             0
+  Information reply:               0
+  Netmask request:                 0
+  Netmask reply:                   0
+  Unknown type:                    0
+
+=========================================================
+  ===============display ip statistics===============
+=========================================================
+  Input:   sum            9087             local             9087
+           bad protocol   0                bad format        0
+           bad checksum   0                bad options       0
+  Output:  forwarding     0                local             9329
+           dropped        0                no route          64
+           compress fails 0
+  Fragment:input          0                output            0
+           dropped        0
+           fragmented     0                couldn't fragment 0
+  Reassembling:sum        0                timeouts          0
+==========================================================
+  ===============display ipv6 interface===============
+==========================================================
+Vlan-interface1 current state :UP
+Line protocol current state :DOWN
+
+====================================================
+  ===============display ipv6 fib===============
+====================================================
+ FIB Table:
+ Total number of Routes : 1
+
+ Flag:
+  U:Useable   G:Gateway   H:Host   B:Blackhole   D:Dynamic   S:Static
+
+Destination:    ::1                                     PrefixLength : 128
+NextHop    :    ::1                                     Flag         : UH
+Label      :    Null                                    Token        : Invalid
+Interface  :    InLoopBack0
+
+===============================================
+  ===============display fib===============
+===============================================
+Destination count: 5    FIB entry count: 5
+
+Flag:
+  U:Useable   G:Gateway   H:Host   B:Blackhole   D:Dynamic   S:Static
+  R:Relay
+
+Destination/Mask   Nexthop         Flag    OutInterface    InnerLabel Token
+0.0.0.0/0          192.168.188.1   USG     Vlan1           Null       Invalid
+192.168.188.0/24   0.0.0.0         U       Vlan1           Null       Invalid
+192.168.188.137/32 127.0.0.1       UH      InLoop0         Null       Invalid
+127.0.0.1/32       127.0.0.1       UH      InLoop0         Null       Invalid
+127.0.0.0/8        127.0.0.1       U       InLoop0         Null       Invalid
+==============================================================
+  ===============display ipv6 neighbors all===============
+==============================================================
+                Type: S-Static    D-Dynamic
+IPv6 Address                   Link-layer     VID  Interface      State T Age
+=======================================================================
+  ===============display igmp-snooping group verbose===============
+=======================================================================
+  Global IGMP Snooping is not enabled.
+======================================================================
+  ===============display mld-snooping group verbose===============
+======================================================================
+  Global MLD snooping is not enabled.
+========================================================
+  ===============display  mac-address===============
+========================================================
+
+0022-61fe-ee9a  1        Learned         GigabitEthernet1/0/1      AGING
+3a31-c4dd-1cba  1        Learned         GigabitEthernet1/0/1      AGING
+0008-9bc8-5650  1        Learned         GigabitEthernet1/0/1      AGING
+001c-c4bd-edec  1        Learned         GigabitEthernet1/0/1      AGING
+0015-99a9-ea88  1        Learned         GigabitEthernet1/0/1      AGING
+5c51-4fe8-cc77  1        Learned         GigabitEthernet1/0/1      AGING
+001e-0beb-27f6  10       Learned         GigabitEthernet1/0/19     AGING
+0030-ab12-0a17  1        Learned         GigabitEthernet1/0/1      AGING
+5c49-797d-0a94  1        Learned         GigabitEthernet1/0/1      AGING
+3a31-c4dd-3e86  1        Learned         GigabitEthernet1/0/1      AGING
+84b1-53c2-b8de  1        Learned         GigabitEthernet1/0/1      AGING
+001c-c4dd-d310  10       Learned         GigabitEthernet1/0/23     AGING
+001a-2206-37bf  1        Learned         GigabitEthernet1/0/1      AGING
+
+ --- 13 mac address(es) found ---
+
+============================================================
+  ===============display ip routing-table===============
+============================================================
+Routing Tables: Public
+	Destinations : 5	Routes : 5
+
+Destination/Mask    Proto  Pre  Cost         NextHop         Interface
+
+0.0.0.0/0           Static 70   0            192.168.188.1   Vlan1
+127.0.0.0/8         Direct 0    0            127.0.0.1       InLoop0
+127.0.0.1/32        Direct 0    0            127.0.0.1       InLoop0
+192.168.188.0/24    Direct 0    0            192.168.188.137 Vlan1
+192.168.188.137/32  Direct 0    0            127.0.0.1       InLoop0
+
+==============================================================
+  ===============display ipv6 routing-table===============
+==============================================================
+Routing Table : Public
+	Destinations : 1	Routes : 1
+
+Destination: ::1/128                                     Protocol  : Direct
+NextHop    : ::1                                         Preference: 0
+Interface  : InLoop0                                     Cost      : 0
+
+======================================================
+  ===============display ospf brief===============
+======================================================
+Info: OSPF routing process is not enabled
+======================================================
+  ===============display ospf error===============
+======================================================
+Info: OSPF routing process is not enabled
+=====================================================
+  ===============display ospf peer===============
+=====================================================
+Info: OSPF routing process is not enabled
+=========================================================
+  ===============display ospf abr-asbr===============
+=========================================================
+Info: OSPF routing process is not enabled
+=======================================================================
+  ===============display ip routing-table statistics===============
+=======================================================================
+Proto      route       active      added       deleted     freed
+DIRECT     4           4           4           0           0
+STATIC     1           1           1           0           0
+RIP        0           0           0           0           0
+OSPF       0           0           0           0           0
+Total      5           5           5           0           0
+=========================================================================
+  ===============display ipv6 routing-table statistics===============
+=========================================================================
+Protocol   route       active      added       deleted     freed
+DIRECT     1           1           1           0           0
+STATIC     0           0           0           0           0
+Total      1           1           1           0           0
+===============================================================
+  ===============_display rm rcom-statistics===============
+===============================================================
+ IPv4 routing table RCOM flush summary
+ -------------------------------------
+ ref : 5            del : 0            totalmsgs : 4
+ fjt : 3            fff : 0
+ nbr : 0            nbd : 0            nff : 0
+ IM List--Cur count 0, Full count 0, Max count 12
+====================================================================
+  ===============_display rm ipv6 rcom-statistics===============
+====================================================================
+ IPv6 routing table RCOM flush summary
+ -------------------------------------
+ ref : 1            del : 0            totalmsgs : 1
+ fjt : 1            fff : 0
+==================================================================
+  ===============_display rm ipv6 flush-summary===============
+==================================================================
+ IPv6 routing table flush summary
+ add count is 1
+ del count is 0
+ mod count is 0
+ ati count is 0
+ ita count is 0
+ mto count is 0
+ mtz count is 0

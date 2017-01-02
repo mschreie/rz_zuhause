@@ -1,5 +1,5 @@
 ---
-### FIXME: mit bindmount reingehängte Dateien sind im ISO 0 Byte groß => copiere den content
+### INFO: mit bindmount reingehängte Dateien sind im ISO 0 Byte groß => copiere den content
 ### FIXME: isolinux.bin hat falsche eigentümer/rechte
 - name: check device
   local_action: shell /usr/bin/ls -ld "{{ usb_device }}" | grep '^b'

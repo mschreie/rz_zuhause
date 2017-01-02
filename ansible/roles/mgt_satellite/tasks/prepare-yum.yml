@@ -33,10 +33,6 @@
     - firefox
     - pulp-admin-client
 
-- name: stop satellite
-  shell: /usr/bin/katello-service stop 
-  ignore_errors: True
-
 - name: update all packages
   yum: name=* state=latest
   notify: 

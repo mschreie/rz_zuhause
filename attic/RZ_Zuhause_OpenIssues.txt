@@ -1,0 +1,54 @@
+RZ_Zuhause  OpenIssues
+
+* Base install of OS of jump-host not automated (yet)
+* Sync of Satellite in this environment not mature enough...
+   maybe this helps: https://access.redhat.com/solutions/2653831
+* 
+
+
+INFOS
+inst.ks=
+ip=ip::gateway:netmask:hostname:interface:none
+
+ip=192.168.188.102::192.168.188.1:24:jump.example.com:enp3s0:none
+inst.repo=
+
+inst.ks=http://10.32.5.1/mnt/archive/RHEL-7/7.x/Server/x86_64/kickstarts/ks.cfg
+
+
+2: ens2f0: <BROADCAST,MULTICAST,SLAVE,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast master bond0 state UP qlen 1000
+    link/ether 00:1b:78:58:76:b0 brd ff:ff:ff:ff:ff:ff
+3: enp3s0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP qlen 1000
+    link/ether 00:1c:c4:bd:ed:ec brd ff:ff:ff:ff:ff:ff
+    inet /24 brd 192.168.188.255 scope global enp3s0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::21c:c4ff:febd:edec/64 scope link 
+       valid_lft forever preferred_lft forever
+4: ens2f1: <BROADCAST,MULTICAST,SLAVE,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast master bond0 state UP qlen 1000
+    link/ether 00:1b:78:58:76:b0 brd ff:ff:ff:ff:ff:ff
+5: enp5s0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc mq state DOWN qlen 1000
+    link/ether 00:1c:c4:bd:fd:8a brd ff:ff:ff:ff:ff:ff
+6: bond0: <BROADCAST,MULTICAST,MASTER,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP qlen 1000
+    link/ether 00:1b:78:58:76:b0 brd ff:ff:ff:ff:ff:ff
+    inet6 fe80::21b:78ff:fe58:76b0/64 scope link 
+       valid_lft forever preferred_lft forever
+7: vlan10@bond0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP qlen 1000
+    link/ether 00:1b:78:58:76:b0 brd ff:ff:ff:ff:ff:ff
+    inet 172.16.10.1/24 brd 172.16.10.255 scope global vlan10
+       valid_lft forever preferred_lft forever
+    inet6 fe80::21b:78ff:fe58:76b0/64 scope link 
+       valid_lft forever preferred_lft forever
+8: vlan20@bond0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP qlen 1000
+    link/ether 00:1b:78:58:76:b0 brd ff:ff:ff:ff:ff:ff
+    inet 172.16.20.1/24 brd 172.16.20.255 scope global vlan20
+       valid_lft forever preferred_lft forever
+    inet6 fe80::21b:78ff:fe58:76b0/64 scope link 
+       valid_lft forever preferred_lft forever
+
+[root@jump ~]# ip r s
+default via 192.168.188.1 dev enp3s0  proto static  metric 100 
+172.16.10.0/24 dev vlan10  proto kernel  scope link  src 172.16.10.1  metric 400 
+172.16.20.0/24 dev vlan20  proto kernel  scope link  src 172.16.20.1  metric 400 
+192.168.188.0/24 dev enp3s0  proto kernel  scope link  src 192.168.188.102  metric 100 
+[root@jump ~]# 
+

@@ -1,0 +1,136 @@
+= {subject}: PREPARED FOR - {customer}
+Adrian Bradshaw <adrian@redhat.com>
+:subject: RHEV Troubleshooting
+:description: Basic Troubleshooting Tips
+:doctype: book
+:confidentiality: Confidential
+:customer:  Volkswagen IT Group Cloud
+:listing-caption: Listing
+:toc:
+:toclevels: 6
+:sectnums:
+:sectnumlevels: 5
+:numbered:
+:chapter-label:
+:pdf-page-size: A4
+:icons: font
+ifdef::backend-pdf[]
+:title-page-background-image: image:images/EngagementJournalCoverPageLogoNew.jpg[pdfwidth=8.0in,align=center]
+:pygments-style: tango
+:source-highlighter: pygments
+//:source-highlighter: coderay
+endif::[]
+:revnumber: 0.0.1
+//A simple http://asciidoc.org[AsciiDoc] document.
+
+== History and Revisions
+
+[cols=4,cols="1,1,3,4",options=header]
+|===
+|Version
+|Date
+|Authors
+|Changes
+
+
+|0.0.1
+|24.10.2015
+|Adrian Bradshaw adrian@redhat.com
+|Initial version of the template
+
+|===
+
+
+== Preface
+=== Confidentiality, Copyright, and Disclaimer
+Copyright 2015 (C) Red Hat, Inc.  All Rights Reserved. No part of the work covered by the copyright herein may be reproduced or used in any form or by any means- graphic, electronic, or mechanical, including photocopying, recording, taping, or information storage and retrieval systems without permission in writing from Red Hat except as is required to share this information as provided with the aforementioned confidential parties.
+
+=== Additional Background and Related Documents
+This document also references additional information that can be found on Red Hat‘s documentation site at https://access.redhat.com/knowledge/docs/ and specifically at https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Virtualization/3.5/
+
+Documents specific to products covered in this solution include the following Guides
+
+* https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Virtualization/3.5/html/Installation_Guide/[RHEV 3.5 Installation Guide]
+* https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Virtualization/3.5/html-single/Administration_Guide/index.html[RHEV 3.5 Administration Guide]
+* https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Virtualization/3.5/html/User_Guide/index.html[RHEV 3.5 User Guide]
+* https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Virtualization/3.5/html-single/Technical_Guide/index.html[RHEV 3.5 Technical Guide]
+
+Additional information can be found on the RHEV upstream projects website (oVirt):
+
+http://www.ovirt.org/Documentation
+
+
+=== Terminology
+Some of the acronyms using in this document are included in the table below
+
+
+.Terminology Table
+[cols=2,cols="1,5",options=header]
+|===
+<|Term <|Definition
+
+|RHEV
+|Red Hat Enterprise Virtualisation
+
+|RHEV-M
+|Red Hat Enterprise Virtualisation Manager
+
+|RHEL-H
+|Red Hat Enterprise Linux Hypervisor
+
+|===
+
+== Summary
+
+This document aims to give some basic troubleshooting tips and recommendations for help diagnose issues with the RHEV environment
+
+=== Raise A Ticket
+
+If you arent able to quickly resolve this issue yourself, you should get a ticket raised with Red Hat as soon as possible. The sooner you engage them, the sooner they will be able to assist. Ideally the ticket would be raised by an approved TAM contact, ensuring the TAM is made aware as soon as possible.
+
+=== Killing a VM in an Unknown State
+
+the following process should be followed in order to resolve a VM that is in an unknown state.
+
+* Identify which HV the VM is/was running on, from the Web UI
+* Connect via SSH to the HV (identified above)
+* Use virsh to list the state of the VM
++
+ virsh -r list
+
+* Attempt to use vdsClient to cleanly kill the VM
++
+ vsdClient localhost shutdown <vm> 0 none force=1
+ vsdClient localhost destroy <vm> #Note - destroy does NOT remove the VM, just terminates it
+
+* If the above steps fail to kill the VM, identify the pid of the qemu-kvm task for the particular machine
++
+ ps aux | grep qemu-kvm
+
+* If you have time, it may be useful to get a dump of the current VM for later analysis by Red Hat, if required
++
+ gcore -o <location with enough disk space> <PID identified above>
+
++
+This file would compress very well, so you should gzip it to save space. Items of up to 1G can be added to cases directly via the web. (A recent 13G core file compressed to about 433M)
+
+* user the kill command to kill the VM
++
+ kill <PID identified above>
+ or
+ kill -9 <PID identified above>
+
+This information is based on https://access.redhat.com/solutions/194583
+
+**Other References**
+
+link:https://access.redhat.com/solutions/125253[Guest in unknown state]
+
+=== Failure to migrate VMs to/from a HV
+
+If you are unable to migrate a VM to/from a particular Hypervisor, it may be related to a misconfiguration of the move network
+
+Check that
+
+* the move IP address is pingable from other HVs
+* the correct bonding is set (mode 4 LACP usually)

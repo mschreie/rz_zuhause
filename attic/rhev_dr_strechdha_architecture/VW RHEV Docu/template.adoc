@@ -1,0 +1,192 @@
+= {subject}: PREPARED FOR - {customer}
+Adrian Bradshaw <adrian@redhat.com>
+:subject: RHS Doc Client TECHNICAL v013
+:description:  Document Sub Title Goes Here
+:doctype: book
+:confidentiality: Confidential
+:customer:  CLIENTCOMPANY
+:listing-caption: Listing
+:toc:
+:toclevels: 6
+:sectnums:
+:sectnumlevels: 5
+:numbered:
+:chapter-label:
+:pdf-page-size: A4
+:icons: font
+ifdef::backend-pdf[]
+:title-page-background-image: image:images/EngagementJournalCoverPageLogoNew.jpg[pdfwidth=8.0in,align=center]
+:pygments-style: tango
+:source-highlighter: pygments
+//:source-highlighter: coderay
+endif::[]
+:revnumber: 0.0.1
+//A simple http://asciidoc.org[AsciiDoc] document.
+
+== History and Revisions
+
+[cols=4,cols="1,1,3,4",options=header]
+|===
+|Version
+|Date
+|Authors
+|Changes
+
+
+|0.0.1
+|24.10.2015
+|Adrian Bradshaw adrian@redhat.com
+|Initial version of the template
+
+|===
+
+
+== Preface
+=== Confidentiality, Copyright, and Disclaimer ===
+The following three paragraphs should be used in all client-facing documents...
+This is a Customer-facing document between Red Hat, Inc. and {customer} (“Client”).
+Copyright (C) {docdate} Red Hat, Inc. All Rights Reserved. No part of the work covered by the copyright herein may be reproduced or used in any form or by any means – graphic, electronic, or mechanical, including photocopying, recording, taping, or information storage and retrieval systems – without permission in writing from Red Hat except as is required to share this information as provided with the aforementioned confidential parties.
+This document is not a quote and does not include any binding commitments by Red Hat.
+WARNING: The following paragraph should ONLY be used in client-facing documents delivered prior to or during the actual engagement. This generally means positioning documents, responses to RFIs, preparatory documents, client surveys, responses to change requests, etc. If you include it, be sure to un-highlight it.
+If acceptable, a formal quote can be issued upon request, which will include the scope of work, cost, and any customer requirements as necessary.
+
+=== About This Document
+Describe the purpose of the document similar to the following:
+This template is provided for the creation of style-guide-compliant, Customer-facing documents. Generally this template would be used primarily for the creation of client-facing documents (e.g. Proposals, Scoping Guides, Engagement Reports, etc.) This document template is visually distinct from both the Red Hat branded public document standards and from Red Hat internal documents.
+
+=== Audience
+Indicate the intended audience for the document similar to the following:
+This document is provided for use by internal and/or Enterprise Solutions licensed parties involved in the creation of Customer-facing Enterprise Solutions documents.
+
+=== Additional Background and Related Documents
+Provide related information to help frame the document and its purpose in relation to any larger works or related documents. For example:
+Numerous conventions are used within Red Hat documentation to facilitate the use and creation of documents as well as to consistently portray similar concepts or information.
+This document carries the style definitions set forth in the document: RH Documentation Style Guide.
+
+=== Terminology
+Provide a glossary for terminology that may not be common knowledge with the intended audience. Define terms and expand then define acronyms. If the terminology table exceeds a full page in length, it should probably be moved to an Appendix with a reference to the appendix in this section in place of the table.
+
+.Terminology Table
+[cols=2,cols="1,5",options=header]
+|===
+<|Term <|Definition
+
+|RHEV
+|Red Hat Enterprise Virtualisation
+
+|RHEV-M
+|Red Hat Enterprise Virtualisation Manager
+
+|RHEL-H
+|Red Hat Enterprise Linux Hypervisor
+
+|===
+
+== CONTENT SAMPLES
+=== Paragraph Styles
+==== Heading 4
+===== Heading 5
+====== Heading 6
+
+RH Body text
+
+NOTE: This is another note
+
+TIP: Top tips go here
+
+IMPORTANT: An important block
+
+WARNING: This is a warning
+
+* Bullet
++
+continuing text
++
+some more text
+* List
+** Sub item
+
+//^
+
+. Number
+. List
++
+continuation text
+
+.. Sub item
++
+more
++
+and even more
+
+.Simple python script showing syntax highlighting
+[source,python]
+----
+#!/usr/bin/python
+#
+name = raw_input('What is your name?\n')
+print 'Hi, %s.' % name
+----
+
+* RH List Bullet: used to convey discrete items or concepts in a list manner where no list numbering is required or advised.
++
+RH List Continue: used following either List Bullet or List Number to provide continuation paragraph(s) without a bullet or number preceding the paragraph.
+
+** RH List Bullet: used as an additional nested list level within either a List Bullet 1 or List Number 1 item to provide subordinate paragraph(s) with a bullet preceding the paragraph.
++
+RH List Continue 2: used following either List Bullet 1 or List Number 1 to provide continuation paragraph(s) without a bullet or number preceding the paragraph.
+
+*** RH List Bullet 3: used as an additional nested list level within either a List Bullet 2 or List Number 2 item to provide subordinate paragraph(s) with a bullet preceding the paragraph.
++
+RH List Continue 3: used following either List Continue 2 or List Number 2 to provide continuation paragraph(s) without a bullet or number preceding the paragraph.
+
+//°
+
+. RH List Number: used to convey discrete items or concepts in a list manner where list numbering is required or beneficial.
+.. RH List Number 2: used as an additional nested list level within either a List Bullet 1 or List Number 1 item to provide subordinate paragraph(s) with a number preceding the paragraph.
+... RH List Number 3: used as an additional nested list level within either a List Bullet 2 or List Number 2 item to provide subordinate paragraph(s) with a number preceding the paragraph.
+
+[quote]
+RH Text Quote: used to quote large portions of text from other documentation. This is not used for file listings or terminal output listings.
+
+
+
+.Example Table with Header
+[cols=5,options=header]
+|===
+<|Column 1 <|Column 2 <|Column 3 <|Column 4 <|Column 5
+
+|Data
+|1
+|1
+|1
+|1
+
+|Data
+|2
+|2
+|2
+|2
+
+|Data
+|3
+|3
+|3
+|3
+
+|Data
+|4
+|4
+|4
+|4
+
+|Total
+|10
+|10
+|10
+|10
+
+|===
+
+.Figure with caption
+image::images/rhev.png[RHEV,pdfwidth=50%,role="right"]

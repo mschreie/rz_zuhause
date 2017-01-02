@@ -1,0 +1,12 @@
+name: rhev21
+mac: 00:1C:C4:A6:9C:3A
+type: rhev
+dc: right
+fqdn: rhev21.example.com.     
+ipaddress: 172.16.20.201 
+reverse: 201.20.16.172.in-addr.arpa.
+ilo_name: rhev21-ilo
+ilo_ip: 172.16.10.201
+
+
+

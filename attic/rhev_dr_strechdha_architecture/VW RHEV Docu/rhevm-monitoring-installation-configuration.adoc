@@ -1,0 +1,521 @@
+= {subject}: PREPARED FOR - {customer}
+Ben Haubeck <bhaubeck@redhat.com>
+:subject: Monitoring
+:description: Installation and Configuration
+:doctype: book
+:confidentiality: Confidential
+:customer:  Volkswagen IT Group Cloud
+:listing-caption: Listing
+:toc:
+:toclevels: 6
+:numbered:
+:chapter-label:
+:pdf-page-size: A4
+:icons: font
+ifdef::backend-pdf[]
+:title-page-background-image: image:images/EngagementJournalCoverPageLogoNew.jpg[pdfwidth=8.0in,align=center]
+:pygments-style: tango
+:source-highlighter: pygments
+//:source-highlighter: coderay
+endif::[]
+:revnumber: 1.3.1
+
+//A simple http://asciidoc.org[AsciiDoc] document.
+
+== History and Revisions
+
+[cols=4,cols="1,1,3,4",options=header]
+|===
+|Version
+|Date
+|Authors
+|Changes
+
+
+|0.1.0
+|12/08/2015
+|Ben Haubeck bhaubeck@redhat.com
+|Initial Draft
+
+|1.0.0
+|14.08.2015
+|Ben Haubeck bhaubeck@redhat.com
+|first Release
+
+
+|1.1.0
+|02.09.2015
+|Ben Haubeck bhaubeck@redhat.com
+|fixed formatting issues
+
+|1.2.0
+|02.09.2015
+|Ben Haubeck bhaubeck@redhat.com
+|/etc/hosts entry for B2X
+
+|1.3.0
+|09.09.2015
+|Ben Haubeck bhaubeck@redhat.com
+|adding SNMP recommendations
+
+|1.3.1
+|20/10/2015
+|Adrian Bradshaw adrian@redhat.com
+|underlying document format converstion
+
+|1.4
+|28/10/2015
+|Ben Haubeck bhaubeck@redhat.com
+|adding description how to obtain the software
+
+|===
+
+
+== Preface
+=== Confidentiality, Copyright, and Disclaimer ===
+The following three paragraphs should be used in all client-facing documents...
+This is a Customer-facing document between Red Hat, Inc. and {customer} (“Client”).
+Copyright (C) {docdate} Red Hat, Inc. All Rights Reserved. No part of the work covered by the copyright herein may be reproduced or used in any form or by any means – graphic, electronic, or mechanical, including photocopying, recording, taping, or information storage and retrieval systems – without permission in writing from Red Hat except as is required to share this information as provided with the aforementioned confidential parties.
+
+=== Additional Background and Related Documents
+
+This document also references additional information that can be found on Red Hat‘s documentation site at https://access.redhat.com/knowledge/docs/ and specifically at https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Virtualization/3.5/
+
+Documents specific to products covered in this solution include the following Guides
+
+* https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Virtualization/3.5/html/Installation_Guide/[RHEV 3.5 Installation Guide]
+* https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Virtualization/3.5/html-single/Administration_Guide/index.html[RHEV 3.5 Administration Guide]
+* https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Virtualization/3.5/html/User_Guide/index.html[RHEV 3.5 User Guide]
+* https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Virtualization/3.5/html-single/Technical_Guide/index.html[RHEV 3.5 Technical Guide]
+
+
+Additional information can be found on the RHEV upstream projects website (oVirt)
+
+http://www.ovirt.org/Documentation
+
+=== Terminology
+
+.Terminology Table
+[cols=2,cols="1,5",options=header]
+|===
+<|Term <|Definition
+
+|RHEV |Red Hat Enterprise Virtualisation
+
+|RHEV-M |Red Hat Enterprise Virtualisation Manager
+
+|RHEL-H |Red Hat Enterprise Linux Hypervisor
+
+|SNMP |Simple Network Management Protocol
+
+|===
+
+== RHEV Monitoring
+=== Summary
+
+This document describes the monitoring setup and configuration of the servers for the “New Linux Platform” (Phase 1) with the Fujitsu hardware monitoring agents for the Fujitsu RX4770 with RHEL 7.1. And it also documents the recommendations for the SNMP based monitoring via the SMILE.
+
+=== Obtain the Software
+
+Point your web browser to http://support.ts.fujitsu.com/download/index.asp?lng=EN&Level1=&LNID=5566
+
+* put "RX4770" in the search box "Product search by Serial-/Identnumber" and hit the continue - button
+* choose neither M1 or M2 in the selection box
+* choose "Red Hat Enterprise Linux Server" as the operating system
+* choose "Red Hat Enterprise Linux 7 (x86_64)" in the automatically unfolded view
+* expand "Server Management Software"
+* expand "ServerView - Agents & CIM Providers and System Monitor"
+* click on the "Download" - Button next to "ServerView Agents for Linux (64 bit)"
+* confirm that you have have "read and agree to the terms and conditions." and click on the "Download file" - Button
+
+
+=== Details / Requirements
+
+ServerView Agents Linux consist of seven packages in Red Hat
+Package Manager (RPM) format (do not install it right now):
+
+* srvmagt-agents-7.10-<release>.<arch>.rpm
+* srvmagt-eecd-7.10-<release>.<arch>.rpm
+* srvmagt-mods_src-7.10-<release>.<arch>.rpm
+* srv-cimprovider-7.10-<release>.x86_64.rpm => no suitable CIMOM found, so not used at VW
+* SVSystemMonitor-7.10-<release>.noarch.rpm
+* SSMWebUI-7.10-<release>.noarch.rpm
+* ServerViewConnectorService
+
+Requirements on Red Hat Enterprise Linux 7:
+
+* libstdc++
+* openssl
+* libcurl
+* net-snmp
+* net-snmp-utils
+* net-snmp-agent-libs
+
+Plus, because DUP is not doing as planned:
+
+* gcc
+* glibc-devel
+* kernel-devel
+* kernel-headers
+
+=== Installation Preparation
+
+Copy the certificates and install the packages:
+
+==== Certificates
+Transfer the files <system_name>.scs.pem and <system_name>.scs.xml to a local directory <cert dir>.
+
+[cols=2]
+|===
+
+|Intranet zone:
+|...SVO.scs.pem
+
+|B2X zone:
+|...SVOA.scs.pem
+
+|===
+
+The Certificates was given to us by Roman Wolf.
+
+
+==== Environment
+Export the environment variables SV_SCS_INSTALL_TRUSTED
+
+ # export SV_SCS_INSTALL_TRUSTED=<certdir>
+
+
+So the scripts in the rpm package using the certificates automatically during the post-installation tasks included in the rpm packages of Fujitsu.
+
+
+==== Installation Steps
+
+Installation of required RHEL packages
+
+ #  yum install libstdc++ openssl libcurl net-snmp net-snmp-utils net-snmp-agent-libs gcc glibc-devel kernel-devel kernel-headers
+
+
+==== Installation of Fujitsu packages
+
+----
+# rpm -U srvmagt-­mods_src-­<version>-­<release>.<arch>.rpm
+# rpm -U ServerViewConnectorService-­<version>-­<release>.<arch>.rpm
+# rpm -U srvmagt-­eecd-­<version>-­<release>.<arch>.rpm
+# rpm -U srvmagt-­agents-­<version>-­<release>.<arch>.rpm
+# rpm -U SVSystemMonitor-­<version>-­<release>.noarch.rpm
+# rpm -U SSMWebUI-­<version>-­<release>.noarch.rpm
+----
+
+in the order given.
+Get the <version> and <release> number for the ServerView Agents Linux as appropriate or do it this way, if only the right files are in the current directory:
+
+----
+# rpm -U srvmagt-mods_src*.rpm
+# rpm -U ServerViewConnectorService*.rpm
+# rpm -U srvmagt-eecd*.rpm
+# rpm -U srvmagt-agents*.rpm
+# rpm -U SVSystemMonitor*.rpm
+# rpm -U SSMWebUI*.rpm
+----
+
+Installation of ServerView Agents Linux automatically stops and then restarts the SNMP master agent snmpd.
+
+Start (and building) Modules
+
+ # /etc/init.d/eecd_mods_src start
+
+
+Start enclosure daemon
+
+ # /etc/init.d/eecd start
+
+Tune the Logging of SNMP
+
+Add this line to /etc/sysconfig/snmpd:
+
+ OPTIONS="-LS6d -Lf /dev/null -p /var/run/snmpd.pid"
+
+Specific SNMP configuration
+
+Copy the snmpd.conf (file attached, see Appendix and is in the Zipfile included, that the certificates contained) to  /etc/snmp/snmpd.conf on the system and adjust the configuration according to the zone:
+
+.Values for rwcommunity:
+[cols=2]
+|===
+
+|Community - Intranet
+|svom_SNMP_Trap1 READ_WRITE
+
+|Community - B2X
+|svom_SNMP_Trap1 READ_WRITE
+
+|===
+
+.Value for trap2sink:
+[cols=2]
+|===
+
+|DNS Management-Station - Intranet
+|vwagwos00svo.wob.vw.vwg
+
+|DNS Management-Station - B2X: (QS2X?)
+|vw2bwos00svoa.wob.sec.vw.vwg
+
+|===
+
+and change the permissions of the file:
+
+ # chmod 600 /etc/snmp/snmpd.conf
+
+In B2X add this line to /etc/hosts
+
+ 10.252.72.227    vw2bwos00svoa.wob.sec.vw.vwg
+
+
+(Re)start SNMP
+
+ # systemctl enable snmpd
+ # systemctl restart snmpd
+
+
+Restart srvmagt
+
+ # systemctl restart srvmagt
+
+
+==== Basic Troubleshooting for Fujitsu Agents
+
+If the start of the controlling service srvmagt fails, try to start every daemon separately in this order and check the status output and / or the journal:
+
+----
+# systemctl stop srvmagt
+
+# systemctl start eecd_mods_src
+# systemctl start eecd
+# systemctl start srvmagt
+# systemctl start srvmagt_scs
+----
+
+== Recommendations for SNMP based Monitoring
+Hardware monitoring of the Fujitsu servers is done by the Fujitsu agents as already documented in the first chapter of this document.
+The Hypervisors, all RHEL-VMs and the RHEV-Managers are additionally monitored via SMILE, which uses SNMP to monitor the systems vendor independent.
+
+=== Monitoring Recommendations for RHEL-Hypervisor (RHEL-H)
+
+For the RHEL hypervisor we recommend at least to get the values for CPU, nemory and network.
+Additionally relevant events from the hypervisors will also be monitored by the RHEV Manager and so captured by the monitoring of the RHEV Manager (see Chapter Monitoring Recommendations for the RHEV Manager).
+
+**NIC Statistics**
+
+The bonds that should be monitored:
+
+* bond0
+* bond1
+* bond2
+
+To discover the OIDs for these bonds:
+
+----
+[root@lxf101s001 ~]# snmpwalk -v 2c -c svom_SNMP_Trap1 localhost
+.1.3.6.1.2.1.2.2.1.2 |grep bond.$
+IF-MIB::ifDescr.16 = STRING: bond0
+IF-MIB::ifDescr.19 = STRING: bond1
+IF-MIB::ifDescr.20 = STRING: bond2
+
+Get Bytes IN: .1.3.6.1.2.1.2.2.1.10
+Get Bytes IN for NIC 19 (bond1): .1.3.6.1.2.1.2.2.1.10.19
+Get Bytes OUT: .1.3.6.1.2.1.2.2.1.16
+Get Bytes OUT for NIC 19 (bond1): .1.3.6.1.2.1.2.2.1.16.19
+----
+
+
+**CPU Statistics**
+
+----
+Load
+1 minute Load: .1.3.6.1.4.1.2021.10.1.3.1
+5 minute Load: .1.3.6.1.4.1.2021.10.1.3.2
+15 minute Load: .1.3.6.1.4.1.2021.10.1.3.3
+----
+
+**CPU times**
+
+----
+percentage of user CPU time: .1.3.6.1.4.1.2021.11.9.0
+raw user cpu time: .1.3.6.1.4.1.2021.11.50.0
+percentages of system CPU time: .1.3.6.1.4.1.2021.11.10.0
+raw system cpu time: .1.3.6.1.4.1.2021.11.52.0
+percentages of idle CPU time: .1.3.6.1.4.1.2021.11.11.0
+----
+
+**Memory Statistics**
+
+----
+Total Swap Size: .1.3.6.1.4.1.2021.4.3.0
+Available Swap Space: .1.3.6.1.4.1.2021.4.4.0
+Total RAM in machine: .1.3.6.1.4.1.2021.4.5.0
+Total RAM used: .1.3.6.1.4.1.2021.4.6.0
+Total RAM Free: .1.3.6.1.4.1.2021.4.11.0
+Total RAM Shared: .1.3.6.1.4.1.2021.4.13.0
+Total RAM Buffered: .1.3.6.1.4.1.2021.4.14.0
+Total Cached Memory: .1.3.6.1.4.1.2021.4.15.0
+----
+
+=== Monitoring Recommendations of RHEL-VMs
+
+The recommendations for RHEL-H monitoring via SNMP are also valid for the RHEL-VMs.
+
+
+=== Monitoring Recommendations for the RHEV Manager
+
+The RHEV Manager can be asked for all events via an API. Below is a python script that fetches all events above “normal” from the RHEV-Manager API. The credentials are to be configured for VW, the credentials that are written in this documentation are examples only. +
+It gathers the information from the manager itself and the managed hypervisors.
+Additionally the VM, that the manager is running should be monitored on a basic level (for example by SNMP following the recommendations for RHEL-VMs).
+
+
+[source,python]
+----
+#!/usr/bin/python
+#
+# Copyright (C) 2011
+#
+# Douglas Schilling Landgraf <dougsland@redhat.com>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, version 2 of the License.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# from https://github.com/dougsland/ovirt-restapi-scripts
+
+import urllib2
+import base64
+import sys
+from xml.etree import ElementTree
+
+"""
+EXAMPLE XML output
+========================
+<event id="3218" href="/api/events/3218">
+        <description>User rhevm logged in.</description>
+        <code>30</code>
+        <severity>normal</severity>
+        <description>ISO-Domain has less than 1 GB unused space left!</description>
+        <time>2011-09-14T07:31:08.095-04:00</time>
+        <user id="ce2375f6-4fe0-4fc9-8692-6f4b7b50a9d6" href="/api/users/ce2375f6-4fe0-4fc9-8692-6f4b7b50a9d6"/>
+ </event>
+"""
+
+# Example
+ADDR     = "rhevm-i01.wob.sec.vw.vwg"
+API_PORT = "443"
+USER     = "rhevm-user"
+PASSWD   = "T0pSecreT!"
+
+# Setting URL
+URL      = "https://" + ADDR + ":" + API_PORT + "/api/events"
+
+request = urllib2.Request(URL)
+print "Connecting to: %s\n" % (URL)
+
+base64string = base64.encodestring('%s:%s' % (USER, PASSWD)).strip()
+request.add_header("Authorization", "Basic %s" % base64string)
+
+try:
+        xmldata = urllib2.urlopen(request).read()
+except urllib2.URLError, e:
+        print "Error: cannot connect to REST API: %s" % (e)
+        print "Try to login using the same user/pass by the Admin Portal and check the error!"
+        sys.exit(2)
+
+#print xmldata
+
+tree = ElementTree.XML(xmldata)
+list = tree.findall("event")
+
+#print len(list)
+
+for item in list:
+        if item.find("severity").text <> "normal":
+                if item.find("code").text <> "815":
+                        print "id:  %s"           % (item.attrib["id"])
+                        print "href: %s"          % (item.attrib["href"])
+                        print "code: %s"          % (item.find("code").text)
+                        print "severity: %s"      % (item.find("severity").text)
+                        print "description: %s"      % (item.find("description").text)
+                        print "time: %s"          % (item.find("time").text)
+
+                if item.find("user") <> None:
+                        print "user id: %s"       % (item.find("user").attrib["id"])
+                        print "user href: %s"     % (item.find("user").attrib["href"])
+
+                if item.find("host") <> None:
+                        print "host id: %s"       % (item.find("host").attrib["id"])
+                        print "host href: %s"     % (item.find("host").attrib["href"])
+
+                if item.find("cluster") <> None:
+                        print "cluster id: %s"       % (item.find("cluster").attrib["id"])
+                        print "cluster href: %s"     % (item.find("cluster").attrib["href"])
+
+        print "\n"
+----
+
+== Appendix
+
+.snmpd.conf (Intranet):
+----
+######################################################################
+#
+# snmpd.conf
+#
+# - created by the snmpconf configuration program
+#
+######################################################################
+# SECTION: Access Control Setup
+#
+# This section defines who is allowed to talk to your running
+# snmp agent.
+# rwcommunity: a SNMPv1/SNMPv2c read-write access community name
+# arguments: community [default|hostname|network/bits] [oid]
+rwcommunity svom_SNMP_Trap1
+
+######################################################################
+# SECTION: Monitor Various Aspects of the Running Host
+#
+# The following check up on various aspects of a host.
+# disk: Check for disk space usage of a partition.
+# The agent can check the amount of available disk space, and make
+# sure it is above a set limit.
+#
+# disk PATH [MIN=100000]
+#
+# PATH: mount path to the disk in question.
+# MIN: Disks with space below this value will have the Mib's errorFlag set.
+# Can be a raw integer value (units of kB) or a percentage followed by the %
+# symbol. Default value = 100000.
+#
+# The results are reported in the dskTable section of the UCD-SNMP-MIB tree
+disk / 100000
+
+
+######################################################################
+# SECTION: Trap Destinations
+#
+# Here we define who the agent will send traps to.
+# trap2sink: A SNMPv2c trap receiver
+# arguments: host [community] [portnum]
+trap2sink vwagwos00svo.wob.vw.vwg
+# authtrapenable: Should we send traps when authentication failures occur
+# arguments: 1 | 2 (1 = yes, 2 = no)
+authtrapenable 1
+
+### BEGIN srvmagt
+master agentx
+### END srvmagt
+#
+dontLogTCPWrappersConnects 1
+----

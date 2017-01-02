@@ -1,0 +1,564 @@
+= {subject}: PREPARED FOR - {customer}
+Adrian Bradshaw <adrian@redhat.com>
+:subject: Pulp Server Setup
+:description:  (unsupported)
+:doctype: book
+:confidentiality: Confidential
+:customer:  Volkswagen IT Group Cloud
+:listing-caption: Listing
+:toc:
+:toclevels: 6
+:numbered:
+:sectnums:
+:sectnumlevels: 5
+:chapter-label:
+:pdf-page-size: A4
+:experimental:
+:icons: font
+ifdef::backend-pdf[]
+:title-page-background-image: image:images/EngagementJournalCoverPageLogoNew.jpg[pdfwidth=8.0in,align=center]
+:pygments-style: tango
+:source-highlighter: pygments
+//:source-highlighter: coderay
+endif::[]
+:revnumber: 0.0.4
+
+//A simple http://asciidoc.org[AsciiDoc] document.
+
+== History and Revisions
+
+[cols=4,cols="1,1,3,4",options=header]
+|===
+|Version
+|Date
+|Authors
+|Changes
+
+|0.0.2
+|23/10/2015
+|Adrian Bradshaw adrian@redhat.com
+|Initial Draft
+
+|0.0.3
+|2/11/2015
+|Adrian Bradshaw adrian@redhat.com
+|Added non Red Hat repo section
+
+|0.0.4
+|5/11/2015
+|Adrian Bradshaw adrian@redhat.com
+|Added Red Hat minor versions section
+
+|===
+
+== Preface
+=== Confidentiality, Copyright, and Disclaimer ===
+This is a Customer-facing document between Red Hat, Inc. and Volkswagen (“Client”).
+Copyright (C) 2015 Red Hat, Inc. All Rights Reserved. No part of the work covered by the copyright herein may be reproduced or used in any form or by any means – graphic, electronic, or mechanical, including photocopying, recording, taping, or information storage and retrieval systems – without permission in writing from Red Hat except as is required to share this information as provided with the aforementioned confidential parties.
+
+
+=== About This Document
+The purpose of the document is to describe the setup of the new **Pulp** server.
+
+=== Audience
+The document is intended for those team members on site at Volkwagen, who will be responsible for Linux server support
+
+=== Additional Background and Related Documents
+Numerous other documents have also been provided by Red Hat Consulting, explaining tasks such as installation of RHEV, backup etc
+
+=== Terminology
+Some of the acronyms using in this document are included in the table below
+
+.Terminology Table
+[cols=2,cols="1,5",options=header]
+|===
+<|Term <|Definition
+
+|RHEV
+|Red Hat Enterprise Virtualisation
+
+|RHEV-M
+|Red Hat Enterprise Virtualisation Manager
+
+|RHEL-H
+|Red Hat Enterprise Linux Hypervisor
+
+|===
+
+== Details
+
+The following servers were used in the setup
+
+[cols=2,cols="1,2"]
+|===
+
+|lxf02p190.wob.vw.vwg  |the pulp server (also used as the provider of the RHEL6 repo certificates
+|lxf101p011.wob.vw.vwg | a rhel7 VM, used for the RHEL7 repo certificates
+
+|===
+
+
+== Installation
+
+WARNING: The following setup requires the use of third party repositories. This means that Red Hat will not be able to fully support the system, only the OS. The pulp-server is explicitly excluded from being supported by Red Hat Support
+
+NOTE: The following details show how to setup pulp on a RHEL7 server. The server that is running at the moment was built on RHEL6
+
+
+. Register the pulp server host with Redhat directly to receive its updates:
+
+ # subscription-manager register
+
+. User subscription-manager to attach the corresponding pool that gives access to the following repositories
+** rhel-7-server-extras-rpms
+** rhel-7-server-rh-common-rpms
+
+ # subscription-manager list --available | less
+ # subscription-manager attach --pool abc...xyz
+
+. Run an update to confirm you can access the Redhat repos properly:
+
+ # yum upgrade
+
+. Install the Pulp repo and the Linux Epel repo as you will need packages from both:
+
+    # rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+    # wget -O /etc/yum.repos.d/rhel-pulp.repo http://repos.fedorapeople.org/repos/pulp/pulp/rhel-pulp.repo
+
+. Install, enable and install mongodb server:
+
+    # yum install mongodb-server
+    # systemctl start mongod && systemctl enable mongod
+
+
+. Install, enable and start qpidd:
+
+    # yum install qpid-cpp-server qpid-cpp-server-store
+    # systemctl start qpidd && systemctl enable qpidd
+
+. Install Pulp group of packages:
+
+    # yum groupinstall pulp-server-qpid
+
+. Run Pulp database setup to populate Pulp database:
+
+    # sudo -u apache pulp-manage-db
+
+. Enable and start web service:
+
+    # systemctl start httpd && systemctl enable httpd
+
+. Enable and start pulp workers, celery beat and pulp resource manager:
+
+    # systemctl start pulp_workers &&  systemctl enable pulp_workers
+    # systemctl start pulp_celerybeat && systemctl enable pulp_celerybeat
+    # systemctl start pulp_resource_manager && systemctl enable pulp_resource_manager
+
+. Install pulp-admin packages:
+
+      # yum groupinstall pulp-admin
+
+. Edit Pulp admin.conf and alter the following two entries
+
+  verify_ssl: False
+  host: <hostname of the server>
+
+
+
+== Additional Configuration
+
+=== Authentication
+
+When the server is first installed, the username and password are both set to **admin**
+
+You will need to login the first time in order to manage authentication, using these initial credentials
+
+ pulp-admin login -u admin
+
+When prompted, enter **admin** for the password
+
+You can then manage passwords/authentication with the auth subsystem.
+
+----
+[root@pulp-server ~]# pulp-admin auth user update
+Command: update
+Description: changes metadata of an existing user
+
+Available Arguments:
+
+  --login    - (required) identifies the user to be updated
+  --name     - user-readable full name of the user
+  --password - new password for the user, use -p if you want to be prompted for
+               the password
+  -p         - if specified, you will be prompted to enter new password for the
+               user
+The following options are required but were not specified:
+  --login
+----
+
+NOTE: It is recommended to both reset the admin password and setup up different user accounts for the other administrators
+
+More information can be found in the upstream documentation, in the  https://pulp-user-guide.readthedocs.org/en/pulp-2.4/admin-client/authentication.html[authentication section]
+
+=== Setting up Repositories
+
+Below is an example of how to setup a repository
+
+==== Add the First Repo
+
+.Add the first Repository
+----
+# pulp-admin rpm repo create --repo-id=rhel-6-server-rhevm-3.5-rpms \
+ --feed=https://cdn.redhat.com/content/dist/rhel/server/6/6Server/x86_64/rhevm/3.5/os \
+ --feed-ca-cert=/etc/rhsm/ca/redhat-uep.pem \
+ --feed-key=/etc/pki/entitlement/5760500017598928075-key.pem \
+ --feed-cert=/etc/pki/entitlement/5760500017598928075.pem
+----
+
+The **--feed**, **--feed-key** & **--feed-cert** can be found by looking in the redhat.repo file of a properly subscribed system
+
+==== Update the Repository
+
+.Update the Repository with Proxy details and configure to publish as **http** also
+----
+pulp-admin rpm repo update --repo-id=rhel-6-server-rhevm-3.5-rpms --proxy-host=http://194.114.63.23 --proxy-port=8080 \
+ --proxy-user=eexthie --proxy-pass=blah_blah --serve-http=true
+----
+
+==== Sync the Repository
+----
+pulp-admin rpm repo publish run --repo-id rhel-6-server-rhevm-3.5-rpms
+----
+You can optionally add the **(--bg)** option to put the sync process in the backgrounf
+
+The repo is eventually available here
+http://lxf02p190.wob.vw.vwg/pulp/repos/content/dist/rhel/server/6/6Server/x86_64/rhevm/3.5/os/
+
+=== RHEL Minor Release Repos
+
+We were asked how to supply repos that only have RPMs that were released during the timeframe of a minor release, such as only 5.8 and all updates up until 5.9 was released.
+
+Below is an example of syncing minor release repos 5.8 and 5.11
+
+Create the 5.8 Repo
+
+----
+pulp-admin rpm repo create --repo-id=rhel-508-server-rpms  --feed=https://cdn.redhat.com/content/dist/rhel/server/5/5.8/x86_64/os \
+  --feed-ca-cert=/etc/rhsm/ca/redhat-uep.pem --feed-key=/root/other-certs/7629501747809197358-key.pem \
+  --feed-cert=/root/other-certs/7629501747809197358.pem --serve-http=true
+----
+
+Run the sync
+
+ pulp-admin rpm repo sync run --repo-id=rhel-508-server-rpms
+
+Now create the 5.11 Repo
+
+----
+pulp-admin rpm repo create --repo-id=rhel-511-server-rpms \
+  --feed=https://cdn.redhat.com/content/dist/rhel/server/5/5.11/x86_64/os \
+  --feed-ca-cert=/etc/rhsm/ca/redhat-uep.pem \
+  --feed-key=/root/other-certs/7629501747809197358-key.pem \
+  --feed-cert=/root/other-certs/7629501747809197358.pem --serve-http=true
+----
+
+ pulp-admin rpm repo sync run --repo-id=rhel-511-server-rpms
+
+If we then get a list of the repos, we can see the differences in total number of packages and errata
+
+----
+[root@pulp-server ~]# pulp-admin rpm repo list
++----------------------------------------------------------------------+
+                            RPM Repositories
++----------------------------------------------------------------------+
+
+...
+
+Id:                  rhel-511-server-rpms
+Display Name:        rhel-511-server-rpms
+Description:         None
+Content Unit Counts:
+  Erratum:                3097
+  Package Category:       6
+  Package Group:          99
+  Rpm:                    16917
+  Yum Repo Metadata File: 1
+
+Id:                  rhel-508-server-rpms
+Display Name:        rhel-508-server-rpms
+Description:         None
+Content Unit Counts:
+  Erratum:                2519
+  Package Category:       6
+  Package Group:          99
+  Rpm:                    14230
+  Yum Repo Metadata File: 1
+
+----
+
+=== Non Red Hat Repos
+
+==== Summary
+
+As well as being able to syncronise with Red Hats CDN, Pulp can also hold other repositories. This could be configured to syncronise other 3rd party repositories (such as elasticsearch or puppet) or it could be for internally maintanied repositories.
+
+This section is about the later, it will show how to create an empty repository and push RPMs into it
+
+==== Create Empty Repository
+
+Creating an empty repositoriy is very simple, it requires only one parameter - the name of rhe repo you wish to create.
+
+ # pulp-admin rpm repo create --repo-id=vw-internal-rpms
+ Successfully created repository [vw-internal-rpms]
+
+==== Push Individual RPM
+
+Pushing a single file into a repository is very simple.
+
+----
+# pulp-admin rpm repo uploads rpm --repo-id=vw-internal-rpms --file puppet-server-3.8.3-1.el7.noarch.rpm
++----------------------------------------------------------------------+
+                              Unit Upload
++----------------------------------------------------------------------+
+
+Extracting necessary metadata for each request...
+[==================================================] 100%
+Analyzing: puppet-server-3.8.3-1.el7.noarch.rpm
+... completed
+
+Creating upload requests on the server...
+[==================================================] 100%
+Initializing: puppet-server-3.8.3-1.el7.noarch.rpm
+... completed
+
+Starting upload of selected units. If this process is stopped through ctrl+c,
+the uploads will be paused and may be resumed later using the resume command or
+cancelled entirely using the cancel command.
+
+Uploading: puppet-server-3.8.3-1.el7.noarch.rpm
+[==================================================] 100%
+23028/23028 bytes
+... completed
+
+Importing into the repository...
+This command may be exited via ctrl+c without affecting the request.
+
+
+[\]
+Running...
+
+Task Succeeded
+
+
+Deleting the upload request...
+... completed
+
+----
+
+==== Push Entire Directory
+
+While you can specify multiple --file  items, if you have many RPMs to push, using the --dir option is much simpler
+
+----
+pulp-admin rpm repo uploads rpm --repo-id=vw-internal-rpms --dir <path to dir>
+...
+(output removed)
+...
+ Uploading: razor-torquebox-3.1.1.3-1.el7.noarch.rpm
+[==================================================] 100%
+61756024/61756024 bytes
+... completed
+
+Importing into the repository...
+This command may be exited via ctrl+c without affecting the request.
+
+
+[|]
+Running...
+
+Task Succeeded
+
+
+Deleting the upload request...
+... completed
+
+Uploading: razor-torquebox-3.1.1.9-1.el7.noarch.rpm
+[==================================================] 100%
+61796760/61796760 bytes
+... completed
+
+Importing into the repository...
+This command may be exited via ctrl+c without affecting the request.
+
+
+[|]
+Running...
+
+Task Succeeded
+
+
+Deleting the upload request...
+... completed
+----
+
+
+=== Scheduled Synchronisation
+
+As mentioned in an earlier section, its easy to perform an ad-hoc sync of a repository, but for ease of use its probably worth adding a schedule to a repository
+
+ pulp-admin repo sync schedules create -s 2015-10-22T16:00:00Z/PT1H \
+   -f 5 --repo-id=rhel-6-server-rhevm-3.5-rpms
+
+The above command sets up an hourly sync process for the repo with the id of rhel-6-server-rhevm-3.5-rpms, that will retry up to 5 times
+
+For more information, please see the upstream guide on https://pulp-user-guide.readthedocs.org/en/pulp-2.4/admin-client/repositories.html[repositories]
+
+
+== Appendix 1 - Current Repos Configured
+
+
+[source]
+----
+[root@lxf02p190 lib]# pulp-admin repo list
++----------------------------------------------------------------------+
+                              Repositories
++----------------------------------------------------------------------+
+
+Id:                  rhel-6-server-rhevm-3.5-rpms
+Display Name:        rhel-6-server-rhevm-3.5-rpms
+Description:         None
+Content Unit Counts:
+  Erratum:                84
+  Package Group:          1
+  Rpm:                    222
+  Yum Repo Metadata File: 1
+
+Id:                  rhel-6-server-rpms
+Display Name:        rhel-6-server-rpms
+Description:         None
+Content Unit Counts:
+  Erratum:                3233
+  Package Category:       10
+  Package Group:          202
+  Rpm:                    16176
+  Yum Repo Metadata File: 1
+
+Id:                  rhel-7-server-rpms
+Display Name:        rhel-7-server-rpms
+Description:         None
+Content Unit Counts:
+  Erratum:                657
+  Package Category:       9
+  Package Environment:    6
+  Package Group:          71
+  Rpm:                    7609
+  Yum Repo Metadata File: 1
+
+Id:                  rhel-7-server-optional-rpms
+Display Name:        rhel-7-server-optional-rpms
+Description:         None
+Content Unit Counts:
+  Erratum: 457
+  Rpm:     6092
+
+Id:                  rhel-6-server-supplementary-rpms
+Display Name:        rhel-6-server-supplementary-rpms
+Description:         None
+Content Unit Counts:
+  Erratum:                206
+  Package Category:       1
+  Package Group:          8
+  Rpm:                    552
+  Yum Repo Metadata File: 1
+
+Id:                  jb-eap-6-for-rhel-6-server-rpms
+Display Name:        jb-eap-6-for-rhel-6-server-rpms
+Description:         None
+Content Unit Counts:
+  Erratum:                68
+  Package Category:       1
+  Package Group:          2
+  Rpm:                    2504
+  Yum Repo Metadata File: 1
+
+Id:                  rhel-7-server-rhev-mgmt-agent-rpms
+Display Name:        rhel-7-server-rhev-mgmt-agent-rpms
+Description:         None
+Content Unit Counts:
+  Erratum:                57
+  Rpm:                    304
+  Yum Repo Metadata File: 1
+----
+
+== Appendix 2 - Adding Other Repositories
+
+.RHEL 6 Supplementary Repo
+----
+pulp-admin rpm repo create --repo-id=rhel-6-server-supplementary-rpms \
+ --feed=https://cdn.redhat.com/content/dist/rhel/server/6/6Server/x86_64/supplementary/os \
+ --feed-ca-cert=/etc/rhsm/ca/redhat-uep.pem \
+ --feed-key=/etc/pki/entitlement/5760500017598928075-key.pem \
+ --feed-cert=/etc/pki/entitlement/5760500017598928075.pem
+
+pulp-admin rpm repo update --repo-id=rhel-6-server-supplementary-rpms \
+ --proxy-host=http://194.114.63.23 --proxy-port=8080 --proxy-user=eexthie \
+ --proxy-pass=password --serve-http=true
+
+pulp-admin rpm repo sync run --repo-id rhel-6-server-supplementary-rpms
+----
+.JBOSS 6 EAP Repo
+----
+# pulp-admin rpm repo create --repo-id=jb-eap-6-for-rhel-6-server-rpms  \
+ --feed=https://cdn.redhat.com/content/dist/rhel/server/6/6Server/x86_64/jbeap/6/os \
+ --feed-ca-cert=/etc/rhsm/ca/redhat-uep.pem \
+ --feed-key=/etc/pki/entitlement/5760500017598928075-key.pem \
+ --feed-cert=/etc/pki/entitlement/5760500017598928075.pem
+
+# pulp-admin rpm repo update --repo-id=jb-eap-6-for-rhel-6-server-rpms \
+ --proxy-host=http://194.114.63.23 --proxy-port=8080 --proxy-user=eexthie \
+ --proxy-pass=password --serve-http=true
+
+# pulp-admin rpm repo sync run --repo-id jb-eap-6-for-rhel-6-server-rpms --bg
+----
+.RHEL 7 Server Repo
+----
+pulp-admin rpm repo create --repo-id=rhel-7-server-rpms \
+ --feed=https://cdn.redhat.com/content/dist/rhel/server/7/7Server/x86_64/os \
+ --feed-ca-cert=/etc/rhsm/ca/redhat-uep.pem \
+ --feed-key=/etc/pki/entitlement/1012993666899645238-key.pem \
+ --feed-cert=/etc/pki/entitlement/1012993666899645238.pem
+
+pulp-admin rpm repo update --repo-id=rhel-7-server-rpms \
+ --proxy-host=http://194.114.63.23 --proxy-port=8080 --proxy-user=eexthie \
+ --proxy-pass=password --serve-http=true
+
+pulp-admin rpm repo sync run --repo-id rhel-7-server-rpms
+----
+.RHEL 7 Optional Repo
+----
+pulp-admin rpm repo create --repo-id=rhel-7-server-optional-rpms \
+ --feed=https://cdn.redhat.com/content/dist/rhel/server/7/7Server/x86_64/optional/os \
+ --feed-ca-cert=/etc/rhsm/ca/redhat-uep.pem \
+ --feed-key=/etc/pki/entitlement/1012993666899645238-key.pem \
+ --feed-cert=/etc/pki/entitlement/1012993666899645238.pem
+
+pulp-admin rpm repo update --repo-id=rhel-7-server-optional-rpms \
+ --proxy-host=http://194.114.63.23 --proxy-port=8080 --proxy-user=eexthie \
+ --proxy-pass=password --serve-http=true
+
+pulp-admin rpm repo sync run --repo-id rhel-7-server-oprional-rpms
+----
+.RHEL7 RHEV Mgmt Agent
+----
+pulp-admin rpm repo create --repo-id=rhel-7-server-rhev-mgmt-agent-rpms \
+ --feed=https://cdn.redhat.com/content/dist/rhel/server/7/7Server/x86_64/rhev-mgmt-agent/3/os \
+ --feed-ca-cert=/etc/rhsm/ca/redhat-uep.pem \
+ --feed-key=/etc/pki/entitlement/5760500017598928075-key.pem \
+ --feed-cert=/etc/pki/entitlement/5760500017598928075.pem
+
+pulp-admin rpm repo update --repo-id=rhel-7-server-rhev-mgmt-agent-rpms \
+ --proxy-host=http://194.114.63.23 --proxy-port=8080 --proxy-user=eexthie \
+ --proxy-pass=password--serve-http=true
+
+pulp-admin rpm repo sync run --repo-id rhel-7-server-rhev-mgmt-agent-rpms
+----

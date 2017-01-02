@@ -1,0 +1,48 @@
+RHEV-M as self-hosted installation
+
+--------------
+see https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Virtualization/3.6/html-single/Self-Hosted_Engine_Guide/index.html#chap-Deploying_Self-Hosted_Engine_on_a_Red_Hat_Enterprise_Linux_Host
+
+
+!! To use the RHEV-M Virtual Appliance for the Manager installation, the /tmp directory must be at least 60 GB.
+
+!! Put rhevm.example.com in DNS 
+
+!! Configure Storage: https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Virtualization/3.6/html/Administration_Guide/chap-Storage.html
+
+
+
+Self hosted:
+subscription-manager repos --disable=*
+subscription-manager repos --enable=rhel-7-server-rpms
+subscription-manager repos --enable=rhel-7-server-rhev-mgmt-agent-rpms
+yum update
+
+yum install ovirt-hosted-engine-setup
+yum install rhevm-appliance
+
+
+
+yum install screen
+screen
+hosted-engine --deploy
+
+
+IMPORTANT
+Only replica 3 Gluster storage is supported. Ensure the following configuration has been made:
+
+vi /etc/glusterfs/glusterd.vol
+option rpc-auth-allow-insecure on
+
+
+gluster volume set volume cluster.quorum-type auto
+gluster volume set volume network.ping-timeout 10
+gluster volume set volume auth.allow \*
+gluster volume set volume group virt
+gluster volume set volume storage.owner-uid 36
+gluster volume set volume storage.owner-gid 36
+gluster volume set volume server.allow-insecure on
+
+
+
+

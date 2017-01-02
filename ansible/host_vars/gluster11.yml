@@ -1,0 +1,11 @@
+name: gluster11
+mac: 00:1E:0B:91:D6:D2
+type: gluster
+dc: left
+fqdn: gluster11.example.com.  
+ipaddress: 172.16.20.103 
+reverse: 103.20.16.172.in-addr.arpa.
+ilo_name: gluster11-ilo
+ilo_ip: 172.16.10.103
+
+

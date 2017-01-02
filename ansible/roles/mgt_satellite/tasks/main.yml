@@ -1,10 +1,12 @@
 - block:
     #  - include: prepare-filesystems.yml
+    - include: stop_satellite.yml
     - include: prepare-nameresolution.yml
     - include: prepare-firewall.yml
     - include: prepare-ntp.yml
     - include: prepare-yum.yml
     - include: install-satellite6.yml
+    - include: start_satellite.yml
     - include: create-organization.yml
     - include: prepare-admin-user.yml
     - include: import_manifest.yml

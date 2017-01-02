@@ -1,0 +1,6 @@
+---
+# needs to be stopped for yum update later on
+- name: stop satellite
+  shell: /usr/bin/katello-service stop 
+  ignore_errors: True
+

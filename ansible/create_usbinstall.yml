@@ -1,4 +1,17 @@
 ---
+# should create ISO-Image to install jump-host out of the box
+#   - modify iso to run on (old) HP g5 servers
+#   - should be done via install-procedure build here
+#      - assure no /home filesystem
+#      - assure /var separate and big enough
+#      - assure ansible user
+#      - assure ssh-key to connect from notebook to ansible user
+#      - assure sudo for ansible-user (add to wheel-group and allow wheel sudo without password)
+#  - done later by ansible
+#      - create ssh-key pair for user ansible
+#      - create ~/projects
+#      - download ~/projects/rz_zuhause
+#
 - hosts: localhost
   gather_facts: false
   become: true

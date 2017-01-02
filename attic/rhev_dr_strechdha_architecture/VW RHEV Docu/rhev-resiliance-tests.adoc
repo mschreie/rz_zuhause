@@ -1,0 +1,502 @@
+= {subject}: PREPARED FOR - {customer}
+Adrian Bradshaw <adrian@redhat.com>
+:subject: RHEV Resiliance Tests
+:description: Initial Test Results
+:doctype: book
+:confidentiality: Confidential
+:customer:  Volkswagen IT Group Cloud
+:listing-caption: Listing
+:toc:
+:toclevels: 6
+:sectnums:
+:sectnumlevels: 5
+:numbered:
+:chapter-label:
+:pdf-page-size: A4
+:icons: font
+ifdef::backend-pdf[]
+:title-page-background-image: image:images/EngagementJournalCoverPageLogoNew.jpg[pdfwidth=8.0in,align=center]
+:pygments-style: tango
+:source-highlighter: pygments
+//:source-highlighter: coderay
+endif::[]
+:revnumber: 0.0.1
+//A simple http://asciidoc.org[AsciiDoc] document.
+
+== History and Revisions
+
+[cols=4,cols="1,1,3,4",options=header]
+|===
+|Version
+|Date
+|Authors
+|Changes
+
+
+|0.0.1
+|18.11.2015
+|Adrian Bradshaw adrian@redhat.com
+|Draft version of test results
+
+|===
+
+
+== Preface
+=== Confidentiality, Copyright, and Disclaimer
+Copyright 2015 (C) Red Hat, Inc.  All Rights Reserved. No part of the work covered by the copyright herein may be reproduced or used in any form or by any means- graphic, electronic, or mechanical, including photocopying, recording, taping, or information storage and retrieval systems without permission in writing from Red Hat except as is required to share this information as provided with the aforementioned confidential parties.
+
+=== Additional Background and Related Documents
+This document also references additional information that can be found on Red Hat‘s documentation site at https://access.redhat.com/knowledge/docs/ and specifically at https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Virtualization/3.5/
+
+Documents specific to products covered in this solution include the following Guides
+
+* https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Virtualization/3.5/html/Installation_Guide/[RHEV 3.5 Installation Guide]
+* https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Virtualization/3.5/html-single/Administration_Guide/index.html[RHEV 3.5 Administration Guide]
+* https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Virtualization/3.5/html/User_Guide/index.html[RHEV 3.5 User Guide]
+* https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Virtualization/3.5/html-single/Technical_Guide/index.html[RHEV 3.5 Technical Guide]
+
+Additional information can be found on the RHEV upstream projects website (oVirt):
+
+http://www.ovirt.org/Documentation
+
+
+=== Terminology
+Some of the acronyms using in this document are included in the table below
+
+
+.Terminology Table
+[cols=2,cols="1,5",options=header]
+|===
+<|Term <|Definition
+
+|RHEV
+|Red Hat Enterprise Virtualisation
+
+|RHEV-M
+|Red Hat Enterprise Virtualisation Manager
+
+|RHEL-H
+|Red Hat Enterprise Linux Hypervisor
+
+|===
+
+== Summary
+
+This document contains the details / observations about the first set of RHEV resilience tests performed on 18th November.
+
+=== Information
+
+On 18th of November we started the RHEV resilience tests.
+
+Persons involved
+
+* Michael Scheibke
+* Eike Holtz
+* Sebastian Tharr
+* Ben Haubeck
+* Adrian Bradshaw
+
+Prior to the tests, a spreadsheet was prepared containing each of the tests to be performed on each server.
+
+Due to time constraints we decided to limit the servers to 1 or 2 servers, so that we could at least try each test
+
+
+== Test Results
+
+Tests started at 10:16, Thursday 18th November 2015
+
+
+=== Power Based Tests
+
+==== Test 1
+
+Removal of power cables one at a time
+
+NOTE: Test PASSED
+
+[cols=3,cols="1,5,5",options=header]
+|===
+
+<|Time <|Event |Notes
+
+|10:16 |1 power cable removed, then second - all green. Events were logged in the iLOM, nothing see elsewhere - |Test 1 PASS
+
+|===
+
+**ACTION REQUIRED:** None
+
+==== Test 2
+
+Removal of all power cables
+
+IMPORTANT: Test FAILED
+
+[cols=3,cols="1,5,5",options=header]
+|===
+
+<|Time <|Event |Notes
+
+|10:19 |Test 2 - all power removed - UI status connecting, then Non Responsive, VMs in unknown status (?)|
+|10:22 |still trying to fence|
+|10:22 |HA VM not restarting (lxf101p003)|
+|10:24 |"no power management configured" message in the RHEVM log |Seems like a bad/misleading message
+|10:26 |HA VM still not migrated|
+|10:33 |HV status "Non Responsive"|Marking Test FAILED as VM stayed in ? mode as it continued to try and verify the host status (endlessly)
+|10:35 |Power restored to HV, to verify the fence will now not complete and allow the VM to fail away to a new HV|
+|10:38 |iLOM reachable but missed the fence, "delaying for 122 seconds"|
+|10:41 |still printing messages about grace period, even though iLOM was reachable - fence opportunity not taken |(unexpected behaviour)
+|10:44 |missed another fence opportunity   |fence opportunity not taken (unexpected)
+|10:47 |HV is now starting to boot the OS as POST is completed|
+|10:47 |fence opportunity not taken |(unexpected)
+|10:47 |we have an OS login prompt - services starting in the background|
+|10:47 |VMs still in ? state|
+|10:49 |RHEVM logs its connection to the HV|
+|10:49 |host is up, HA VM is starting on another HV (lxf102s003)|TEST 2 FAIL - (due to VMs not migrating)
+3+|While this result is explainable (RHEV couldn't verify the status of the HV so didnt want to risk starting VMs in 2 places) its not the behavior we desire. This is a known issue, SANlock fencing is required to enable this -  see https://bugzilla.redhat.com/show_bug.cgi?id=804272[RFE BZ804272]
+
+|===
+
+**ACTION REQUIRED:**
+
+* VW to raise ticket to add to RFE - DONE
+* Red Hat to follow up on RFE
+
+==== Test 3
+
+Removal of Hot Swap PSU
+
+NOTE: Test SKIPPED
+
+[cols=3,cols="1,5,5",options=header]
+|===
+
+<|Time <|Event |Notes
+
+3+|Test abandoned as its not possible to remove without removing the cables and this was done in test 2
+
+|===
+
+**ACTION REQUIRED:** None
+
+=== Storage Based Tests
+
+==== Test 4
+
+Removal of 1 OS disk in RAID mirror
+
+IMPORTANT: Test FAILED
+
+[cols=3,cols="1,5,5",options=header]
+|===
+
+<|Time <|Event |Notes
+
+|11:05 |TEST 4 - one OS disk pulled|
+|11:05 |nothing in the UI or the logs|
+|11:05 |disk re-inserted|
+|11:06 |Test pass?  | From this point of view it passes
+||Disk re-inserted, raid status "degraded" - |RAID still degraded, it doesnt seem to have realised the disk is present
+|11:14 | Marking as failed as replacing disk didnt initiate a rebuild and manual intervention was required| This may be expected behavior, needs to be clarified
+
+|===
+
+**ACTION REQUIRED:** VW will investigate installing Linux RAID management tools, so that the RAID can be rebuilt without a reboot
+
+==== Test 5
+
+Removal of both OS disk in RAID mirror
+
+IMPORTANT: Test FAILED
+
+[cols=3,cols="1,5,5",options=header]
+|===
+
+<|Time <|Event |Notes
+
+|11:19 |Both disks removed|All OS disks now removed
+|11:19 |RHEV "Connecting" and logging a VDS connection error|
+|11:19 |Message in UI "will attempt to fence in 61 seconds"|
+|11:19 |VMs still show as green|
+|11:22 |Still waiting on the fence event to happen |(CSS led blinking in the iLOM)
+|11:24 |VMs still green AND still reachable, HV stayed up and reachable also|
+|11:27 |Still no fence event  |TEST FAIL (even if VMs still reachable)
+|11:29 |re-prints same message about it will be fenced in 61 seconds |(same message was printed 10 mins ago)
+|11:33 |Adrian clicks the power management Test button - test passes - seems to be configured correctly|
+|11:35 |disks being replaced|
+|11:38 |Eike choses new start from the power menu| Nothing **seems* to be happening
+|11:39 |Eike attempted power off from the power menu - gets message "cant reboot in progress"| Decide to wait longer
+|11:40 |server logs power off request| We just needed to wait, a message in the UI would have been useful
+|11:40 |server coming back up |
+|11:55 |placed into maint mode while RAID recovery is performed| RAID was eventually recovered successfully
+
+|===
+
+**ACTION REQUIRED:**
+
+* Red Hat to clarify why no fence event happened
+* VW (as above Linux RAID tool installation)
+
+As the RAID rebuild will take time to complete - we moved on to **lxf102s003** to perform SAN tests.
+
+==== Test 6
+
+Partial removal of SAN cables (not all)
+
+NOTE: Test PASSED
+
+[cols=3,cols="1,5,5",options=header]
+|===
+
+<|Time <|Event |Notes
+
+|12:03 |SAN cable pulled|
+|12:04 |cable removed - half of paths lost (log on the HV)|
+|12:05 |everything stays green in RHEV|
+|12:05 |reconnecting cables|
+|12:05 |paths back (seen in the HV log)|
+|12:07 |removing other cable|
+|12:07 |paths down as expected - no other effects - all green in the UI|
+|12:09 |cables back in|
+|12:09 |all paths back  |   TEST PASS
+
+|===
+
+**ACTION REQUIRED:**  None
+
+==== Test 7
+
+Removal of all  SAN cables
+
+IMPORTANT: Test FAILED
+
+[cols=3,cols="1,5,5",options=header]
+|===
+
+<|Time <|Event |Notes
+
+|12:12 | All SAN cables removed |
+|12:12 |rhevm logs warning about SD|
+|12:14 |all VMs no in Paused state in the UI and in the log . UI "VM has paused due to a storage IO problem"|
+|12:15| |assume we are in a timeout wait for storage to come back
+
+|12:17 |server now non operational status|
+|12:18 |message in log of rhevm about failed migration|
+|12:19 |"MIGRATE_PAUSED_EIO_VM IS NOT SUPPORTED" in the RHEV log|
+|12:20 |"Power management not configured" message |(it is configured)
+||"no other host to test power management"!!!  | This needs to be investigated
+|12:20 |Adrian manually tests power management | Test passes
+|12:25 |TEST FAIL| TEST Marked as FAILED
+|12:25 |re-connect cables|
+|12:26 |VMs up acording to log and the UI| HV Still Red/non-operational
+|12:27 |confirmed all VMs can be connected to|
+|12:30 |HV automatically goes back to Up status| This took longer than expected
+
+|===
+
+**ACTION REQUIRED:** Red Hat to clarify expected behavior in this situation
+
+
+
+=== Network Based Tests
+
+staying with lxf102s003
+
+==== Test 8
+
+Removing individual cables in bond1, one at a time
+
+NOTE: Test PASSED
+
+[cols=3,cols="1,5,5",options=header]
+|===
+
+<|Time <|Event |Notes
+
+|12:42 |1 cable removed from bond1|
+|12:43 |the UI shows the nic down and logs a message about the loss| no negative impact
+|12:46 |cable back in|
+|12:46 |UI shows nic up, log shows status up|
+|12:47 |Other cable pulled in bond0, ui shows and logs an entry|
+|12:48 |cable put back in|
+|12:48 |UI show back Nic up and logs a message | TEST PASSED
+
+|===
+
+**ACTION REQUIRED:**  None
+
+==== Test 9
+
+Removing both cables in bond1
+
+WARNING: Test INCONCLUSIVE
+
+[cols=3,cols="1,5,5",options=header]
+|===
+
+<|Time <|Event |Notes
+
+|12:48 | both cables pulled|
+|12:49 | log & rhev both show the the whole bond down | expecting a fence event
+|12:50 |VMs still green - not expected - cant login into VM (expected) | we expected a fence event after a wait period
+|12:53 |host still green, VMs green but not reachable - bond shows as down | non migration of VMs *may* be expected as HV is "Up"
+|12:56 | Test INCONCLUSIVE |marking test as "INCONCLUSIVE"
+|12:56 |reconnecting network cables|
+|12:57 |log entries on RHEVM|
+|12:57 |RHEV UI shows green|
+
+|===
+
+**ACTION REQUIRED:** Red Hat to clarify if this is expected
+
+==== Test 10
+
+Removing individual cables in bond2 (HeSyMo), one at a time
+
+NOTE: Test PASSED
+
+[cols=3,cols="1,5,5",options=header]
+|===
+
+<|Time <|Event |Notes
+
+|12:58 |pulled first cable from bond2|rhev UI shows cable down
+|12:58 |cable re-inserted|UI shows up and logs entry
+|12:59 |now pull 2nd one|UI shows it down
+|12:59 |cable re-inserted|UI shows up and logs entry
+|13:01 |(VMs unaffected)|TEST PASSED
+
+|===
+
+**ACTION REQUIRED:**  None
+
+==== Test 11
+
+Removing both cables in bond2 (HeSyMo)
+
+NOTE: Test PASSED
+
+[cols=3,cols="1,5,5",options=header]
+|===
+
+<|Time <|Event |Notes
+
+|13:01 |both cables removed|
+|13:01 |UI shows bond down|
+|13:01 |..will wait to see if anything happens, not expecting..|
+|13:04 |test migration attempted|
+|13:04 |Migration worked| Migration over the admin network, unexpected !!
+|13:06 |attempt to migrate VM back|
+|13:08 |completed without issue|
+|13:08 |both cables back in| UI shows bond back up
+3+|While its great that this worked, we need to be aware of it as our migration bandwidth limit is based on a dual 10G migration network, not a single 1G interface
+
+|===
+
+**ACTION REQUIRED:** None
+
+==== Test 12
+
+Removing the iRMC/iLOM Cable
+
+NOTE: Test PASSED
+
+[cols=3,cols="1,5,5",options=header]
+|===
+
+<|Time <|Event |Notes
+
+|13:09 |the iRMC cable removed - nothing logged  - no impact |(fencing would not work during this time)
+|13:09 |Cable re-added| Test PASSED
+
+|===
+
+**ACTION REQUIRED:** None
+
+==== Test 13a
+
+Removing individual cables in bond0 (Admin), one at a time
+
+NOTE: Test PASSED
+
+[cols=3,cols="1,5,5",options=header]
+|===
+
+<|Time <|Event |Notes
+
+|13:14 |Removed first cable|
+|13:15 |logs and UI reflect change| No adverse effects
+|13:15 |cable plugged back in|
+|13:16 |removed 2nd cable| UI shows it down
+|13:18 |cable back in  |UI shows up
+|13:18 |  | TEST PASSED
+
+|===
+
+**ACTION REQUIRED:**  None
+
+==== Test 13b
+
+Removing both cables in bond0 (Admin)
+
+IMPORTANT: Test FAILED
+
+[cols=3,cols="1,5,5",options=header]
+|===
+
+<|Time <|Event |Notes
+
+|13:19 |both cables removed |expecting a fence event
+|13:20 |Lost ssh connection | UI no sign of any problem (!?!!?)
+|13:23 |VMs are still reachable |no UI change to reflect total lost of RHEVM bond0
+|13:28 |crashed one of the HA VMs on the HV to see if it will be moved|
+|13:29 |VM crash also un-noticed|
+|13:30 |both cables replaced |
+|13:30 |**NOW** the UI shows the host as Red  "Connecting"|
+|13:31 |HV recovers - Status UP|
+|13:28 |Marking Test as FAILED as it didnt show bond0 as down - or or give any hint of an issue| TEST FAILED
+
+|===
+
+**ACTION REQUIRED:** Red Hat to investigate why the complete loss of the RHEVM bond on a HV did not show up in RHEVM
+
+=== Hypervisor Tests
+
+==== Test 14
+
+Crash of a non-SPM HV
+
+IMPORTANT: Test FAILED
+
+[cols=3,cols="1,5,5",options=header]
+|===
+
+<|Time <|Event |Notes
+
+|13:35 |Crash HV 102s003|
+|13:35 |VDS network error on rhevm in the log|
+|13:36 |host is red in the UI "Non responsive"|
+|13:37 |decides to fence - didnt kdump !!!| needs investigation
+|13:38 |VMs restarted on a different host|
+|13:38 |"not responding, will stay in connecting state for 120 seconds" (as its in POST)|
+||Server eventually comes backup and goes green| Test FAILED as it didnt perform a Kdump
+
+|===
+
+**ACTION REQUIRED:** Red Hat to investigate why no kdump was performed
+
+==== Test 15
+
+Unresponsive HV, overload disks with lots of simultaneous disk writes
+
+WARNING: Test SKIPPED
+
+[cols=3,cols="1,5,5",options=header]
+|===
+
+<|Time <|Event |Notes
+
+3+|Test was abandoned as, even with a load of 15,000, the server would still VMs migrated to/from it at a normal speed
+
+|===
+
+**ACTION REQUIRED:**  None

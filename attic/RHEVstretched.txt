@@ -1,0 +1,5 @@
+two links for reference:
+
+https://access.redhat.com/articles/27136
+http://www.redhat.com/en/files/resources/en-rhev-3-disaster-recovery.pdf
+
