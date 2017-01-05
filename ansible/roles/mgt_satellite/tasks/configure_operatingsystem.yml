@@ -5,9 +5,6 @@
   with_items:
     - "{{ custom_templates }}"
 
-- debug:
-    var: current_template_ids
-
 - name: get os id
   shell: "hammer --csv  os list | awk -F, '/{{ os_name }}/ { print $1 }'"
   register: current_os_id

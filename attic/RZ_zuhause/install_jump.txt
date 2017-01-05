@@ -43,95 +43,28 @@ Activation-Keys:
 FIXME: only basic Subscriptions and Product content available at the moment 
    config-issue
 
-FIXME: RHEL 7.3 has no installation media (As only 7.2 was downloaded)
-
 Hosts->Partition Table
 FIXME: Kickstart default 
 -> define different partitioning than autopart 
 
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxx
 
-Hosts->Provisioning Templates
-Kickstart default finish		Finish template			Clone
-Kickstart default iPXE		iPXE template			Clone
-Kickstart default PXELinux		PXELinux template			Clone
-Kickstart default user data		User data template			Clone
-kickstart_networking_setup
-
-Satellite Kickstart Default		Provisioning template			Clone
-Satellite Kickstart Default Finish		Finish template			Clone
-Satellite Kickstart Default User Data		User data template			Clone
-subscription_manager_registration
-
-					Clone
-remote_execution_ssh_keys
+ToDo servers:
+* Tastatur -> Deutsch
+* kein /home- device
+* ssh-key (user ansible)
+* Boot-Verhalten der Server: Netzwerk-Boot -> localboot.0 bootet nicht!
 
 
- 
-Changed "Kickstart default PXELinux:
-OLD: kernel <%= @kernel %>
-NEW: kernel <%= @kernel %> hpsa.hpsa_allow_any=1
+@host.params['sshkey']
+@host.params['remote_execution_ssh_keys'].each
 
-Changed "Kickstart default iPXE"
-OLD: kernel <%= "#{@host.url_for_boot(:kernel)}" %> ks=<%= foreman_url('provision')%><%= static %> ksdevice=<%= @host.mac %> network kssendmac ip=${netX/ip} netmask=${netX/netmask} gateway=${netX/gateway} dns=${dns}
-initrd <%= "#{@host.url_for_boot(:initrd)}" %>
+snipet: remote_execution_ssh_keys
+# remote_execution_ssh_keys: public keys to be put in ~/.ssh/authorized_keys
+#
+# remote_execution_ssh_user: user for which remote_execution_ssh_keys will be
+#                            authorized
 
-NEW: kernel <%= "#{@host.url_for_boot(:kernel)}" %> hpsa.hpsa_allow_any=1 ks=<%= foreman_url('provision')%><%= static %> ksdevice=<%= @host.mac %> network kssendmac ip=${netX/ip} netmask=${netX/netmask} gateway=${netX/gateway} dns=${dns}
-initrd <%= "#{@host.url_for_boot(:initrd)}" %>
-
-Changed "PXELinux global default"
-OLD:     kernel <%= profile[:hostgroup].operatingsystem.kernel(profile[:hostgroup].architecture) %>
-NEW:     kernel <%= profile[:hostgroup].operatingsystem.kernel(profile[:hostgroup].architecture) %> hpsa.hpsa_allow_any=1
-
-Cloned "Satellite Kickstart Default" 
-to     "Satellite Kickstart Default G5" and changed:
-OLD: bootloader --append="nofb quiet splash=quiet <%=ks_console%>" <%= grub_pass %>
-NEW: bootloader --append="nofb quiet splash=quiet <%=ks_console%> hpsa.hpsa_allow_any=1" <%= grub_pass %>
-
-OLD: bootloader --location=mbr --append="nofb quiet splash=quiet" <%= grub_pass %>
-NEW: bootloader --location=mbr --append="nofb quiet splash=quiet hpsa.hpsa_allow_any=1" <%= grub_pass %>
-
-
-Hosts->Operating System-> RedHat 7.2
-Templates:
-DEfault values are:
-PXELinux:  Kickstart default PXELinux
-iPXE:      Kickstart default iPXE
-provision: Satellite Kickstart Default
-finish:    Satellite Kickstart Default Finish
-user_data: Satellite Kickstart Default User Data
-
-changed: 
-OLD: provision: Satellite Kickstart Default
-NEW: provision: Satellite Kickstart Default G5
-
-hostgroup needs Activation Keys: gluster
-
-==========
-Try to deploy a first host:
-Hosts->New Host
-Name: gluster12
-Organization: Default Organization
-Location: Default Location
-Host Group: storagehosts
-Deploy on: Bare Metal
-Lifecycle Environment: PRD
-Content View: everything
-Puppet Environment *
-Capsule Settings
-Content Source: jump.example.com
-Puppet CA: jump.example.com
-Puppet Master: jump.example.com
-
-Network;
-Domain: example.com
-Realm:
-MAC address:
-Subnet: storage (172.16.20.0/24)
-IP address: 
-
-
-
-
-
+ToDo Satellite-Config:
+subnet -> remote execution-> select capsule 
 
