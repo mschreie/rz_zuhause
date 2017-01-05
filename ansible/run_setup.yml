@@ -1,0 +1,20 @@
+---
+- hosts: jump
+  #vars_files:
+  #  - vars/secret.yml
+  remote_user: root
+  # gather_facts: false
+  tasks:
+    - name: Display all variables/facts known for a host
+      debug:
+        var: hostvars[inventory_hostname]
+        verbosity: 4
+
+    - name: Display connection
+      debug:
+        var: ansible_connection
+
+      
+
+
+

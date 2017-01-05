@@ -4,6 +4,23 @@ pool_regex: "{{ satellite_subscription_pool_regex }}"
 # repos to install Satellite Server itself
 repos: "{{ satellite_repos }}"
 
+# packages to install on Satellite Server itself
+packages:
+    - rhevm-guest-agent-common
+    - chrony
+    - sos
+    - bind-utils
+    - satellite
+    - xauth
+    - screen
+    - firefox
+    - pulp-admin-client
+    - puppet-foreman_scap_client
+
+rhel_version: 7.2
+satellite_version: 6.2
+os_name: "RedHat {{ rhel_version }}"
+
 product_config:
   - product: "Red Hat Enterprise Linux Server"
     basearch: x86_64
@@ -16,13 +33,13 @@ product_config:
       - name: "Red Hat Enterprise Linux 7 Server - RH Common (RPMs)"
         releasever: 7Server
       - name: "Red Hat Enterprise Linux 7 Server (Kickstart)"
-        releasever: "7.2"
-      - name: "Red Hat Satellite Tools 6.2 (for RHEL 7 Server) (RPMs)"
+        releasever: "{{ rhel_version}}"
+      - name: "Red Hat Satellite Tools {{satellite_version}} (for RHEL 7 Server) (RPMs)"
 #need manifest WITH satellite
 #  - product: Red Hat Satellite
 #    basearch: x86_64
 #    repos:
-#      - name: Red Hat Satellite 6.2 (for RHEL 7 Server) (RPMs)
+#      - name: Red Hat Satellite {{satellite_version}} (for RHEL 7 Server) (RPMs)
 #        releasever: 7Server
   - product: Red Hat Software Collections for RHEL Server
     basearch: x86_64
@@ -85,10 +102,10 @@ content_config:
       - product: "Red Hat Enterprise Linux Server"
         repository: "Red Hat Enterprise Linux 7 Server - RH Common RPMs x86_64 7Server"
       - product: "Red Hat Enterprise Linux Server"
-        repository: "Red Hat Satellite Tools 6.2 for RHEL 7 Server RPMs x86_64"
+        repository: "Red Hat Satellite Tools {{satellite_version}} for RHEL 7 Server RPMs x86_64"
 #need manifest WITH satellite
 #      - product: Red Hat Satellite
-#        repository: Red Hat Satellite 6.2 for RHEL 7 Server RPMs
+#        repository: Red Hat Satellite {{satellite_version}} for RHEL 7 Server RPMs
       - product: Red Hat Software Collections for RHEL Server
         repository: Red Hat Software Collections RPMs for Red Hat Enterprise Linux 7 Server x86_64 7Server
       - product: Red Hat Enterprise Virtualization
@@ -111,5 +128,35 @@ content_config:
 #      - product: Red Hat Storage Native Client for RHEL 7 RPMs
 #        repository: Red Hat Storage Native Client for RHEL 7 RPMs x86_64 7Server
     host_collection: "RHEL7"
-    override: "rhel-7-server-satellite-tools-6.2-rpms"
+    override: "rhel-7-server-satellite-tools-{{satellite_version}}-rpms"
     activation_key_subscription_regex: "{{ rhel_subscription_pool_regex }}"
+
+hostgroups:
+     - name: allhosts
+       lifecycle_environment: PROD
+       subnet: storage
+
+puppet_environment: production
+
+
+custom_templates:
+    - original_name: Kickstart default PXELinux
+      new_name: MSI Kickstart default PXELinux
+      regexp: "^([ 	]* APPEND.*)$"               # regexp to search for; parts in () can be backreferenced via \1, etc in replace string
+      replace: '\1 hpsa.hpsa_allow_any=1'            # the regexp will be replace with this string
+      comment: "added hspa parameter for HP G5 servers"
+      check_regexp: " APPEND.*hpsa.hpsa_allow_any=1"       # what to search for in new template to assure changes have been made (not implemented yet)
+           #sed -i -e  '/ APPEND/ s/$/ hpsa.hpsa_allow_any=1/' /tmp/dump
+    - original_name: Kickstart default iPXE
+      new_name: MSI Kickstart default iPXE
+      regexp: "(kernel.*)$"               # regexp to search for; parts in () can be backreferenced via \1, etc in replace string
+      replace: '\1 hpsa.hpsa_allow_any=1'            # the regexp will be replace with this string
+      comment: "added hspa parameter for HP G5 servers"
+      check_regexp: "kernel.*hpsa.hpsa_allow_any=1"       # what to search for in new template to assure changes have been made (not implemented yet)
+    - original_name: Satellite Kickstart Default
+      new_name: MSI Satellite Kickstart Default
+      regexp: '(bootloader .*--append="'               # regexp to search for; parts in () can be backreferenced via \1, etc in replace string
+      replace: '\1 hpsa.hpsa_allow_any=1 '            # the regexp will be replace with this string
+      comment: "added hspa parameter for HP G5 servers"
+      check_regexp: "bootloader.*--append=.*hpsa.hpsa_allow_any=1"       # what to search for in new template to assure changes have been made (not implemented yet)
+

@@ -1,0 +1,68 @@
+---
+- name: get existing templates
+  shell:  "hammer --csv template list | awk -F, '{ print $2 }'"
+  register: current_templates
+
+- name: generate unique suffix
+  shell: 'for i in {1..2} ;do uuidgen -t; done | sed -e "s/-//g" -e "s/\(....\)/\1\n/g" | sed -n "/./p"'
+  register: uuids
+  delegate_to: localhost
+
+- name: dump original template
+  shell: "hammer template dump --name '{{ item[0].original_name }}' > {{ tmp_dir }}/template_{{ item[1] }}.tmp"
+  with_together:
+     - "{{ custom_templates }}"
+     - "{{ uuids.stdout_lines }}"
+  when: item.0.original_name is defined
+  failed_when: not item.1 
+  ignore_errors: true
+  register: debug_out
+
+- fail:
+    # This should not happen but if it does here comes a understandable error message....
+    msg: "Ups.. Thisshould not happen! Not enough uuids -> please change 'for i in' loop in code"
+  when: item.failed_when_result is defined and item.failed_when_result 
+  with_items: 
+    - "{{ debug_out.results }}"
+
+
+
+- name: clone template
+  shell: "hammer template clone --name '{{ item.original_name }}' --new-name '{{ item.new_name }}'"
+  when: "item.new_name not in current_templates.stdout_lines"
+  with_items:
+     - "{{ custom_templates }}"
+
+- name: alter templatefile
+  replace:
+    dest: "{{ tmp_dir }}/template_{{ item[1] }}.tmp"
+    regexp: "{{ item[0].regexp }}"
+    replace: "{{ item[0].replace }}"
+  with_together:
+     - "{{ custom_templates }}"
+     - "{{ uuids.stdout_lines }}"
+  when: item.0.original_name is defined
+  failed_when: not item.1 
+
+- name: update cloned template
+  shell: "hammer template update --file {{ tmp_dir }}/template_{{ item[1] }}.tmp --audit-comment '{{ item[0].comment }}' --name '{{ item[0].new_name }}'"
+  with_together:
+     - "{{ custom_templates }}"
+     - "{{ uuids.stdout_lines }}"
+  when: item.0.original_name is defined
+  failed_when: not item.1 
+
+- name: remove temporary file
+  file:
+    dest: "{{ tmp_dir }}/template_{{ item[1] }}.tmp" 
+    state: absent
+  with_together:
+     - "{{ custom_templates }}"
+     - "{{ uuids.stdout_lines }}"
+  when: item.0.original_name is defined
+  failed_when: not item.1 
+
+## to check content: hammer template dump --name "MSI Kickstart default PXELinux"
+
+
+

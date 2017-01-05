@@ -1,0 +1,23 @@
+- name: get current hosts 
+  shell: "hammer --csv host list --organization '{{ organization }}' | awk -F, 'NR>1 {print $2}'"
+  register: current_hosts
+  changed_when: false
+
+- name: get locations 
+  shell: "hammer --csv location list | awk -F, 'NR==2 { print $1 }'"
+  register: current_location
+  changed_when: false
+
+- name: get id of architecture 
+  shell: "hammer --csv architecture list | awk -F, '/x86_64/ {print $1}'"
+  register: architecture_id
+  changed_when: false
+
+- name: create host
+  shell: "hammer host create --organization '{{ organization }}' --location-id {{ current_location.stdout }} --name {{ item }} --hostgroup {{ hostgroups[0].name }} --ip {{ hostvars[item]['ipaddress'] }} --mac {{ hostvars[item]['mac'] }} --architecture-id {{ architecture_id.stdout }} --ask-root-password false --autoheal false --build true --domain {{ dns_domain }} --enabled true --provision-method build --subnet {{ networks[0].name }} --managed true"
+  when: item not in current_hosts.stdout_lines
+  with_items: 
+     - "{{ groups['servers'] }}"
+
+# unsolved:  deploy on "Bare Metal"
+

@@ -1,0 +1,23 @@
+- name: get template ids
+  shell: "hammer --csv template list --per-page=99999 | awk -F, '$2 == \"{{ item.new_name }}\" { print $1 }'"
+  register: current_template_ids
+  changed_when: false
+  with_items:
+    - "{{ custom_templates }}"
+
+- debug:
+    var: current_template_ids
+
+- name: get os id
+  shell: "hammer --csv  os list | awk -F, '/{{ os_name }}/ { print $1 }'"
+  register: current_os_id
+
+- name: associate os to template
+  shell: "hammer template add-operatingsystem --id {{ item.stdout }} --operatingsystem-id {{ current_os_id.stdout }}"
+  with_items:
+    - "{{ current_template_ids.results }}"
+
+- name: make template a default template
+  shell: "hammer os set-default-template  --config-template-id {{ item.stdout }} --id {{ current_os_id.stdout }}"
+  with_items:
+    - "{{ current_template_ids.results }}"

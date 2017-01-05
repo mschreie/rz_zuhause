@@ -7,13 +7,23 @@
     - include: prepare-yum.yml
     - include: install-satellite6.yml
     - include: start_satellite.yml
+    - include: adjust-nameresolution.yml
+    - include: addhost2named.yml
     - include: create-organization.yml
     - include: prepare-admin-user.yml
     - include: import_manifest.yml
     - include: enable_repo_and_sync.yml
     - include: wait-for-sync-tasks.yml
+    - include: alter_kickstarttemplates.yml 
+    - include: configure_installationmedia.yml
+    - include: configure_operatingsystem.yml 
     - include: lifecycle-environments.yml
     - include: content_views.yml
     - include: host-collections.yml
     - include: activation_keys.yml
+    - include: configure_dnsdomain.yml
+    - include: configure_subnets.yml
+    - include: configure_puppetenvironment.yml
+    - include: configure_hostgroups.yml
+    - include: create-hosts.yml
 ##  when: mode=="create"

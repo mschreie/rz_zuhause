@@ -1,13 +1,12 @@
 
-
 [manager]
-jump ansible_connection=local
+jump 
 
 [manager-ilo]
 jump-ilo
 
 [glusterleft]
-gluster11
+gluster11 
 gluster12
 
 [glusterright]
@@ -77,4 +76,3 @@ rhevright-ilo
 [servers-ilo:children]
 gluster-ilo
 rhev-ilo
-

@@ -1,0 +1,9 @@
+
+- name: get locations for puppetenv
+  shell: "hammer --csv location list | awk -F, 'NR==2 { print $1 }'"
+  register: current_location
+  changed_when: false
+
+
+- name: update dnsdomain
+  shell: "hammer environment update --name '{{ puppet_environment }}' --organizations '{{ organization }}' --location-ids {{ current_location.stdout }}"

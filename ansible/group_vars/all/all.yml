@@ -1,7 +1,6 @@
 # definitions specific to whole datacenter
 dns_domain: example.com
-dns_searchdomain: [coe.muc.redhat.com]
-dns_nameservers: [192.168.188.1]
+dns_searchdomain: [example.com]
 dns_reverse_domain: 20.16.172.in-addr.arpa
 organization: "Example Inc"
 organization_id: "Example_Inc"
@@ -17,9 +16,14 @@ satellite_repos:
 
 # definitions for management host 
 mgt_hostname: jump.{{ dns_domain }}
+mgt_reverse: 1.{{ dns_reverse_domain }}
 mgt_ip: 172.16.20.1
 mgt_nic: vlan20
 mgt_dhcp_range: "172.16.20.50 172.16.20.99"
+mgt_upstream_router: 192.168.188.1
+#### depends on status / system 
+upstream_dns: [192.168.188.1]
+internal_dns: [ "{{ mgt_ip }}" ]
 
 
 
@@ -27,10 +31,25 @@ mgt_dhcp_range: "172.16.20.50 172.16.20.99"
 hostname: "{{ inventory_hostname_short }}.{{ dns_domain }}"
 
 
+# definition of networks
+networks:
+  - name: storage
+    ip: 172.16.20.0
+    netmask: 255.255.255.0
+    gateway: 172.16.20.1
+    nameserver: 172.16.20.1
+    vlanid: 
+    boot_mode: Static
+   
+    
+
 # RED HAT SUBSCRIPTION POOLS
 
 satellite_subscription_pool_regex: "^(Red Hat Satellite Employee Subscription|Red Hat Satellite)$"
 rhel_subscription_pool_regex: "^(Employee SKU|Red Hat Enterprise Linux Server.*Unlimited guests.*)$"
 rhev_subscription_pool_regex: "^(Employee SKU|Red Hat Enterprise Virtualization.*|Red Hat Enterprise Linux Server.*Unlimited guests.*)$"
 
+# Installation Media 
+medium_regex_rhel7: "Enterprise_Linux_7"
 
+tmp_dir: /tmp

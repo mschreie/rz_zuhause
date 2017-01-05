@@ -22,16 +22,7 @@
     
 - name: install rpms 
   yum: name="{{ item }}" state=present
-  with_items:
-    - rhevm-guest-agent-common
-    - chrony
-    - sos
-    - bind-utils
-    - satellite
-    - xauth
-    - screen
-    - firefox
-    - pulp-admin-client
+  with_items: "{{ packages }}"
 
 - name: update all packages
   yum: name=* state=latest
