@@ -1,21 +1,41 @@
-- name: do debug
-  debug:
-    var: "{{ item }}"
-  with_items:
-    - "{{ networks }}"
-
 - name: add subnets to dhcpd.conf
   blockinfile:
     dest: /etc/dhcp/dhcpd.conf
     backup: true
     block: |
        subnet {{ item.ip }} netmask {{ item.netmask }} {
+          pool
+             {
+               range {{ item.range }};
+             }
+             option subnet-mask {{ item.netmask }};
+             option routers {{ item.gateway }};
        }
     marker: "# {mark} Ansible managed block {{ item.ip }}"
   notify: Restart dhcpd
   with_items:
     - "{{ networks }}"
-  when: item.managed_by == 'ansible' or item.managed_by == 'none'
+  when: item.managed_by == 'ansible' 
+
+- name: get subnets from dhcp unit file
+  shell: "grep -q {{ item.interface }} /etc/systemd/system/dhcpd.service"
+  register: unit_file 
+  with_items:
+    - "{{ networks }}"
+  ignore_errors: true
+
+- name: add subnet to dhcp unit file 
+  lineinfile:
+     dest: /etc/systemd/system/dhcpd.service
+     regexp: '^(ExecStart=/usr/sbin/dhcpd .*)$'
+     line: '\1 {{ item.item.interface }}'
+     backrefs: true
+  when: item.rc == 1
+  with_items:
+    - "{{ unit_file.results }}"
+  notify: 
+    - systemctl daemon-reload
+    - Restart dhcpd
 
 - name: add reverse subnet to dns
   blockinfile:
@@ -62,12 +82,6 @@
   with_items: 
      - "{{ groups['servers'] }}"
   ##when: hostvars[item]['ilo_mac'] is defined
-
-- debug:
-    msg: "item: {{ item }}"
-    #msg: "ilo_ip: {{ hostvars[item.item]['ilo_ip'] }}"
-  with_items: 
-     - "{{ dnsout.results }}"
 
 - name: add ilo staticaly to dns
   script: binary/named_update.sh {{ fqdn }}  {{ ipaddress }} {{ reverse }}  

@@ -43,6 +43,7 @@ networks:
     nameserver: 172.16.20.1
     vlanid: 
     boot_mode: Static
+    interface: vlan20
   - name: ilo
     managed_by: ansible
     ip: 172.16.10.0
@@ -52,10 +53,12 @@ networks:
     nameserver: 172.16.10.1
     vlanid: 
     boot_mode: Static
-  - name: other 
-    managed_by: none
-    ip: 192.168.188.0
-    netmask: 255.255.255.0
+    interface: vlan10
+    range: "172.16.10.50 172.16.10.99"
+ # - name: other 
+ #   managed_by: none
+ #   ip: 192.168.188.0
+ #   netmask: 255.255.255.0
     
 
 # RED HAT SUBSCRIPTION POOLS

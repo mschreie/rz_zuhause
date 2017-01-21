@@ -11,10 +11,14 @@
       port=22
       delay=1
       timeout=300
+- name: systemctl daemon-reload
+  shell: systemctl daemon-reload
 - name: Restart cron
   service: name=cron state=restarted
 - name: Restart dhcpd
   service: name=dhcpd state=restarted
 - name: Restart named
   service: name=named state=restarted
+- name: systemctl daemon-reload
+  shell: systemctl daemon-reload
 

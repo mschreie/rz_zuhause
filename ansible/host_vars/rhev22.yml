@@ -7,5 +7,5 @@ ipaddress: 172.16.20.202
 reverse: 202.20.16.172.in-addr.arpa.
 ilo_name: rhev22-ilo
 ilo_ip: 172.16.10.202
-# ilo_mac:
+ilo_mac: 00:1e:0b:5f:4c:e4 
 ilo_reverse: 202.10.16.172.in-addr.arpa.
