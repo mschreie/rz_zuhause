@@ -3,66 +3,75 @@
   shell:  "hammer --csv template list | awk -F, '{ print $2 }'"
   register: current_templates
 
-- name: generate unique suffix
-  shell: 'for i in {1..2} ;do uuidgen -t; done | sed -e "s/-//g" -e "s/\(....\)/\1\n/g" | sed -n "/./p"'
-  register: uuids
+- name: generate unique suffix for templates to clone
+  shell: 'uuidgen -t | cut -c 1-6'
   delegate_to: localhost
+  with_items:
+     - "{{ custom_templates_clone }}"
+  register: the_templates_clone
+
+- name: generate unique suffix for templates to alter
+  shell: 'uuidgen -t | cut -c 1-6'
+  delegate_to: localhost
+  with_items:
+     - "{{ custom_templates_alter }}"
+  register: the_templates_alter
+
+- debug:
+    var: the_templates_alter
+
+- debug:
+    var: the_templates_clone
 
 - name: dump original template
-  shell: "hammer template dump --name '{{ item[0].original_name }}' > {{ tmp_dir }}/template_{{ item[1] }}.tmp"
-  with_together:
-     - "{{ custom_templates }}"
-     - "{{ uuids.stdout_lines }}"
-  when: item.0.original_name is defined
-  failed_when: not item.1 
-  ignore_errors: true
-  register: debug_out
-
-- fail:
-    # This should not happen but if it does here comes a understandable error message....
-    msg: "Ups.. Thisshould not happen! Not enough uuids -> please change 'for i in' loop in code"
-  when: item.failed_when_result is defined and item.failed_when_result 
-  with_items: 
-    - "{{ debug_out.results }}"
-
-
+  shell: "hammer template dump --name '{{ item.item.original_name }}' > {{ tmp_dir }}/template_{{ item.stdout }}.tmp"
+  with_items:
+     - "{{ the_templates_clone.results }}"
+     - "{{ the_templates_alter.results }}"
 
 - name: clone template
   shell: "hammer template clone --name '{{ item.original_name }}' --new-name '{{ item.new_name }}'"
   when: "item.new_name not in current_templates.stdout_lines"
   with_items:
-     - "{{ custom_templates }}"
+     - "{{ custom_templates_clone }}"
+     - "{{ custom_templates_alter }}"
 
-- name: alter templatefile
+- name: alter templatefile for templates to clone
   replace:
-    dest: "{{ tmp_dir }}/template_{{ item[1] }}.tmp"
-    regexp: "{{ item[0].regexp }}"
-    replace: "{{ item[0].replace }}"
-  with_together:
-     - "{{ custom_templates }}"
-     - "{{ uuids.stdout_lines }}"
-  when: item.0.original_name is defined
-  failed_when: not item.1 
+    dest: "{{ tmp_dir }}/template_{{ item.0.stdout }}.tmp"
+    regexp: "{{ item.1.regexp }}"
+    replace: "{{ item.1.replace }}"
+  with_subelements:
+     - "{{ the_templates_clone.results }}"
+     - item.replace
+
+- name: alter templatefile for templates to alter
+  replace:
+    dest: "{{ tmp_dir }}/template_{{ item.0.stdout }}.tmp"
+    regexp: "{{ item.1.regexp }}"
+    replace: "{{ item.1.replace }}"
+  with_subelements:
+     - "{{ the_templates_alter.results }}"
+     - item.replace
 
 - name: update cloned template
-  shell: "hammer template update --file {{ tmp_dir }}/template_{{ item[1] }}.tmp --audit-comment '{{ item[0].comment }}' --name '{{ item[0].new_name }}'"
-  with_together:
-     - "{{ custom_templates }}"
-     - "{{ uuids.stdout_lines }}"
-  when: item.0.original_name is defined
-  failed_when: not item.1 
+  shell: "hammer template update --file {{ tmp_dir }}/template_{{ item.stdout }}.tmp --audit-comment '{{ item.item.comment | join(\n) }}' --name '{{ item.item.new_name }}'"
+  with_items:
+     - "{{ the_templates_clone.results }}"
+
+- name: update original template
+  shell: "hammer template update --file {{ tmp_dir }}/template_{{ item.stdout }}.tmp --audit-comment '{{ item.item.comment | join(\n) }}' --name '{{ item.item.original_name }}'"
+  with_items:
+     - "{{ the_templates_alter.results }}"
 
 - name: remove temporary file
   file:
-    dest: "{{ tmp_dir }}/template_{{ item[1] }}.tmp" 
+    dest: "{{ tmp_dir }}/template_{{ item.stdout }}.tmp"
     state: absent
-  with_together:
-     - "{{ custom_templates }}"
-     - "{{ uuids.stdout_lines }}"
-  when: item.0.original_name is defined
-  failed_when: not item.1 
+  with_items:
+     - "{{ the_templates_clone.results }}"
+     - "{{ the_templates_alter.results }}"
 
 ## to check content: hammer template dump --name "MSI Kickstart default PXELinux"
-
 
 

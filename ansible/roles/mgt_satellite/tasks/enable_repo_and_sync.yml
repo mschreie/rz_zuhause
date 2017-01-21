@@ -11,7 +11,7 @@
     - repos
   register: enable_repos_out
   ## ignore_errors: yes
-  failed_when: "'Error: 409 Conflict' not in enable_repos_out.stderr"
+  failed_when: "enable_repos_out.rc != 0 and 'Error: 409 Conflict' not in enable_repos_out.stderr"
 
 
 - name: start sync tasks for repos

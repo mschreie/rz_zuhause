@@ -1,0 +1,16 @@
+---
+- hosts: jump
+  remote_user: root
+  gather_facts: false
+  tasks:
+     
+  - name: dubug var
+    debug: 
+      msg: Var is {{ var }}
+    vars:
+      var: "{{ item }}"
+    with_items:
+       - a
+       - b
+       - c 
+  

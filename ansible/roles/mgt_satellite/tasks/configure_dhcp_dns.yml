@@ -1,0 +1,92 @@
+- name: do debug
+  debug:
+    var: "{{ item }}"
+  with_items:
+    - "{{ networks }}"
+
+- name: add subnets to dhcpd.conf
+  blockinfile:
+    dest: /etc/dhcp/dhcpd.conf
+    backup: true
+    block: |
+       subnet {{ item.ip }} netmask {{ item.netmask }} {
+       }
+    marker: "# {mark} Ansible managed block {{ item.ip }}"
+  notify: Restart dhcpd
+  with_items:
+    - "{{ networks }}"
+  when: item.managed_by == 'ansible' or item.managed_by == 'none'
+
+- name: add reverse subnet to dns
+  blockinfile:
+    dest: /etc/zones.conf
+    backup: true
+    block: |
+      zone "{{ item.reverse }}" {
+          type master;
+          file "/var/named/dynamic/db.{{ item.reverse }}";
+          update-policy {
+                  grant rndc-key zonesub ANY;
+          };
+      };
+    marker: "# {mark} Ansible managed block {{ item.reverse }}"
+  notify: Restart named
+  with_items:
+    - "{{ networks }}"
+  when: item.managed_by == 'ansible' 
+
+
+- name: add ilo staticaly to dhcp
+  blockinfile:
+    dest: /etc/dhcp/dhcpd.hosts
+    backup: true
+    block: |
+      host {{ hostvars[item]['ilo_name'] }} {
+                    fixed-address {{ hostvars[item]['ilo_ip'] }};
+                  }
+    marker: "# {mark} Ansible managed block {{ hostvars[item]['ilo_name'] }}"
+                    ## hardware ethernet {{ hostvars[item]['ilo_mac'] }};
+  notify: Restart dhcpd
+  with_items: 
+     - "{{ groups['servers'] }}"
+##  when: hostvars[item]['ilo_mac'] is defined
+
+- name: flush handlers
+  meta: 
+    flush_handlers
+
+- name: check dns
+  shell: host {{ hostname }} {
+  register: dnsout
+  ignore_errors: yes
+  with_items: 
+     - "{{ groups['servers'] }}"
+  ##when: hostvars[item]['ilo_mac'] is defined
+
+- debug:
+    msg: "item: {{ item }}"
+    #msg: "ilo_ip: {{ hostvars[item.item]['ilo_ip'] }}"
+  with_items: 
+     - "{{ dnsout.results }}"
+
+- name: add ilo staticaly to dns
+  script: binary/named_update.sh {{ fqdn }}  {{ ipaddress }} {{ reverse }}  
+  # debug:
+  #   msg:  |
+  #     fqdn: {{ fqdn }}
+  #     ipaddress: {{ ipaddress }} 
+  #     reverse: {{ reverse }}  
+  vars:
+    fqdn: "{{ hostvars[item.item]['ilo_name'] }}.{{ dns_domain }}."
+    ipaddress: "{{ hostvars[item.item]['ilo_ip'] }}"
+    reverse: "{{ hostvars[item.item]['ilo_reverse'] }}"
+  notify: Restart named
+  with_items: 
+     - "{{ dnsout.results }}" 
+  when: item.stdout.find('{{ hostvars[item.item]['ilo_ip'] }}') == -1
+  ## when: item.stdout.find('{{ ipaddress }}') == -1
+  run_once: true
+
+- name: flush handlers
+  meta: 
+    flush_handlers

@@ -1,9 +1,16 @@
-- name: get template ids
+- name: get template ids for cloned templates
   shell: "hammer --csv template list --per-page=99999 | awk -F, '$2 == \"{{ item.new_name }}\" { print $1 }'"
-  register: current_template_ids
+  register: current_template_ids_clone
   changed_when: false
   with_items:
-    - "{{ custom_templates }}"
+    - "{{ custom_templates_clone }}"
+
+- name: get template ids for alterd templates
+  shell: "hammer --csv template list --per-page=99999 | awk -F, '$2 == \"{{ item.new_name }}\" { print $1 }'"
+  register: current_template_ids_alter
+  changed_when: false
+  with_items:
+    - "{{ custom_templates_alter }}"
 
 - name: get os id
   shell: "hammer --csv  os list | awk -F, '/{{ os_name }}/ { print $1 }'"
@@ -12,9 +19,10 @@
 - name: associate os to template
   shell: "hammer template add-operatingsystem --id {{ item.stdout }} --operatingsystem-id {{ current_os_id.stdout }}"
   with_items:
-    - "{{ current_template_ids.results }}"
+    - "{{ current_template_ids_clone.results }}"
+    - "{{ current_template_ids_alter.results }}"
 
 - name: make template a default template
   shell: "hammer os set-default-template  --config-template-id {{ item.stdout }} --id {{ current_os_id.stdout }}"
   with_items:
-    - "{{ current_template_ids.results }}"
+    - "{{ current_template_ids_clone.results }}"

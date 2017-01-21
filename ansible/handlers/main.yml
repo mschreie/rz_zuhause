@@ -13,4 +13,8 @@
       timeout=300
 - name: Restart cron
   service: name=cron state=restarted
+- name: Restart dhcpd
+  service: name=dhcpd state=restarted
+- name: Restart named
+  service: name=named state=restarted
 

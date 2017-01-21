@@ -33,14 +33,29 @@ hostname: "{{ inventory_hostname_short }}.{{ dns_domain }}"
 
 # definition of networks
 networks:
+    # WARNING: satellite-managed network needs to be at position 0 (see create_hosts.yml
   - name: storage
+    managed_by: satellite
     ip: 172.16.20.0
+    reverse: 20.16.172.in-addr.arpa
     netmask: 255.255.255.0
     gateway: 172.16.20.1
     nameserver: 172.16.20.1
     vlanid: 
     boot_mode: Static
-   
+  - name: ilo
+    managed_by: ansible
+    ip: 172.16.10.0
+    reverse: 10.16.172.in-addr.arpa
+    netmask: 255.255.255.0
+    gateway: 172.16.10.1
+    nameserver: 172.16.10.1
+    vlanid: 
+    boot_mode: Static
+  - name: other 
+    managed_by: none
+    ip: 192.168.188.0
+    netmask: 255.255.255.0
     
 
 # RED HAT SUBSCRIPTION POOLS

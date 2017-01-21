@@ -12,4 +12,5 @@
 
 - name: upload manifest
   command: 'hammer subscription upload --organization "{{ organization }}" --file /root/{{ satellite_manifestfile }}'
-  when: manifest|changed
+  when: (republish is defined and republish) or manifest|changed 
+

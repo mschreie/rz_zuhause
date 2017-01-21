@@ -1,0 +1,70 @@
+---
+- hosts: jump
+  remote_user: root
+  gather_facts: false
+  tasks:
+     
+  - name: get partition-table info
+    ## shell: "hammer --output=json partition-table info --name '{{ item }}'"
+    shell: "cat /tmp/hammer.out"
+    register: partition_tables_info
+    with_items:
+       - "Kickstart default"
+  
+  - name: debug partition_tables_info
+    debug: 
+      var: partition_tables_info
+  
+  - name: debug json-parsing
+    debug: 
+      var: (item.stdout|from_json)['Operating systems']
+    with_items:
+       - "{{ partition_tables_info.results }}"
+
+  - name: list of os-ids
+    vars: 
+      osfamily:  "OS Family"
+    debug:
+            ## msg: "OS-IDs are {{item.stdout|from_json|json_query('Operating systems.[*].id')|join(',')}}"
+       msg: '{{item.stdout|from_json|json_query(osfamily)}}'
+       ##msg: "{{item.stdout|from_json|json_query('Operatingsystems')}}"
+    with_items:
+       - "{{ partition_tables_info.results }}"
+  
+  - fail:
+    
+  
+  - name: create new partition-table
+    shell: "hammer partition-table create --name '{{ item.item.item.new_name }}' --file {{ tmp_dir }}/partition-table_{{ item.item.stdout }}.tmp --audit-comment '{{ item.item.item.comment | join(\n) }}' --name '{{ item.item.item.new_name }}'"
+    when: "item.item.new_name not in current_partition_tables.stdout_lines"
+    with_items:
+       - "{{ partition_tables_info.results }}"
+  
+## 
+## 
+## hammer partition-table create [OPTIONS]
+## 
+## Options:
+##  --host-ids HOST_IDS                       Array of host IDs to associate with the partition table
+##                                            Comma separated list of values.
+##  --hostgroup-ids HOSTGROUP_IDS             Array of host group IDs to associate with the partition table
+##                                            Comma separated list of values.
+##  --hostgroup-titles HOSTGROUP_TITLES       Comma separated list of values.
+##  --hostgroups HOSTGROUP_NAMES              Comma separated list of values.
+##  --hosts HOST_NAMES                        Comma separated list of values.
+##  --location-ids LOCATION_IDS               REPLACE locations with given ids
+##                                            Comma separated list of values.
+##  --locations LOCATION_NAMES                Comma separated list of values.
+##  --locked LOCKED                           Whether or not the template is locked for editing
+##                                            One of true/false, yes/no, 1/0.
+##  --operatingsystem-ids OPERATINGSYSTEM_IDS Array of operating system IDs to associate with the partition table
+##                                            Comma separated list of values.
+##  --operatingsystems OPERATINGSYSTEM_TITLES Comma separated list of values.
+##  --organization-ids ORGANIZATION_IDS       REPLACE organizations with given ids.
+##                                            Comma separated list of values.
+##  --organizations ORGANIZATION_NAMES        Comma separated list of values.
+##  --os-family OS_FAMILY                      
+##  --snippet SNIPPET                         One of true/false, yes/no, 1/0.
+## 
+## 
+

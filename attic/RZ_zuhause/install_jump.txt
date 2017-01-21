@@ -12,7 +12,7 @@ tmpfs                  7,8G  8,5M  7,8G   1% /run
 tmpfs                  7,8G     0  7,8G   0% /sys/fs/cgroup
 /dev/sda1              497M  123M  374M  25% /boot
 /dev/mapper/rhel-var   100G  185M  100G   1% /var
-
+=> OK!!
 ---
 Network: made the second if available:
 3: enp5s0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP qlen 1000
@@ -48,13 +48,22 @@ FIXME: Kickstart default
 -> define different partitioning than autopart 
 
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxx
+DynDNS:
+D.h. für eine Korrektur könntest du z.B. entweder das DynDNS Update manuell auslösen oder einen 2. DynDNS Client betreiben, der unabhängig vom Hybrid-Router zyklisch die IP aktualisiert. So mache ich das indem ich den DynDNS Client auf meiner NAS (Synology im Menü unter "Externer Zugriff") nutze. Ich habe keine Probleme seitdem.
+ 
+https://en.code-bude.net/2013/07/21/how-to-setup-ddclient-on-raspberry-pi-for-use-with-namecheap-dyndns/
+
+-----
+LÖSUNGSANSATZ:
+In der Konfiguration des Speedport "Internet -> LTE deaktivieren oder Ausnahmen hinzufügen -> Ausnahmeregel hinzufügen" muss lediglich entsprechende Konfiguration "Datenverkehr zu destem Zielport" erfolgen.
+ 
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 ToDo servers:
 * Tastatur -> Deutsch
-* kein /home- device
 * ssh-key (user ansible)
 * Boot-Verhalten der Server: Netzwerk-Boot -> localboot.0 bootet nicht!
-
+  => changed -> needs to be tested!
 
 @host.params['sshkey']
 @host.params['remote_execution_ssh_keys'].each

@@ -14,7 +14,7 @@
   changed_when: false
 
 - name: create host
-  shell: "hammer host create --organization '{{ organization }}' --location-id {{ current_location.stdout }} --name {{ item }} --hostgroup {{ hostgroups[0].name }} --ip {{ hostvars[item]['ipaddress'] }} --mac {{ hostvars[item]['mac'] }} --architecture-id {{ architecture_id.stdout }} --ask-root-password false --autoheal false --build true --domain {{ dns_domain }} --enabled true --provision-method build --subnet {{ networks[0].name }} --managed true"
+  shell: "hammer host create --organization '{{ organization }}' --location-id {{ current_location.stdout }} --name {{ item }} --hostgroup {{ hostgroups[0].name }} --ip {{ hostvars[item]['ipaddress'] }} --mac {{ hostvars[item]['mac'] }} --architecture-id {{ architecture_id.stdout }} --ask-root-password false --autoheal false --build true --domain {{ dns_domain }} --enabled true --provision-method build --subnet {{ networks[0].name }} --managed true --parameters 'remote_execution_ssh_user={{ user_name }},remote_execution_ssh_keys={{ user_key }}'"
   when: item not in current_hosts.stdout
   with_items: 
      - "{{ groups['servers'] }}"
