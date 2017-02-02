@@ -1,0 +1,99 @@
+---
+- name: get existing partition-tables
+  shell:  "hammer --csv partition-table list | awk -F, '{ print $2 }'"
+  register: current_partition_tables
+
+- name: generate unique suffix
+  shell: 'uuidgen -t | cut -c 1-6'
+  delegate_to: localhost
+  with_items:
+     - "{{ custom_partition_tables }}"
+  register: the_partition_tables
+
+- debug:
+    var: the_partition_tables
+
+- name: dump original partition-table
+  shell: "hammer partition-table dump --name '{{ item.item.original_name }}' > {{ tmp_dir }}/partition-table_{{ item.stdout }}.tmp"
+  with_items:
+     - "{{ the_partition_tables.results }}"
+
+- name: alter partition-tablefile
+  replace:
+    dest: "{{ tmp_dir }}/partition-table_{{ item.0.stdout }}.tmp"
+    regexp: "{{ item.1.regexp }}"
+    replace: "{{ item.1.replace }}"
+  with_subelements:
+     - "{{ the_partition_tables.results }}"
+     - item.replace
+
+##- name: get partition-table info
+##  shell: "hammer --output=json partition-table info --name '{{ item.item.original_name }}'"
+##  register: partition_tables_info
+##  with_items:
+##     - "{{ the_partition_tables.results }}"
+##
+- name: debug json-parsing
+  debug: 
+    var: item
+  with_items:
+     - "{{ partition_tables_info.results }}"
+##
+##- fail:
+##  
+##
+##- name: create new partition-table
+##  shell: "hammer partition-table create --name '{{ item.item.item.new_name }}' --file {{ tmp_dir }}/partition-table_{{ item.item.stdout }}.tmp --audit-comment '{{ item.item.item.comment | join(\n) }}' --name '{{ item.item.item.new_name }}'"
+##  when: "item.item.new_name not in current_partition_tables.stdout_lines"
+##  with_items:
+##     - "{{ partition_tables_info.results }}"
+##
+## 
+##- name: change existing  partition-table
+##  shell: "hammer partition-table update --name '{{ item.item.item.new_name }}' --file {{ tmp_dir }}/partition-table_{{ item.item.stdout }}.tmp --audit-comment '{{ item.item.item.comment | join(\n) }}'"
+##   when: "item.item.new_name not in current_partition_tables.stdout_lines"
+##   with_items:
+##      - "{{ partition_tables_info.results }}"
+
+- name: change existing  partition-table
+  shell: "hammer partition-table update --name '{{ item.item.original_name }}' --file {{ tmp_dir }}/partition-table_{{ item.stdout }}.tmp --audit-comment '{{ item.item.comment | join(\n) }}'"
+##  when: "item.item.new_name not in current_partition_tables.stdout_lines"
+  with_items:
+     - "{{ the_partition_tables.results }}"
+## 
+## 
+## hammer partition-table create [OPTIONS]
+## 
+## Options:
+##  --host-ids HOST_IDS                       Array of host IDs to associate with the partition table
+##                                            Comma separated list of values.
+##  --hostgroup-ids HOSTGROUP_IDS             Array of host group IDs to associate with the partition table
+##                                            Comma separated list of values.
+##  --hostgroup-titles HOSTGROUP_TITLES       Comma separated list of values.
+##  --hostgroups HOSTGROUP_NAMES              Comma separated list of values.
+##  --hosts HOST_NAMES                        Comma separated list of values.
+##  --location-ids LOCATION_IDS               REPLACE locations with given ids
+##                                            Comma separated list of values.
+##  --locations LOCATION_NAMES                Comma separated list of values.
+##  --locked LOCKED                           Whether or not the template is locked for editing
+##                                            One of true/false, yes/no, 1/0.
+##  --operatingsystem-ids OPERATINGSYSTEM_IDS Array of operating system IDs to associate with the partition table
+##                                            Comma separated list of values.
+##  --operatingsystems OPERATINGSYSTEM_TITLES Comma separated list of values.
+##  --organization-ids ORGANIZATION_IDS       REPLACE organizations with given ids.
+##                                            Comma separated list of values.
+##  --organizations ORGANIZATION_NAMES        Comma separated list of values.
+##  --os-family OS_FAMILY                      
+##  --snippet SNIPPET                         One of true/false, yes/no, 1/0.
+## 
+## 
+- name: remove temporary file
+  file:
+    dest: "{{ tmp_dir }}/partition-table_{{ item.stdout }}.tmp"
+    state: absent
+  with_items:
+     - "{{ the_partition_tables.results }}"
+
+## to check content: hammer partition-table dump --name "MSI Kickstart default PXELinux"
+
+

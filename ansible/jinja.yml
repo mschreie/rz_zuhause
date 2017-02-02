@@ -1,0 +1,15 @@
+---
+- hosts: jump
+  remote_user: root
+  gather_facts: false
+  vars:
+   myvar:
+    - val: a
+    - val: b
+    - val: c
+  tasks:
+  - name: debug 
+    debug: 
+    ##  msg: "{% for row in myvar %}{{loop.index}}\n{% endfor %}"
+      msg: "{% for row in myvar %}{{loop.index}}-{{row.val}}\n{% endfor %}"
+  

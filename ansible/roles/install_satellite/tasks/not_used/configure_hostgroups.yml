@@ -1,0 +1,49 @@
+- name: get current hostgroups 
+  shell: "hammer --csv hostgroup list --organization '{{ organization }}' | awk -F, 'NR>1 {print $2}'"
+  register: current_hostgroups
+  changed_when: false
+
+- name: get locations 
+  shell: "hammer --csv location list | awk -F, 'NR==2 { print $1 }'"
+  register: current_location
+  changed_when: false
+
+- name: get id of capsule
+  shell: "hammer --csv capsule list --organization '{{ organization }}' | awk -F, '/{{ mgt_hostname}}/ {print $1}'"
+  register: capsule_id
+  changed_when: false
+  
+- name: get id of architecture 
+  shell: "hammer --csv architecture list | awk -F, '/x86_64/ {print $1}'"
+  register: architecture_id
+  changed_when: false
+
+- name: get id of installation medium  
+  shell: "hammer --csv medium list --organization '{{ organization }}' | awk -F, '/{{ medium_regex_rhel7 }}/ {print $1}'"
+  register: medium_id
+  changed_when: false
+
+- name: get id of partition table
+  shell: "hammer --csv partition-table list | awk -F, '/Redhat/ { print $1}'"
+  register: partitiontable_id
+  changed_when: false
+
+- name: get current lifecycle environments
+  shell: hammer lifecycle-environment list --organization "{{ organization }}" --library false | awk '{ print $3 }' | tail -n+4
+  register: current_lifecycle_environments
+  changed_when: false
+
+- name: create hostgroup
+  shell: "hammer hostgroup create --organization '{{ organization }}' --organizations '{{ organization }}' --location-ids {{ current_location.stdout }} --name '{{ item[0].name }}' --architecture-id {{ architecture_id.stdout }} --ask-root-pass false --content-source-id {{ capsule_id.stdout }} --content-view '{{ item[1].content_view }}' --domain {{ dns_domain }} --lifecycle-environment '{{ item[0].lifecycle_environment }}' --medium-id {{ medium_id.stdout }} --operatingsystem '{{ os_name }}' --partition-table-id {{ partitiontable_id.stdout }} --puppet-ca-proxy-id {{ capsule_id.stdout }} --puppet-proxy-id {{ capsule_id.stdout }} --root-pass '{{ root_password }}' --subnet '{{ item[0].subnet }}' --environment {{ puppet_environment }}"
+  when: item[0].name not in current_hostgroups.stdout_lines
+  with_nested: 
+     - "{{ hostgroups }}"
+     - "{{ content_config}}"
+
+- name: associate activation keys to hostgroup
+  shell: "hammer hostgroup set-parameter --name kt_activation_keys --value 'AK-{{ item[1].content_view }}-{{ item[0] }}' --hostgroup '{{ item[2].name }}' "
+  with_nested: 
+    - "{{ current_lifecycle_environments.stdout_lines }}"
+    - "{{ content_config }}"
+    - "{{ hostgroups }}"
+

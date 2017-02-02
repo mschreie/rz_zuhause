@@ -1,0 +1,77 @@
+---
+- name: get existing templates
+  shell:  "hammer --csv template list | awk -F, '{ print $2 }'"
+  register: current_templates
+
+- name: generate unique suffix for templates to clone
+  shell: 'uuidgen -t | cut -c 1-6'
+  delegate_to: localhost
+  with_items:
+     - "{{ custom_templates_clone }}"
+  register: the_templates_clone
+
+- name: generate unique suffix for templates to alter
+  shell: 'uuidgen -t | cut -c 1-6'
+  delegate_to: localhost
+  with_items:
+     - "{{ custom_templates_alter }}"
+  register: the_templates_alter
+
+- debug:
+    var: the_templates_alter
+
+- debug:
+    var: the_templates_clone
+
+- name: dump original template
+  shell: "hammer template dump --name '{{ item.item.original_name }}' > {{ tmp_dir }}/template_{{ item.stdout }}.tmp"
+  with_items:
+     - "{{ the_templates_clone.results }}"
+     - "{{ the_templates_alter.results }}"
+
+- name: clone template
+  shell: "hammer template clone --name '{{ item.original_name }}' --new-name '{{ item.new_name }}'"
+  when: "item.new_name not in current_templates.stdout_lines"
+  with_items:
+     - "{{ custom_templates_clone }}"
+     - "{{ custom_templates_alter }}"
+
+- name: alter templatefile for templates to clone
+  replace:
+    dest: "{{ tmp_dir }}/template_{{ item.0.stdout }}.tmp"
+    regexp: "{{ item.1.regexp }}"
+    replace: "{{ item.1.replace }}"
+  with_subelements:
+     - "{{ the_templates_clone.results }}"
+     - item.replace
+
+- name: alter templatefile for templates to alter
+  replace:
+    dest: "{{ tmp_dir }}/template_{{ item.0.stdout }}.tmp"
+    regexp: "{{ item.1.regexp }}"
+    replace: "{{ item.1.replace }}"
+  with_subelements:
+     - "{{ the_templates_alter.results }}"
+     - item.replace
+
+- name: update cloned template
+  shell: "hammer template update --file {{ tmp_dir }}/template_{{ item.stdout }}.tmp --audit-comment '{{ item.item.comment | join(\n) }}' --name '{{ item.item.new_name }}'"
+  with_items:
+     - "{{ the_templates_clone.results }}"
+
+- name: update original template
+  shell: "hammer template update --file {{ tmp_dir }}/template_{{ item.stdout }}.tmp --audit-comment '{{ item.item.comment | join(\n) }}' --name '{{ item.item.original_name }}'"
+  with_items:
+     - "{{ the_templates_alter.results }}"
+
+- name: remove temporary file
+  file:
+    dest: "{{ tmp_dir }}/template_{{ item.stdout }}.tmp"
+    state: absent
+  with_items:
+     - "{{ the_templates_clone.results }}"
+     - "{{ the_templates_alter.results }}"
+
+## to check content: hammer template dump --name "MSI Kickstart default PXELinux"
+
+

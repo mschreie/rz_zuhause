@@ -1,0 +1,27 @@
+- name: stop satellite
+  shell: katello-service stop
+
+- name: backup config and data files
+  shell: katello-backup {{ backup_conf.destination_dir }}
+   
+##   shell: "tar {{taropts }} {{ destination }}/{{ tarfile }}{% for dir in directories %} {{dir}}{% endfor %}"
+##   with_items: 
+##     - "{{ backups }}"
+##   vars:
+##     destination: "{{ item.destination_dir }}" 
+##     tarfile:     "{{ item.destination_file }}" 
+##     taropts:     "{{ item.tar_options }}" 
+##     directories: "{{ item.paths }}"
+
+## - name: check backup
+##   shell:  ls -ld {{ destination }}/{{ tarfile }}
+##   with_items: 
+##     - "{{ backups }}"
+##   vars:
+##     destination: "{{ item.destination_dir }}" 
+##     tarfile:     "{{ item.destination_file }}" 
+
+- name: start satellite
+  shell: katello-service start
+
+

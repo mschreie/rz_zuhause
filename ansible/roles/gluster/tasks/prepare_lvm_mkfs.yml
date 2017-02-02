@@ -1,0 +1,35 @@
+---
+- name: create logical volumes
+  lvol: vg=rhel lv={{ item.1.name }}  size={{ item.1.size }} state=present
+  with_subelemnts:
+     - "{{ gluster_volumes }}"
+     - "{{ gluster_volumes.bricks }}"
+   when: item.1.hostname == ansible_hostname
+
+
+- name: create filesystem 
+  filesystem: dev=/dev/rhel/{{ item.1.name }} 
+              fstype=xfs
+              opts="-i size=512"
+  with_subelemnts:
+     - "{{ gluster_volumes }}"
+     - "{{ gluster_volumes.bricks }}"
+   when: item.1.hostname == ansible_hostname
+
+- name: mount brick volume 
+  mount: name=/gluster/bricks/{{ item.1.name }} 
+         src=/dev/rhel/{{ item.1.name }} 
+         fstype=xfs opts=inode64,noatime
+         state=mounted
+  with_subelemnts:
+     - "{{ gluster_volumes }}"
+     - "{{ gluster_volumes.bricks }}"
+   when: item.1.hostname == ansible_hostname
+
+- name: create mounted directory
+  file: path=/gluster/bricks/{{ item.1.name }}/mounted
+        state=directory owner=root group=root mode=775
+  with_subelemnts:
+     - "{{ gluster_volumes }}"
+     - "{{ gluster_volumes.bricks }}"
+   when: item.1.hostname == ansible_hostname

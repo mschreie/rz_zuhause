@@ -1,0 +1,5 @@
+# configure gluster 
+# still not finished
+
+- hosts: gluster11
+

@@ -5,13 +5,46 @@ dns_reverse_domain: 20.16.172.in-addr.arpa
 organization: "Example Inc"
 organization_id: "Example_Inc"
 
+rhel_version: 7.2
+satellite_version: 6.2
+os_name: "RedHat {{ rhel_version }}"
+
 satellite_manifestfile: manifest.zip
 # Repos for the Satellite Server itself:
 satellite_repos:
    - rhel-7-server-rpms
    - rhel-server-rhscl-7-rpms
-   - rhel-7-server-satellite-6.2-rpms
+   - rhel-7-server-satellite-{{ satellite_version }}-rpms
    - rhel-7-server-rh-common-rpms
+
+satellite_packages:
+   - rhevm-guest-agent-common
+   - chrony
+   - sos
+   - bind-utils
+   - satellite
+   - xauth
+   - screen
+   - firefox
+   - pulp-admin-client
+   - puppet-foreman_scap_client
+
+gluster_repos:
+   - rh-gluster-3-for-rhel-7-server-rpms 
+   # - rh-gluster-3-samba-for-rhel-7-server-rpm
+   # - rh-gluster-3-nfs-for-rhel-7-server-rpms
+   # - gluster-nfs
+   - rhel-7-server-satellite-tools-{{ satellite_version }}-rpms 
+   - rhel-7-server-rpms
+
+gluster_packages:
+  - redhat-storage-server
+
+gluster_firewall_services:
+  - glusterfs
+
+gluster_services:
+  - glusterd
 
 
 # definitions for management host 
@@ -25,6 +58,9 @@ mgt_upstream_router: 192.168.188.1
 upstream_dns: [192.168.188.1]
 internal_dns: [ "{{ mgt_ip }}" ]
 
+
+user_name: ansible
+user_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDPanrS/ciKaVRmqjkZTnOJjM9YzqXtBwnhHTP1hkmK5iMExhd71Cjb1o2IiJVTu53XNaP5iYM0tn0Ajzm2ltWGNDXveL7MNPQtl8vFcTed+dhnzZQiNURLY3F/jbiJwhAkj0cjLvpDSNKZU2xi4+hjbkmUCeQmMNeqfJdFNXEjKguNWQZgJrsx0X5gBhrDVFzPNxbyT4pl26tDcTNFA9Fg+XQYfjum4wAhib6EMJz0D2rPGbxD/D5MGo5Srmg4b29h6nxov+T4y+t/xtPMk8CQF2jcRh0uCBOXoqThKngIUR9qBMoiP1sFXfQ4SUT0F1ITiXVsX5lnpCMVPqM+PzAj ansible@jump.example.com"
 
 
 # for all hosts always correct
@@ -71,3 +107,98 @@ rhev_subscription_pool_regex: "^(Employee SKU|Red Hat Enterprise Virtualization.
 medium_regex_rhel7: "Enterprise_Linux_7"
 
 tmp_dir: /tmp
+
+
+
+#gluster_brickname: {{hostname}}:/gluster/bricks/{{name}}/mounted
+gluster_volumes:
+  - name: left
+    bricks:
+      - hostname: gluster11
+        name: left1
+        type: data
+        size: 90g
+      - hostname: gluster21
+        name: left1
+        type: data
+        size: 90g
+      - hostname: gluster12
+        name: arbiter1
+        type: arbiter
+        size: 100m
+
+      - hostname: gluster12
+        name: left2
+        type: data
+        size: 90g
+      - hostname: gluster22
+        name: left2
+        type: data
+        size: 90g
+      - hostname: gluster11
+        name: leftarbiter2
+        type: arbiter
+        size: 100m
+    parameters:
+      - arg: cluster.quorum-type
+        val: auto
+      - arg: network.ping-timeout
+        val: 10
+##      - arg: auth.allow
+##        val: "\*"
+      - arg: group
+        val: virt
+      - arg: storage.owner-uid
+        val: 36
+      - arg: storage.owner-gid
+        val: 36
+      - arg: server.allow-insecure
+        val: on
+
+
+  - name: right
+    replica: 3
+    arbiter: 1
+    bricks:
+      - hostname: gluster21
+        name: right1
+        type: data
+        size: 90g
+      - hostname: gluster11
+        name: right1
+        type: data
+        size: 90g
+      - hostname: gluster22
+        name: rightarbiter1
+        type: arbiter
+        size: 100m
+
+      - hostname: gluster22
+        name: right2
+        type: data
+        size: 90g
+      - hostname: gluster12
+        name: right2
+        type: data
+        size: 90g
+      - hostname: gluster21
+        name: rightarbiter2
+        type: arbiter
+        size: 100m
+    parameters:
+      - arg: cluster.quorum-type
+        val: auto
+      - arg: network.ping-timeout
+        val: 10
+##      - arg: auth.allow
+##        val: "\*"
+      - arg: group
+        val: virt
+      - arg: storage.owner-uid
+        val: 36
+      - arg: storage.owner-gid
+        val: 36
+      - arg: server.allow-insecure
+        val: on
+
+ 

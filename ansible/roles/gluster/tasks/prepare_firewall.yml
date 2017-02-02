@@ -1,0 +1,11 @@
+---
+- name: allow glusterfs through firewall
+  firewalld: 
+    service: "{{ item }}"
+    immediate: true
+    permanent: true
+    state: enabled
+  with_items:
+    - "{{ firewall_services }}"
+
+

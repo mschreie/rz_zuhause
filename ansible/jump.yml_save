@@ -186,46 +186,45 @@ custom_partition_tables:
       table_file: partition_table.j2
 
 
-backup_conf:
-  ## to_mount: "jupiter:/sicherungen" 
-  to_mount: "192.168.188.106:/sicherungen" 
+backup:
+  to_mount: "jupiter:/sicherungen" 
   mount_path:  "/backup"
   destination_dir: "/backup/rz_zuhause/jump"
-## backups:
-##    - destination_dir: "{{ backup_conf.destination_dir }}" 
-##      destination_file: config_files.tar.gz 
-##      tar_options: --selinux -czvf 
-##      paths:
-##       - /etc/katello
-##       - /etc/elasticsearch
-##       - /etc/candlepin
-##       - /etc/pulp
-##       - /etc/gofer
-##       - /etc/pki/katello
-##       - /etc/pki/pulp
-##       - /etc/qpidd.conf
-##       - /etc/sysconfig/katello
-##       - /etc/sysconfig/elasticsearch
-##       - /root/ssl-build
-##       - /var/www/html/pub/*
-##    - destination_dir: "{{ backup_conf.destination_dir }}" 
-##      destination_file: elastic_data.tar.gz 
-##      tar_options: --selinux -czvf 
-##      paths:
-##       - /var/lib/elasticsearch
-##    - destination_dir: "{{ backup_conf.destination_dir }}" 
-##      destination_file: pulp_data.tar 
-##      tar_options: --selinux -cvf 
-##      paths:
-##       - /var/lib/pulp
-##       - /var/www/pub
-##    - destination_dir: "{{ backup_conf.destination_dir }}" 
-##      destination_file: mongo_data.tar.gz
-##      tar_options: --selinux -czvf 
-##      paths:
-##       - /var/lib/mongodb
-##    - destination_dir: "{{ backup_conf.destination_dir }}" 
-##      destination_file: pgsql_data.tar.gz
-##      tar_options: --selinux -czvf 
-##      paths:
-##       - /var/lib/pgsql/data/
+  backups:
+   - destination_dir: "{{ backup.mount_path }}" 
+     destination_file: config_files.tar.gz 
+     tar_options: --selinux -czvf 
+     paths:
+      - /etc/katello \
+      - /etc/elasticsearch \
+      - /etc/candlepin \
+      - /etc/pulp \
+      - /etc/gofer \
+      - /etc/pki/katello \
+      - /etc/pki/pulp \
+      - /etc/qpidd.conf \
+      - /etc/sysconfig/katello \
+      - /etc/sysconfig/elasticsearch \
+      - /root/ssl-build \
+      - /var/www/html/pub/*
+   - destination_dir: "{{ backup.mount_path }}" 
+     destination_file: elastic_data.tar.gz 
+     tar_options: --selinux -czvf 
+     paths:
+      - /var/lib/elasticsearch
+   - destination_dir: "{{ backup.mount_path }}" 
+     destination_file: pulp_data.tar 
+     tar_options: --selinux -cvf 
+     paths:
+      - /var/lib/pulp
+      - /var/www/pub
+   - destination_dir: "{{ backup.mount_path }}" 
+     destination_file: mongo_data.tar.gz
+     tar_options: --selinux -czvf 
+     paths:
+      - /var/lib/mongodb
+   - destination_dir: "{{ backup.mount_path }}" 
+     destination_file: pgsql_data.tar.gz
+     tar_options: --selinux -czvf 
+     paths:
+      - /var/lib/pgsql/data/

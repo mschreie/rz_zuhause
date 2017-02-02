@@ -1,0 +1,9 @@
+- name: enable gluster repos 
+  shell: subscription-manager repos --disable=* --enable=rhel-7-server-satellite-tools-6.1-rpms --enable=rh-gluster-3-for-rhel-7-server-rpms --enable=rhel-7-server-rpms
+
+- name: yum clean repos 
+  shell: yum clean all
+  
+- name: install Gluster
+  yum: name=redhat-storage-server state=latest
+ 

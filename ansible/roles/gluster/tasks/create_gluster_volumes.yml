@@ -1,0 +1,28 @@
+---
+
+- shell: gluster volume list 
+  register: gluster_volumes
+
+- name: create gluster volumes
+  #gluster_volume: state=present name=left replicas=3 arbiter=1 bricks=/gluster/bricks/left/mounted rebalance=yes cluster="gluster11,gluster21,gluster12,gluster22"
+  ## shell: gluster volume create {{ item.name }} replica {{ item.replica }}  arbiter {{ item.arbiter }}  {{ item.bricks.0.hostname }}:/gluster/bricks/{{ item.bricks.0.name }}/mounted {{ item.bricks.1.hostname }}:/gluster/bricks/{{ item.bricks.1.name }}/mounted {{ item.bricks.2.hostname }}:/gluster/bricks/{{ item.bricks.2.name }}/mounted {{ item.bricks.3.hostname }}:/gluster/bricks/{{ item.bricks.3.name }}/mounted {{ item.bricks.4.hostname }}:/gluster/bricks/{{ item.bricks.4.name }}/mounted {{ item.bricks.5.hostname }}:/gluster/bricks/{{ item.bricks.5.name }}/mounted 
+  shell: "gluster volume create {{ item.name }} replica {{ item.replica }}  arbiter {{ item.arbiter }} {% for brick in item.bricks %} {{ brick.hostname }}:/gluster/bricks/{{ brick.name }}/mounted{% endfor %}"
+  when: gluster_volumes.stdout | search ( item.name ) 
+  run_once: true
+  with_items:
+    - "{{ gluster_volumes}}"
+
+- name: tune
+  shell: gluster volume set {{ item.0.name }}  {{ item[1].arg }} {{ item[1].val }}
+  run_once: true
+  with_subelements:
+     - "{{ gluster_volumes }}"
+     - "parameters"
+
+
+- name: start gluster volume
+  gluster_volume: state=started name={{ item }}
+  with_items:
+    - "{{ gluster_volumes}}"
+  
+
