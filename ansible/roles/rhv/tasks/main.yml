@@ -1,0 +1,13 @@
+---
+# tasks file for rhv
+
+## before: do gluster_client
+
+# grep -E 'svm|vmx' /proc/cpuinfo | grep nx
+# configure storage:
+#   https://access.redhat.com/documentation/en/red-hat-virtualization/4.0/single/administration-guide/#chap-Storage
+# do  rpm-installation as gluster-hosts
+# /var/tmp need 60GB
+
+# hosted-engine --deploy
+

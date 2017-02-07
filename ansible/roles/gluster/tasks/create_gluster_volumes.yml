@@ -12,12 +12,21 @@
   with_items:
     - "{{ gluster_volumes}}"
 
-- name: tune
+- name: tune volumes
   shell: gluster volume set {{ item.0.name }}  {{ item[1].arg }} {{ item[1].val }}
   run_once: true
   with_subelements:
      - "{{ gluster_volumes }}"
      - "parameters"
+
+- name: tune gluster hosts
+  lineinfile: 
+    dest: /etc/glusterfs/glusterd.vol
+    regexp: '^option {{ item.arg }}'
+    insertafter: '# option {{ item.arg }}'
+    line: 'option {{ item.arg }} {{ item.val }}'
+  with_items:
+     - "{{ gluster_host_options }}"
 
 
 - name: start gluster volume

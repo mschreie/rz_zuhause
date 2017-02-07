@@ -1,0 +1,8 @@
+---
+# tasks file for gluster
+
+- include: gluster_client_install.yml
+#- include: prepare_client_firewall.yml
+#- include: prepare_client_services.yml
+#- include: do_client_mount.yml
+ 

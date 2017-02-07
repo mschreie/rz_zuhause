@@ -2,4 +2,4 @@
 repos: "{{ gluster_repos }}"
 packages: "{{ gluster_packages }}"
 firewall_services: "{{ gluster_firewall_services }}"
-service: "{{ gluster__services }}"
+service: "{{ gluster_services }}"

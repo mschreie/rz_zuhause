@@ -1,6 +1,6 @@
 ---
 - name: create gluster trusted pool
-    shell: gluster peer probe {{ item }}
+  shell: gluster peer probe {{ item }}
   with_items: "{{groups['gluster']}}"
   when: item !=  groups['gluster'][0] 
   delegate_to: "{{ groups['gluster'][0] }}"

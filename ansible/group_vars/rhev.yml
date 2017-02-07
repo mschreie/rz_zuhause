@@ -1,0 +1,5 @@
+
+repos: "{{ gluster_client_repos }}"
+packages: "{{ gluster_client_packages }}"
+firewall_services: "{{ gluster_client_firewall_services }}"
+service: "{{ gluster_client_services }}"

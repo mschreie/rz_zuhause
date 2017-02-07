@@ -7,6 +7,7 @@ organization_id: "Example_Inc"
 
 rhel_version: 7.2
 satellite_version: 6.2
+rhv_version: 4.0
 os_name: "RedHat {{ rhel_version }}"
 
 satellite_manifestfile: manifest.zip
@@ -29,6 +30,24 @@ satellite_packages:
    - pulp-admin-client
    - puppet-foreman_scap_client
 
+gluster_client_repos:
+   - rh-gluster-3-client-for-rhel-7-server-rpms 
+   # - rh-gluster-3-samba-for-rhel-7-server-rpm
+   # - rh-gluster-3-nfs-for-rhel-7-server-rpms
+   # - gluster-nfs
+   - rhel-7-server-satellite-tools-{{ satellite_version }}-rpms 
+   - rhel-7-server-rpms
+
+gluster_client_packages:
+  - glusterfs
+  - glusterfs-fuse
+
+#gluster_client_firewall_services:
+#  - glusterfs
+
+#gluster_client_services:
+#  - glusterd
+
 gluster_repos:
    - rh-gluster-3-for-rhel-7-server-rpms 
    # - rh-gluster-3-samba-for-rhel-7-server-rpm
@@ -46,6 +65,18 @@ gluster_firewall_services:
 gluster_services:
   - glusterd
 
+
+rhv_repos:
+  - rhel-7-server-rpms
+  - rhel-7-server-supplementary-rpms
+  - rhel-7-server-rhv-{{ rhv_version }}-rpms
+  - jb-eap-7-for-rhel-7-server-rpms
+rhv_packages:
+  - ovirt-hosted-engine-setup
+  - rhevm-appliance
+
+rhv_firewall_services:
+rhv_services:
 
 # definitions for management host 
 mgt_hostname: jump.{{ dns_domain }}
@@ -201,4 +232,6 @@ gluster_volumes:
       - arg: server.allow-insecure
         val: on
 
- 
+gluster_host_options:
+      - arg: rpc-auth-allow-insecure 
+        val: on
