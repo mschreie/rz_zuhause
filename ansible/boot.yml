@@ -1,0 +1,23 @@
+# reboot a system
+# from http://stackoverflow.com/questions/23877781/how-to-wait-for-server-restart-using-ansible/28070759#28070759
+
+- hosts: "{{ server }}"
+  gather_facts: False 
+  tasks:
+   - name: Boot a server
+     local_action: shell echo "Booting $hostname"
+     notify:
+      - Boot server
+      - Wait for server to start
+
+  handlers:
+    - name: Boot server
+      raw: power on
+      delegate_to: "{{ inventory_hostname }}-ilo"
+    - name: Wait for server to start
+      local_action:
+        module: wait_for
+          host={{ inventory_hostname }}
+          port=22
+          delay=1
+          timeout=300

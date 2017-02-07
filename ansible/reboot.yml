@@ -1,0 +1,25 @@
+# reboot a system
+# from http://stackoverflow.com/questions/23877781/how-to-wait-for-server-restart-using-ansible/28070759#28070759
+
+- hosts: "{{ server }}"
+  tasks:
+   - name: Restart a server
+     shell: echo "Rebooting $hostname"
+     notify:
+      - Restart server
+      - Wait for server to restart
+
+
+  handlers:
+    - name: Restart server
+      command: sleep 2 && shutdown -r now "Reboot triggered by Ansible"
+      async: 1
+      poll: 0
+      ignore_errors: true
+    - name: Wait for server to restart
+      local_action:
+        module: wait_for
+          host={{ inventory_hostname }}
+          port=22
+          delay=1
+          timeout=300
