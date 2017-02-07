@@ -1,0 +1,17 @@
+---
+- name: enable gluster repos 
+  shell: 'subscription-manager repos --disable="*" {% for repo in repos %} --enable="{{repo}}" {% endfor %}'
+  when: repos is defined
+
+- name: yum clean repos 
+  shell: yum clean all
+    
+- name: install Gluster rpms
+  yum: name="{{ item }}" state=present
+  with_items: "{{ packages }}"
+
+- name: update all packages
+  yum: name=* state=latest
+  notify: 
+    - Restart server
+    - Wait for server to restart 

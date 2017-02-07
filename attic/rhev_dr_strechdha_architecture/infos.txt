@@ -1,0 +1,111 @@
+Systems Engineering - Work List
+https://engineering.redhat.com/pnt/p-631515/?pk_campaign=up
+
+
+Doku _Startingpoint:
+
+http://www.gluster.org/community/documentation/index.php/Gluster_3.1_Concepts_Guide
+
+Load Balancing:
+http://www.gluster.org/community/documentation/index.php/Gluster_3.1:_Exploring_Gluster_Advantages:
+Replication:
+http://www.gluster.org/community/documentation/index.php/Gluster_3.1:_Understanding_Replication
+-> automatic failover when using the Gluster native client
+
+http://www.gluster.org/community/documentation/index.php/Gluster_3.1:_Understanding_Virtual_Machine_Image_Storage
+-> offering automatic failover (when using the Gluster native client) 
+-> and always-on performance even during a self-heal process.
+
+
+HowTo: HA and Loadbalancing 
+http://download.gluster.org/pub/gluster/glusterfs/doc/HA%20and%20Load%20Balancing%20for%20NFS%20and%20SMB.html
+
+
+2-way replication described here:
+https://access.redhat.com/documentation/en-US/Red_Hat_Storage/3.1/html-single/Administration_Guide/index.html#sect-Creating_Replicated_Volumes
+
+Managing Split Brain:
+https://access.redhat.com/documentation/en-US/Red_Hat_Storage/3.1/html-single/Administration_Guide/index.html#sect-Managing_Split-brain
+
+Server-Side Quorum:
+2 nodes -> HA ineffective
+  -> healing: 4 nodes 
+  - >dummy node with no bricks
+
+Client Site Quorum:
+cluster.quorum-type = auto
+takes "first brick" into account. are exactly 50% online, then the FIRST brick needs to be online to allow writing still.
+
+
+2x2  distribute replicate volume setup
+
+
+
+Red Hat Gluster Storage 3.1
+Configuring Red Hat Enterprise
+Virtualization with Red Hat Gluster
+Storage
+https://access.redhat.com/documentation/en-US/Red_Hat_Storage/3.1/pdf/Configuring_Red_Hat_Enterprise_Virtualization_with_Red_Hat_Gluster_Storage/Red_Hat_Storage-3.1-Configuring_Red_Hat_Enterprise_Virtualization_with_Red_Hat_Gluster_Storage-en-US.pdf
+inconsistent:
+throughout the document old versions are stated
+e.g 
+Page 5: Gluster v. 3.0 x86_64
+Page 6: Red Hat Enterprise Linux 6.3, 6.4, and 6.5 hypervisors
+Page 8: You can use the following hypervisors as hosts:
+Red Hat Enterprise Virtualization Hypervisor 3.4
+Red Hat Enterprise Linux 6.3
+Red Hat Enterprise Linux 6.4
+Red Hat Enterprise Linux 6.5
+
+Chapter 5: . Recommended Best Practices and Troubleshooting
+* Enable the server side quorum at all times for the Red Hat Gluster Storage volumes hosting virtual
+machine images. For more information, see section, Configuring Server-Side Quorum in the Red Hat
+Gluster Storage Administration Guide
+* Red Hat Gluster Storage Volumes that serve as Red Hat Enterprise Virtualization Master Storage
+Domain contain SANLocks and have the Red Hat Gluster Storage volume profile set to virt. This
+enables the Client Side Quorum for 2-way Automatic File Replication and avoids the
+inconsistency problems for Multiple Writer situations. For more information see section, Configuring
+Client-Side Quorum in the Red Hat Gluster Storage Administration Guide
+* Disable the client side quorum for Red Hat Gluster Storage volumes that host Virtual Machines
+images for high-availability with 2-way replication.
+
+=> 1, 3 state no client-side quorum only server-side quorum
+=> 2 states client side quorum enabled automaticaly
+makes no sence to me.
+
+
+
+Why GlusterFS:
+Gluster Storage Platform and Gluster Filesystem offer the most reliable and simple open source clustered file system running on commodity hardware.
+
+The solution features the following specific advantages:
+
+No metadata server—Gluster Filesystem uses a fully distributed architecture (together with the Gluster Elastic Hash) removing the need for a metadata server and consequently, a potential bottleneck.
+High performance global namespace—Gluster Filesystem offer scale out to hundreds of petabytes with linear performance using 10GigE and InfiniBand (native RDMA).
+High availability—Gluster Filesystem uses replication to survive hardware failures, and automatically performs self-healing to restore performance. Data is stored using an NFS-like native format.
+Stackable userspace design—Simple to install and portable, Gluster Filesystem has no kernel dependencies. The stackable design also enables you to configure specific workload profiles, as required.
+see [1]
+
+
+
+[1] http://www.gluster.org/community/documentation/index.php/Gluster_3.1:_Exploring_Gluster_Advantages
+
+
+
+
+
+
+
+
+
+
+====================
+reaction in split brain scenario
+  - no disruption on storage systems as "client side quorum" takes "primary brick" into account
+  - RHEV-M tries to fence the Hosts on the other site - but does not succeed
+  - orphaned Hypervisor contiues to run with all VMs
+  - SPM is only active on one site but is not needed for running instances
+  - no growing of disks possible so thin provisioning is no good option 
+  - if split brain disappears the fence-request finds its way, making the cluster missbehave. - Need to find a way out of this.
+
+

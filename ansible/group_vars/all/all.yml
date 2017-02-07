@@ -1,31 +1,101 @@
 # definitions specific to whole datacenter
 dns_domain: example.com
-dns_searchdomain: [coe.muc.redhat.com]
-dns_nameservers: [192.168.188.1]
+dns_searchdomain: [example.com]
 dns_reverse_domain: 20.16.172.in-addr.arpa
 organization: "Example Inc"
 organization_id: "Example_Inc"
+
+rhel_version: 7.2
+satellite_version: 6.2
+os_name: "RedHat {{ rhel_version }}"
 
 satellite_manifestfile: manifest.zip
 # Repos for the Satellite Server itself:
 satellite_repos:
    - rhel-7-server-rpms
    - rhel-server-rhscl-7-rpms
-   - rhel-7-server-satellite-6.2-rpms
+   - rhel-7-server-satellite-{{ satellite_version }}-rpms
    - rhel-7-server-rh-common-rpms
+
+satellite_packages:
+   - rhevm-guest-agent-common
+   - chrony
+   - sos
+   - bind-utils
+   - satellite
+   - xauth
+   - screen
+   - firefox
+   - pulp-admin-client
+   - puppet-foreman_scap_client
+
+gluster_repos:
+   - rh-gluster-3-for-rhel-7-server-rpms 
+   # - rh-gluster-3-samba-for-rhel-7-server-rpm
+   # - rh-gluster-3-nfs-for-rhel-7-server-rpms
+   # - gluster-nfs
+   - rhel-7-server-satellite-tools-{{ satellite_version }}-rpms 
+   - rhel-7-server-rpms
+
+gluster_packages:
+  - redhat-storage-server
+
+gluster_firewall_services:
+  - glusterfs
+
+gluster_services:
+  - glusterd
 
 
 # definitions for management host 
 mgt_hostname: jump.{{ dns_domain }}
+mgt_reverse: 1.{{ dns_reverse_domain }}
 mgt_ip: 172.16.20.1
 mgt_nic: vlan20
 mgt_dhcp_range: "172.16.20.50 172.16.20.99"
+mgt_upstream_router: 192.168.188.1
+#### depends on status / system 
+upstream_dns: [192.168.188.1]
+internal_dns: [ "{{ mgt_ip }}" ]
 
+
+user_name: ansible
+user_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDPanrS/ciKaVRmqjkZTnOJjM9YzqXtBwnhHTP1hkmK5iMExhd71Cjb1o2IiJVTu53XNaP5iYM0tn0Ajzm2ltWGNDXveL7MNPQtl8vFcTed+dhnzZQiNURLY3F/jbiJwhAkj0cjLvpDSNKZU2xi4+hjbkmUCeQmMNeqfJdFNXEjKguNWQZgJrsx0X5gBhrDVFzPNxbyT4pl26tDcTNFA9Fg+XQYfjum4wAhib6EMJz0D2rPGbxD/D5MGo5Srmg4b29h6nxov+T4y+t/xtPMk8CQF2jcRh0uCBOXoqThKngIUR9qBMoiP1sFXfQ4SUT0F1ITiXVsX5lnpCMVPqM+PzAj ansible@jump.example.com"
 
 
 # for all hosts always correct
 hostname: "{{ inventory_hostname_short }}.{{ dns_domain }}"
 
+
+# definition of networks
+networks:
+    # WARNING: satellite-managed network needs to be at position 0 (see create_hosts.yml
+  - name: storage
+    managed_by: satellite
+    ip: 172.16.20.0
+    reverse: 20.16.172.in-addr.arpa
+    netmask: 255.255.255.0
+    gateway: 172.16.20.1
+    nameserver: 172.16.20.1
+    vlanid: 
+    boot_mode: Static
+    interface: vlan20
+  - name: ilo
+    managed_by: ansible
+    ip: 172.16.10.0
+    reverse: 10.16.172.in-addr.arpa
+    netmask: 255.255.255.0
+    gateway: 172.16.10.1
+    nameserver: 172.16.10.1
+    vlanid: 
+    boot_mode: Static
+    interface: vlan10
+    range: "172.16.10.50 172.16.10.99"
+ # - name: other 
+ #   managed_by: none
+ #   ip: 192.168.188.0
+ #   netmask: 255.255.255.0
+    
 
 # RED HAT SUBSCRIPTION POOLS
 
@@ -33,4 +103,102 @@ satellite_subscription_pool_regex: "^(Red Hat Satellite Employee Subscription|Re
 rhel_subscription_pool_regex: "^(Employee SKU|Red Hat Enterprise Linux Server.*Unlimited guests.*)$"
 rhev_subscription_pool_regex: "^(Employee SKU|Red Hat Enterprise Virtualization.*|Red Hat Enterprise Linux Server.*Unlimited guests.*)$"
 
+# Installation Media 
+medium_regex_rhel7: "Enterprise_Linux_7"
 
+tmp_dir: /tmp
+
+
+
+#gluster_brickname: {{hostname}}:/gluster/bricks/{{name}}/mounted
+gluster_volumes:
+  - name: left
+    bricks:
+      - hostname: gluster11
+        name: left1
+        type: data
+        size: 90g
+      - hostname: gluster21
+        name: left1
+        type: data
+        size: 90g
+      - hostname: gluster12
+        name: arbiter1
+        type: arbiter
+        size: 100m
+
+      - hostname: gluster12
+        name: left2
+        type: data
+        size: 90g
+      - hostname: gluster22
+        name: left2
+        type: data
+        size: 90g
+      - hostname: gluster11
+        name: leftarbiter2
+        type: arbiter
+        size: 100m
+    parameters:
+      - arg: cluster.quorum-type
+        val: auto
+      - arg: network.ping-timeout
+        val: 10
+##      - arg: auth.allow
+##        val: "\*"
+      - arg: group
+        val: virt
+      - arg: storage.owner-uid
+        val: 36
+      - arg: storage.owner-gid
+        val: 36
+      - arg: server.allow-insecure
+        val: on
+
+
+  - name: right
+    replica: 3
+    arbiter: 1
+    bricks:
+      - hostname: gluster21
+        name: right1
+        type: data
+        size: 90g
+      - hostname: gluster11
+        name: right1
+        type: data
+        size: 90g
+      - hostname: gluster22
+        name: rightarbiter1
+        type: arbiter
+        size: 100m
+
+      - hostname: gluster22
+        name: right2
+        type: data
+        size: 90g
+      - hostname: gluster12
+        name: right2
+        type: data
+        size: 90g
+      - hostname: gluster21
+        name: rightarbiter2
+        type: arbiter
+        size: 100m
+    parameters:
+      - arg: cluster.quorum-type
+        val: auto
+      - arg: network.ping-timeout
+        val: 10
+##      - arg: auth.allow
+##        val: "\*"
+      - arg: group
+        val: virt
+      - arg: storage.owner-uid
+        val: 36
+      - arg: storage.owner-gid
+        val: 36
+      - arg: server.allow-insecure
+        val: on
+
+ 

@@ -1,0 +1,26 @@
+move to CDN:
+
+subscription-manager remove --all
+subscription-manager unregister
+mv -i /etc/rhsm/rhsm.conf /etc/rhsm/rhsm.conf_jump.ORG
+mv -i /etc/rhsm/rhsm.conf.kat-backup /etc/rhsm/rhsm.conf
+subscription-manager register
+subscription-manager attach --pool=8a85f98144844aff014488d058bf15be
+subscription-manager repos --disable=*
+subscription-manager repos  --enable=rhel-7-server-satellite-tools-6.1-rpms --enable=rh-gluster-3-for-rhel-7-server-rpms --enable=rhel-7-server-rpms
+yum clean all
+
+
+
+move to Jump:
+
+subscription-manager remove --all
+subscription-manager unregister
+mv -i /etc/rhsm/rhsm.conf /etc/rhsm/rhsm.conf.kat-backup
+mv -i /etc/rhsm/rhsm.conf_jump.ORG /etc/rhsm/rhsm.conf
+subscription-manager register --org=Default_Organization --environment=PRD/everything
+subscription-manager attach --pool=402884f74b41bf94014b41e7f9e501d4
+
+subscription-manager repos --disable=*
+subscription-manager repos  --enable=rhel-7-server-satellite-tools-6.1-rpms --enable=rh-gluster-3-for-rhel-7-server-rpms --enable=rhel-7-server-rpms
+yum clean all

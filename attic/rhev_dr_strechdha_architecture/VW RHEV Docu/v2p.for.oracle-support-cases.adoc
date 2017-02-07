@@ -1,0 +1,328 @@
+= {subject}: PREPARED FOR - {customer}
+Ben Haubeck <bhaubeck@redhat.com>
+:subject: v2p Recovery for Oracle Support Cases
+:description:  v2p Recovery for Oracle Support Cases with Relax-and-Recover
+:doctype: book
+:confidentiality: Confidential
+:customer:  Volkswagen IT Group Cloud
+:listing-caption: Listing
+:toc:
+:toclevels: 6
+:numbered:
+:sectnums:
+:sectnumlevels: 5
+:chapter-label:
+:pdf-page-size: A4
+:experimental:
+:icons: font
+ifdef::backend-pdf[]
+:title-page-background-image: image:images/EngagementJournalCoverPageLogoNew.jpg[pdfwidth=8.0in,align=center]
+:pygments-style: tango
+:source-highlighter: pygments
+//:source-highlighter: coderay
+endif::[]
+:revnumber: 1.0.0
+
+//A simple http://asciidoc.org[AsciiDoc] document.
+
+== History and Revisions
+
+[cols=4,cols="1,1,3,4",options=header]
+|===
+|Version
+|Date
+|Authors
+|Changes
+
+|0.0.1
+|04/11/2015
+|Ben Haubeck bhaubeck@redhat.com
+|Initial Draft
+
+|0.0.2
+|05/11/2015
+|Ben Haubeck bhaubeck@redhat.com
+|adding images, little adjustments
+
+|0.0.3
+|06/11/2015
+|Ben Haubeck bhaubeck@redhat.com
+|adding hint for identifying the direct attached LUN
+
+|0.0.4
+|06/11/2015
+|Ben Haubeck bhaubeck@redhat.com
+|added description for the VLAN module
+
+|0.9.0
+|11/11/2015
+|Ben Haubeck bhaubeck@redhat.com
+|added the feedback from Frank Kapsch from the first recovery
+
+|1.0.0
+|18/11/2015
+|Ben Haubeck bhaubeck@redhat.com
+|added the feedback from Gunnar Thielebein
+
+|1.0.1
+|19/11/2015
+|Ben Haubeck bhaubeck@redhat.com
+|minor changes, typos, etc.
+
+|===
+
+== Preface
+=== Confidentiality, Copyright, and Disclaimer ===
+This is a Customer-facing document between Red Hat, Inc. and Volkswagen (“Client”).
+Copyright (C) 2015 Red Hat, Inc. All Rights Reserved. No part of the work covered by the copyright herein may be reproduced or used in any form or by any means – graphic, electronic, or mechanical, including photocopying, recording, taping, or information storage and retrieval systems – without permission in writing from Red Hat except as is required to share this information as provided with the aforementioned confidential parties.
+
+
+=== About This Document
+The purpose of the document is to describe the procedure of the recovery of virtual machine to a physical machine with Relax-and-Recover if the Oracle support is demanding to reproduce a support case on bare metal.
+
+=== Audience
+The document is intended for those team members on site at Volkswagen, who will be responsible for Linux server support.
+
+=== Additional Background and Related Documents
+Numerous other documents have also been provided by Red Hat Consulting, explaining tasks such as installation of RHEV, backup etc.
+
+=== Terminology
+Some of the acronyms using in this document are included in the table below
+
+.Terminology Table
+[cols=2,cols="1,5",options=header]
+|===
+<|Term <|Definition
+
+|RHEV
+|Red Hat Enterprise Virtualisation
+
+|RHEV-M
+|Red Hat Enterprise Virtualisation Manager
+
+|RHEL-H
+|Red Hat Enterprise Linux Hypervisor
+
+|v2p
+|virtual to physical
+
+|===
+
+== Important Remarks
+WARNING: To prevent any accidental access to the LUN while it is mounted on the standalone recovery system, the LUN should be completely unzoned from the RHEV environment and should zoned to the recovery standalone system ***exclusively***.
+
+WARNING: The original VM should be ***shut down*** to prevent IP address conflicts, that might prevent the TSM restore.
+
+WARNING: If the recovery is being done on a original hypervisor have in mind, that this machine might have still access to all LUNs in the complete RHEV environment. So do **NOT** use the automatic recovery option of ReaR as it might overwrite a LUN with the recovery instead of a local disk. (ReaR has added some extra safety to prevent this but it is not recommended to test this out.)
+
+== Prerequisites
+. The ISO image of every VM must contain the kernel module __8021q__ so that you can configure the VLAN interface for the TSM file recovery. Therefore this lines
+
+ # kernel modules to include in the rescue media in addition to the ones
+ # present at that time mkrescue is being executed
+ MODULES=(8021q)
++
+must be placed in the file +/etc/rear/local.conf+
+After that the cronjob for creating the ReaR iso images must renew the ISO image at least once.
+In the new RHEV environment at Volkswagen cfengine is taking care about this line in /etc/rear/local.conf.
+
+. The physical box need at least 2 physical disks as the VMs are using 2 virtual disks according to Volkswagen standard.
+
+
+== Recovery Preparations
+. Turn of the original VM to avoid IP address conflicts.
+. Make sure, that you have a local user for login after the recovery as the network of the VM will not work on the physical box.
+. Note the WWN of the LUN that is direct attached to the VM, notify the SAN-Team to zone that (and only that) LUN to target machine for the recovery.
+. Note the name and the IP address of the TSM server that is holding the backup for the VM (look it up in +/opt/tivoli/tsm/client/ba/bin/dsm.sys+) on the original VM or in the file in the ReaR recovery shell:
+
+  grep TCPServeraddress /opt/Tivoli/tsm/client/ba/bin/dsm.sys
+
+. Obtain the ISO that is being creating on a daily basis individually for every VM and place it on the boot server according to the environment in which the VM, that should be recovered, is placed.
+..  recent ISO image for ReaR saved locally on every VM. If the VM is not existing anymore and / or the file system is not accessible anymore, the ISO image can be retrieved from TSM via the TSM client on a different node.
+..  local path to the ReaR image: /opt/tivoli/tsm/rear/rear-<hostname>.iso
+... for example: : /opt/tivoli/tsm/rear/rear-lxf102p001.iso
+.. change the permission of the ISO file to 644 if necessary.
+. Boot via iRMC the machine with the ReaR iso image. If the restore is happening on a Fujitsu server, login into the iRMC, navigate to the "Remote Console in Power" and set the onetime boot option:
+
++
+image::images/2015-11-17-15_49_02-rootlxf117s003lom.png[pdfwidth=75%]
+
+. Choose "Recover <hostname>". Do **NOT** use the automatic recovery option.
++
+image::images/v2p.rear.000.PNG[pdfwidth=75%]
+
+. after ReaR has booted the machine you can login by typing "root" at the prompt and hit return (no password) and you have reached the ReaR recovery shell.
++
+image::images/v2p.rear.000b.PNG[pdfwidth=75%]
+
+. unload the fiber channel module
+
+  modprobe -r lpfc
+
+. load the module for the SAS controller to get access to the local disks
+
+
+  modprobe megaraid_sas
+
+
+. if it is not clear, which interfaces have a link you can determine this by using
+
+  ip link set up <interface>
++
+
+on the interfaces and check with
+
+  ip a s <interface>
++
+if the state of the interface is "up"
+
+  . create the ifcfg-files for ens3f0, ens4f0 and bond0 (or the corresponding devices for the interface(s) to get the interface(s) up, that you need for reaching the TSM server)
+
++
+----
+# cat /etc/sysconfig/network-scripts/ifcfg-bond0
+DEVICE=bond0
+ONBOOT=yes
+BOOTPROTO=none
+USERCTL=no
+----
+
++
+check, if the physical interfaces in this example (ens3f0 and ens4f0) are matching your recovery target box physics.
+
++
+----
+# cat /etc/sysconfig/network-scripts/ifcfg-ens3f0
+DEVICE=ens3f0
+USERCTL=no
+ONBOOT=yes
+MASTER=bond0
+SLAVE=yes
+BOOTPROTO=none
+----
+
++
+----
+# cat /etc/sysconfig/network-scripts/ifcfg-ens4f0
+DEVICE=ens4f0
+USERCTL=no
+ONBOOT=yes
+MASTER=bond0
+SLAVE=yes
+BOOTPROTO=none
+----
+
+. load the modules for the bonded interface with a VLAN trunk
+
++
+----
+modprobe 8021q
+modprobe bonding mode=4 miimon=100
+----
+
+. set up the vlan interface on top of the bond interface (in this example it is VLAN 27)
+
+ ip link add link bond0 name bond0.27 type vlan id 27
+
+. set an IP address on the VLAN interface (in this example it is 10.252.185.45/22)
+
+ ip addr add 10.252.185.45/22 dev bond0.27
+
+. activate the VLAN interface
+
+ ip link set up bond0
+
+. put the network ports into the bond
+
+ ifenslave bond0 ens3f0 ens4f0
+
+. check if the interfaces (bond0 and bond0.<VLANID>) are up, if not:
+
+ ip link set up bond0.27
+
+. add the default route:
+
+ ip route add default gw 10.252.184.4
+
+ . in B2X add the TSM server to the /etc/hosts, for instance:
+
+  10.252.40.54  tsm74-10g.wob.sec.vw.vwg
+
+== Recovery Procedure with ReaR
+
+. Start the Recovery process by typing
+
+ rear recover
++
+image::images/v2p.rear.001b.png[pdfwidth=75%]
+
+. using the defaults until you got asked for file systems that should be recovered and for the disk mapping.
+
++
+image::images/v2p.rear.002b.png[pdfwidth=75%]
+image::images/v2p.rear.003b.png[pdfwidth=75%]
+
++
+IMPORTANT: Do not use the defaults as we do not want to restore the database files. So skip every file system that is starting with u0[1-5]. We are using the re-attached LUN after the recovery directly again.
+
+
++
+If you chose to recover also the database files but skip the direct attached LUN later on as described, you end up with an overfilled root file system and therefore failing recovery.
++
+So in this specific case, type
+
+  1 2 3 4 5 6 7 13
+
++
+hit <Enter> and check the selection in the next step:
++
+image::images/v2p.rear.004bb.png[pdfwidth=75%]
+
+
+. Disk mappings
+.. skip the recovery of /dev/sda as this is the direct attached LUN, that is direct attached after the recovery again, so there is no need to recover that.
+Skip also /dev/sda of the physical box as it seems that /dev/sda is some virtual disk / floppy provided by the Fujitsu iRMC with a capacity of 8 MB, so ignore that.
+
++
+image::images/v2p.rear.006b.png[pdfwidth=75%]
+
+.. use /dev/sdb for original /dev/vda (we are moving from virtual to physical AND we have to skip the first sd-device which is temporarly created by the iRMC for us):
+
++
+image::images/v2p.rear.007b.png[pdfwidth=75%]
+
+.. use /dev/sdc for original /dev/vdb (same procedure):
+
++
+image::images/v2p.rear.008.PNG[pdfwidth=75%]
+
++
+
+. Choose to continue
+
++
+image::images/v2p.rear.009.PNG[pdfwidth=75%]
+
+. Partitions, PVs, VGs, LVs and file systems are getting rebuild:
+
++
+image::images/v2p.rear.011b.png[pdfwidth=75%]
+image::images/v2p.rear.012.PNG[pdfwidth=75%]
+image::images/v2p.rear.013.PNG[pdfwidth=75%]
+
+. after it finished the file recovery from the TSM server you can either investigate the chrooted environment or just sync and reboot:
+
++
+image::images/v2p.rear.100.PNG[pdfwidth=75%]
+
+.. sync
+.. reboot
+
+. Final Steps
+
+.. Network: After the machine has rebooted, you have to configure the network interfaces once more as the network configuration is now recovered as formerly used inside the VM.
+.. Attach the LUN with the database on it (if already zoned to the physical box).
+.. DB-Settings: Depending on the size of the new physical box it might necessary to increase the SGA size as the number of CPUs are increased compared to the original VM +
+See also: +
+ORA-00821 ORA-01034 ORA-27101, SGA_target need to be increased (Doc ID 815426.1) +
+ORA-12853 / ORA-4031 or ORA-4030 on Instance Startup With increased SGA size (Doc ID 839789.1) +

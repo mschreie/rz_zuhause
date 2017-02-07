@@ -1,0 +1,19 @@
+- name: get orgid
+  shell: hammer --csv organization list  | awk -F, '/{{ organization }}/ { print $1 } '
+  register: orgid
+  #ignore_errors: yes
+
+- name: get adminid
+  shell: hammer --csv user list  | awk -F, '/admin/ { print $1 } '
+  register: adminid
+  #ignore_errors: yes
+
+- name: get locations 
+  shell: "hammer --csv location list | awk -F, 'NR==2 { print $1 }'"
+  register: current_location
+  changed_when: false
+
+
+- name: set defaultorg for admin
+  shell: "hammer user update --default-organization-id {{ orgid.stdout }} --locale en --default-location-id {{ current_location.stdout }} --id {{ adminid.stdout }}"
+  #ignore_errors: yes

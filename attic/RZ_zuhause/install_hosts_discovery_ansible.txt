@@ -1,0 +1,229 @@
+Satellite is up and running
+LACP is configured
+ILOs have right ip adress
+
+made discovery work (for one more host):
+
+most official document seems to be:
+https://access.redhat.com/blogs/1169563/posts/1420443
+
+more helpful was:
+https://access.redhat.com/solutions/2089981
+-> it points out, that you need some config and some leases in dhcp
+
+I also switched proy / Port 9090 (which did not work) to direct / Port 433
+
+=================  ANSIBLE ========================
+http://docs.ansible.com/ansible/intro_getting_started.html
+
+Ansible mit  installieren.... (VORSICHT: Kann zu Konflikten mit satellite kommen!!)
+
+[root@jump ~]# wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+--2016-03-20 18:27:07--  https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+Resolving dl.fedoraproject.org (dl.fedoraproject.org)... 209.132.181.27, 209.132.181.26, 209.132.181.23, ...
+Connecting to dl.fedoraproject.org (dl.fedoraproject.org)|209.132.181.27|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 14524 (14K) [application/x-rpm]
+Saving to: ‘epel-release-latest-7.noarch.rpm’
+
+100%[===================================================================================================================>] 14,524      69.2KB/s   in 0.2s
+
+2016-03-20 18:27:08 (69.2 KB/s) - ‘epel-release-latest-7.noarch.rpm’ saved [14524/14524]
+
+[root@jump ~]# yum install epel-release-latest-7.noarch.rpm
+Loaded plugins: product-id, search-disabled-repos, subscription-manager
+Examining epel-release-latest-7.noarch.rpm: epel-release-7-5.noarch
+Marking epel-release-latest-7.noarch.rpm to be installed
+Resolving Dependencies
+--> Running transaction check
+---> Package epel-release.noarch 0:7-5 will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+=============================================================================================================================================================
+ Package                              Arch                           Version                     Repository                                             Size
+=============================================================================================================================================================
+Installing:
+ epel-release                         noarch                         7-5                         /epel-release-latest-7.noarch                          24 k
+
+Transaction Summary
+=============================================================================================================================================================
+Install  1 Package
+
+Total size: 24 k
+Installed size: 24 k
+Is this ok [y/d/N]: y
+Downloading packages:
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Installing : epel-release-7-5.noarch                                                                                                                   1/1
+  Verifying  : epel-release-7-5.noarch                                                                                                                   1/1
+
+Installed:
+  epel-release.noarch 0:7-5
+
+Complete!
+[root@jump ~]# 
+
+disabled epel-packages via 
+[root@jump ~]# vi /etc/yum.repos.d/epel*
+
+
+[root@jump ~]# yum --enablerepo=epel search ansible
+Loaded plugins: product-id, search-disabled-repos, subscription-manager
+======================================================================= N/S matched: ansible ========================================================================
+ansible-inventory-grapher.noarch : Creates graphs representing ansible inventory
+ansible-lint.noarch : Best practices checker for Ansible
+ansible-openstack-modules.noarch : Unofficial Ansible modules for managing Openstack
+ansible.noarch : SSH-based configuration management, deployment, and task execution system
+ansible1.9.noarch : SSH-based configuration management, deployment, and task execution system
+
+  Name and summary matches only, use "search all" for everything.
+[root@jump ~]# yum --enablerepo=epel info ansible1.9
+Loaded plugins: product-id, search-disabled-repos, subscription-manager
+Available Packages
+Name        : ansible1.9
+Arch        : noarch
+Version     : 1.9.4
+Release     : 2.el7
+Size        : 1.7 M
+Repo        : epel/x86_64
+...
+[root@jump ~]# yum --enablerepo=epel info ansible
+Loaded plugins: product-id, search-disabled-repos, subscription-manager
+Available Packages
+Name        : ansible
+Arch        : noarch
+Version     : 1.9.4
+Release     : 1.el7
+Size        : 1.7 M
+Repo        : epel/x86_64
+Summary     : SSH-based configuration management, deployment, and task execution system
+URL         : http://ansible.com
+License     : GPLv3+
+Description :
+...
+[root@jump ~]# yum --enablerepo=epel install ansible1.9
+Loaded plugins: product-id, search-disabled-repos, subscription-manager
+epel/x86_64/metalink                                                                                                                          |  27 kB  00:00:00
+Resolving Dependencies
+....
+Dependencies Resolved
+
+====================================================================================================================
+ Package                     Arch                Version                   Repository                                   Size
+====================================================================================================================
+Installing:
+ ansible1.9                  noarch              1.9.4-2.el7               epel                              1.7 M
+Installing for dependencies:
+ PyYAML                      x86_64              3.10-11.el7               rhel-7-server-rpms                153 k
+ libtomcrypt                 x86_64              1.17-23.el7               epel                              224 k
+ libtommath                  x86_64              0.42.0-4.el7              epel                               35 k
+ python-ecdsa                noarch              0.11-3.el7                epel                               69 k
+ python-keyczar              noarch              0.71c-2.el7               epel                              218 k
+ python-paramiko             noarch              1.15.1-1.el7              epel                              999 k
+ python-pyasn1               noarch              0.1.6-2.el7               rhel-7-server-rpms                 91 k
+ python2-crypto              x86_64              2.6.1-9.el7               epel                              475 k
+ sshpass                     x86_64              1.05-5.el7                epel                               21 k
+
+Transaction Summary
+====================================================================================================================
+Install  1 Package (+9 Dependent packages)
+
+Total download size: 3.9 M
+Installed size: 17 M
+Is this ok [y/d/N]: y
+Downloading packages:
+warning: /var/cache/yum/x86_64/7Server/epel/packages/libtommath-0.42.0-4.el7.x86_64.rpm: Header V3 RSA/SHA256 Signature, key ID 352c64e5: NOKEY    0 B  --:--:-- ETA
+Public key for libtommath-0.42.0-4.el7.x86_64.rpm is not installed
+(1/10): libtommath-0.42.0-4.el7.x86_64.rpm                                                       |  35 kB  00:00:00
+(2/10): python-keyczar-0.71c-2.el7.noarch.rpm                                                    | 218 kB  00:00:01
+(3/10): libtomcrypt-1.17-23.el7.x86_64.rpm                                                       | 224 kB  00:00:01
+(4/10): python-ecdsa-0.11-3.el7.noarch.rpm                                                       |  69 kB  00:00:03
+(5/10): python2-crypto-2.6.1-9.el7.x86_64.rpm                                                    | 475 kB  00:00:05
+(6/10): sshpass-1.05-5.el7.x86_64.rpm                                                            |  21 kB  00:00:01
+(7/10): python-pyasn1-0.1.6-2.el7.noarch.rpm                                                     |  91 kB  00:00:09
+(8/10): python-paramiko-1.15.1-1.el7.noarch.rpm                                                  | 999 kB  00:00:09
+(9/10): ansible1.9-1.9.4-2.el7.noarch.rpm                                                        | 1.7 MB  00:00:11
+(10/10): PyYAML-3.10-11.el7.x86_64.rpm                                                           | 153 kB  00:00:12
+---------------------------------------------------------------------------------------------------------------------
+Total                                                                                                                                333 kB/s | 3.9 MB  00:00:12
+Retrieving key from file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
+Importing GPG key 0x352C64E5:
+ Userid     : "Fedora EPEL (7) <epel@fedoraproject.org>"
+ Fingerprint: 91e9 7d7c 4a5e 96f1 7f3e 888f 6a2f aea2 352c 64e5
+ Package    : epel-release-7-5.noarch (@/epel-release-latest-7.noarch)
+ From       : /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
+Is this ok [y/N]: y
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Installing : sshpass-1.05-5.el7.x86_64                                                                1/10
+  Installing : PyYAML-3.10-11.el7.x86_64                                                                2/10
+  Installing : python-pyasn1-0.1.6-2.el7.noarch                                                         3/10
+  Installing : libtommath-0.42.0-4.el7.x86_64                                                           4/10
+  Installing : libtomcrypt-1.17-23.el7.x86_64                                                           5/10
+  Installing : python2-crypto-2.6.1-9.el7.x86_64                                                        6/10
+  Installing : python-keyczar-0.71c-2.el7.noarch                                                        7/10
+  Installing : python-ecdsa-0.11-3.el7.noarch                                                           8/10
+  Installing : python-paramiko-1.15.1-1.el7.noarch                                                      9/10
+  Installing : ansible1.9-1.9.4-2.el7.noarch                                                           10/10
+  Verifying  : python-keyczar-0.71c-2.el7.noarch                                                        1/10
+  Verifying  : python2-crypto-2.6.1-9.el7.x86_64                                                        2/10
+  Verifying  : ansible1.9-1.9.4-2.el7.noarch                                                            3/10
+  Verifying  : libtomcrypt-1.17-23.el7.x86_64                                                           4/10
+  Verifying  : python-ecdsa-0.11-3.el7.noarch                                                           5/10
+  Verifying  : libtommath-0.42.0-4.el7.x86_64                                                           6/10
+  Verifying  : python-pyasn1-0.1.6-2.el7.noarch                                                         7/10
+  Verifying  : PyYAML-3.10-11.el7.x86_64                                                                8/10
+  Verifying  : sshpass-1.05-5.el7.x86_64                                                                9/10
+  Verifying  : python-paramiko-1.15.1-1.el7.noarch                                                     10/10
+
+Installed:
+  ansible1.9.noarch 0:1.9.4-2.el7
+
+Dependency Installed:
+  PyYAML.x86_64 0:3.10-11.el7             libtomcrypt.x86_64 0:1.17-23.el7          libtommath.x86_64 0:0.42.0-4.el7       python-ecdsa.noarch 0:0.11-3.el7
+  python-keyczar.noarch 0:0.71c-2.el7     python-paramiko.noarch 0:1.15.1-1.el7     python-pyasn1.noarch 0:0.1.6-2.el7     python2-crypto.x86_64 0:2.6.1-9.el7
+  sshpass.x86_64 0:1.05-5.el7
+
+Complete!
+[root@jump ~]#
+
+
+[root@jump ~]# vi /etc/ansible/hosts
+
+[root@jump ~]# ssh-keygen
+Generating public/private rsa key pair.
+Enter file in which to save the key (/root/.ssh/id_rsa):
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /root/.ssh/id_rsa.
+Your public key has been saved in /root/.ssh/id_rsa.pub.
+The key fingerprint is:
+91:da:77:8d:80:d5:5f:05:6d:da:a7:a3:cf:34:cf:90 root@jump.example.com
+The key's randomart image is:
++--[ RSA 2048]----+
+|          ..  .oo|
+|         +  .   +|
+|        + .  . = |
+|       o . . oo o|
+|      . S . o ...|
+|         . .  o. |
+|             .E. |
+|            .o = |
+|             .o o|
++-----------------+
+[root@jump ~]# ^C
+
+[root@jump ~]# ssh-copy-id gluster11
+[root@jump ~]# ssh-copy-id gluster12
+[root@jump ~]# ssh-copy-id gluster21  <- not working: discovery finds no disk and has network issues...  
+[root@jump ~]# ssh-copy-id gluster22  
+
+gluster11 not subscribed properly...
+

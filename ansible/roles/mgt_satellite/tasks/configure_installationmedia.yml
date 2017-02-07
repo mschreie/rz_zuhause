@@ -1,0 +1,23 @@
+- name: get medium id 
+  shell: "hammer --csv medium list | awk -F, '/Red_Hat_Server/ { print $1 } '"
+  register: current_medium_id
+  changed_when: false
+
+
+- name: get locations for medium
+  shell: "hammer --csv location list | awk -F, 'NR==2 { print $2 }'"
+  register: current_location
+  changed_when: false
+
+- name: get medium info
+  command: hammer medium info --id {{ current_medium_id.stdout }} 
+  register: current_medium_info
+
+- name: add medium to organization 
+  command: "hammer organization add-medium --medium-id {{ current_medium_id.stdout }} --name '{{ organization }}'" 
+  when: organization not in current_medium_info.stdout
+
+- name: add medium to location 
+  command: "hammer location add-medium --medium-id {{ current_medium_id.stdout }} --name '{{ current_location.stdout }}'" 
+  when: current_location.stdout not in current_medium_info.stdout
+

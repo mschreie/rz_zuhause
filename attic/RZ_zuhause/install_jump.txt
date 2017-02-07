@@ -1,0 +1,79 @@
+after minimal-installation of RHEL 7 Server:
+
+jump.example.com
+
+## changed FS-Mountpoints to look like this: (no /home, but /var)
+[root@jump /]# df -h
+Filesystem             Size  Used Avail Use% Mounted on
+/dev/mapper/rhel-root   50G  780M   50G   2% /
+devtmpfs               7,8G     0  7,8G   0% /dev
+tmpfs                  7,8G     0  7,8G   0% /dev/shm
+tmpfs                  7,8G  8,5M  7,8G   1% /run
+tmpfs                  7,8G     0  7,8G   0% /sys/fs/cgroup
+/dev/sda1              497M  123M  374M  25% /boot
+/dev/mapper/rhel-var   100G  185M  100G   1% /var
+=> OK!!
+---
+Network: made the second if available:
+3: enp5s0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP qlen 1000
+    link/ether 00:1c:c4:bd:fd:8a brd ff:ff:ff:ff:ff:ff
+    inet 172.16.1.10/24 brd 172.16.1.255 scope global enp5s0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::21c:c4ff:febd:fd8a/64 scope link 
+       valid_lft forever preferred_lft forever
+
+
+put jump.example.com in 
+vi /etc/hosts
+edit C:\Windows\System32\drivers\etc\hosts
+
+192.168.4.119	jump.example.com
+
+
+
+FIXME: configuring bond (LACP) and tagged VLANs to connect to both switches to mgt and storage network
+
+
+==== setting up Satellite to deploy servers
+
+FIXME: Subnet needs to add Discovery-Capsule manualy (bug fixed in hammer 1.14)
+   Bug in hammer
+
+Activation-Keys: 
+FIXME: only basic Subscriptions and Product content available at the moment 
+   config-issue
+
+Hosts->Partition Table
+FIXME: Kickstart default 
+-> define different partitioning than autopart 
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxx
+DynDNS:
+D.h. für eine Korrektur könntest du z.B. entweder das DynDNS Update manuell auslösen oder einen 2. DynDNS Client betreiben, der unabhängig vom Hybrid-Router zyklisch die IP aktualisiert. So mache ich das indem ich den DynDNS Client auf meiner NAS (Synology im Menü unter "Externer Zugriff") nutze. Ich habe keine Probleme seitdem.
+ 
+https://en.code-bude.net/2013/07/21/how-to-setup-ddclient-on-raspberry-pi-for-use-with-namecheap-dyndns/
+
+-----
+LÖSUNGSANSATZ:
+In der Konfiguration des Speedport "Internet -> LTE deaktivieren oder Ausnahmen hinzufügen -> Ausnahmeregel hinzufügen" muss lediglich entsprechende Konfiguration "Datenverkehr zu destem Zielport" erfolgen.
+ 
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+ToDo servers:
+* Tastatur -> Deutsch
+* ssh-key (user ansible)
+* Boot-Verhalten der Server: Netzwerk-Boot -> localboot.0 bootet nicht!
+  => changed -> needs to be tested!
+
+@host.params['sshkey']
+@host.params['remote_execution_ssh_keys'].each
+
+snipet: remote_execution_ssh_keys
+# remote_execution_ssh_keys: public keys to be put in ~/.ssh/authorized_keys
+#
+# remote_execution_ssh_user: user for which remote_execution_ssh_keys will be
+#                            authorized
+
+ToDo Satellite-Config:
+subnet -> remote execution-> select capsule 
+

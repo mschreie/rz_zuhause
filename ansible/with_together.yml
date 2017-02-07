@@ -1,0 +1,39 @@
+- name: small test with with_together
+  hosts: jump
+  user: root
+  gather_facts: false
+  vars:
+    alpha: 
+      - name: a
+        type: x
+      - name: b
+        type: y
+      - name: c
+        type: z
+      - name: d
+        type: w
+    number: [1, 2, 3 ]
+
+  tasks:
+    - debug:
+        msg: "alpha {{ item[0].name }} number {{ item[1] }}"
+      with_together:
+        - "{{ alpha }}"
+        - "{{ number }}"
+      when: item.0.name is defined
+      failed_when: not item.1 
+      ignore_errors: true
+      register: debug_out
+
+    - debug:
+        var: item
+      with_items: 
+        - "{{ debug_out.results }}"
+
+    - fail:
+        msg: "Not enough numbers here... -> please change code"
+      when: item.failed_when_result
+      with_items: 
+        - "{{ debug_out.results }}"
+
+

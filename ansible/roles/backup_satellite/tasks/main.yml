@@ -1,0 +1,5 @@
+---
+# tasks file for backup_satellite
+- include: mount_backupdir.yml
+- include: backup_satellite.yml
+- include: umount_backupdir.yml

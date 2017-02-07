@@ -1,0 +1,32 @@
+---
+# FIXME: content in /home vanishes 
+# FIXME: content in /var vanishes !!!!
+- name: umount /home
+  mount:
+    name: /home
+    state: unmounted
+
+- name: remove lv home
+  lvol: 
+    vg: rhel
+    lv: home
+    state: absent
+    force: yes
+
+- name: create lv var
+  lvol: 
+    vg: rhel
+    lv: var
+    state: present
+    size:  100G
+
+- name: create fs var 
+  filesystem: 
+    fstype: ext4 
+    dev: /dev/rhel/var
+
+- name: mount /var
+  mount:
+    name: /var
+    fstype: ext4 
+    src: /dev/rhel/var

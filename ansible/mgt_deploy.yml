@@ -5,6 +5,8 @@
   remote_user: root
   gather_facts: false
   roles:
+    - install_satellite 
+    - backup_satellite
     - mgt_satellite 
 
 

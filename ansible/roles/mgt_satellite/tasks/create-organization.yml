@@ -1,6 +1,0 @@
-- name: create organization
-  shell: hammer organization create --name "{{ organization }}" 
-  register: orgs
-  ignore_errors: yes
-
-# "ignore_errors: yes" because hammer throws an error if we try to enable a repo, that is already enabled

@@ -1,0 +1,30 @@
+- debug:
+    #msg: '{{ backup_conf.mount_path }}'
+    msg: '{{ backup_conf }}'
+    ## msg: '{{ custom_partition_tables }}'
+
+- name: mkdir backup-mountpoint
+  file:
+    state: directory
+    path: '{{ backup_conf.mount_path }}'
+    owner: root
+    group: root
+    mode: 770
+   
+
+- name: mount backup-dir
+  mount:
+    fstype: nfs
+    opts: rw,noatime
+    name: '{{ backup_conf.mount_path }}'
+    src:  '{{ backup_conf.to_mount }}'
+    state: mounted
+
+- name: mkdir backup-dir
+  file:
+    state: directory
+    path: '{{ backup_conf.destination_dir }}'
+    owner: root
+    group: root
+    mode: 770
+   

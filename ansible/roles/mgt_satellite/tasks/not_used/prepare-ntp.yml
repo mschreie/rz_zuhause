@@ -1,0 +1,12 @@
+---
+# new in ansible 2.2
+- name: set timezone to Europe/Berlin
+  timezone: name=Europe/Berlin 
+  notify:
+    - Restart cron
+
+- name: enable chrony
+  service:  name=chronyd state=started enabled=yes
+
+
+

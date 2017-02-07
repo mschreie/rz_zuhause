@@ -1,0 +1,15 @@
+- block:
+  - name: check dns
+    shell: host {{ hostname }}
+    register: dnsout
+    ignore_errors: yes
+
+  - name: add dns entry - forward and reverse 
+    script: binary/named_update.sh {{ hostname }}  {{ ipaddress }} {{ reverse }}  
+    when: dnsout.stdout.find('{{ ipaddress }}') == -1
+    run_once: true
+  vars:
+  - hostname: "{{ mgt_hostname }}."
+  - ipaddress: "{{ mgt_ip }}"
+  - reverse: "{{ mgt_reverse }}."
+

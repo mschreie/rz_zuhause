@@ -1,0 +1,51 @@
+# Installation
+
+Installation is simple
+
+## Pre-Reqs
+
+
+ yum install ruby ruby-devel gcc
+ gem install asciidoctor
+ gem install --pre asciidoctor-pdf
+ gem install coderay pygments.rb
+
+
+## Post Installation
+
+Simply copy default-theme.yml over the default one (default-theme.yml).
+
+----
+ cd asciidoctor-ej
+
+ #backup the original
+ mv ~/.gem/ruby/gems/asciidoctor-pdf-1.5.0.alpha.9/data/themes/default-theme.yml{,.orig}
+
+ #copy this into place
+ cp default-theme.yml ~/.gem/ruby/gems/asciidoctor-pdf-1.5.0.alpha.9/data/themes/default-theme.yml
+----
+
+Thats it!
+
+## Build Your first Doc
+
+ asciidoctor-pdf template.adoc && evince template.pdf
+ 
+## Vim Users
+
+If you use vim and the syntax highlighting isnt working, the simplest solution I found was to add a line into my ~/.vimrc file like this
+
+ autocmd BufRead,BufNewFile *.adoc   set filetype=asciidoc
+
+This simply tells vim that all files that end in .adoc should use the *asciidoc* syntax highlighter
+
+=== Alternatives
+
+Other ways to do this
+
+* Execute the Vim command :set syntax=asciidoc
+* Add the following line to the end of you AsciiDoc source files:
++
+ // vim: set syntax=asciidoc:
+ 
+ 

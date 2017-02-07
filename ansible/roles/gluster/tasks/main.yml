@@ -1,0 +1,10 @@
+---
+# tasks file for gluster
+
+- include: gluster_install.yml
+- include: prepare_firewall.yml
+- include: prepare_services.yml
+- include: prepare_lvm_mkfs.yml
+- include: create_gluster_trustedpool.yml
+- include: create_gluster_volumes.yml
+ 

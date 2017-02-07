@@ -1,0 +1,23 @@
+- name: get current subnets 
+  shell: "hammer --csv subnet list --organization '{{ organization }}' | awk -F, 'NR>1 {print $3}'"
+  register: current_subnets
+  changed_when: false
+
+- name: get id of capsule
+  shell: "hammer --csv capsule list --organization '{{ organization }}' | awk -F, '/{{ mgt_hostname}}/ {print $1}'"
+  register: capsule_id
+  changed_when: false
+  
+- name: get locations 
+  shell: "hammer --csv location list | awk -F, 'NR==2 { print $1 }'"
+  register: current_location
+  changed_when: false
+
+
+- name: create subnet
+  shell: hammer subnet create --organizations "{{ organization }}" --location-ids {{ current_location.stdout }} --name "{{ item.name }}" --network "{{ item.ip }}" --mask "{{ item.netmask }}" --dhcp-id "{{ capsule_id.stdout }}" --dns-id "{{ capsule_id.stdout }}" --tftp-id "{{ capsule_id.stdout }}" --boot-mode "{{ item.boot_mode }}" --dns-primary "{{ item.nameserver }}" --domains "{{ dns_domain }}" --gateway "{{ item.gateway }}" --ipam None
+  when: item.ip not in current_subnets.stdout_lines
+  with_items: "{{ networks }}"
+
+### discovery-proxy needs to be set manualy (at the moment)
+

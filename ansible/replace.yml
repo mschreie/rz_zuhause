@@ -1,0 +1,18 @@
+- name: small test with replace
+  hosts: localhost
+  user: root
+  gather_facts: false
+  vars:
+    things:
+      - name: a
+      - name: b
+      - name: c
+  tasks:
+    - name: create uuids
+      shell: "uuidgen | cut -c 1-6"
+      register: out
+      with_items:
+        - "{{ things }}"
+    - debug: 
+        var: out
+

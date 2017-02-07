@@ -1,0 +1,10 @@
+- name: umount backup-dir
+  mount:
+    fstype: nfs
+    name: '{{ backup_conf.mount_path }}'
+    state: unmounted
+
+- name: remove backup-dir
+  file:
+    state: absent
+    path: '{{ backup_conf.mount_path }}'

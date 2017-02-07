@@ -1,0 +1,33 @@
+Must:
+Doron Fediuck <dfediuck@redhat.com>
+Allon Mureinik <amureini@redhat.com>
+Yaniv Dary <ydary@redhat.com>,
+Gil Klein <gklein@redhat.com>
+Aharon Canan <acanan@redhat.com>
+
+Optional:
+Itamar Heim <iheim@redhat.com>
+Scott Herold <sherold@redhat.com>
+
+
+Mentioned by Dirk:
+
+Sayan Saha <ssaha@redhat.com>
+
+
+
+Allon Mureinik <amureini@redhat.com>
+Jesse Wu <jewu@redhat.com>
+Ric Wheeler <rwheeler@redhat.com>
+Vijay Trehan <vtrehan@redhat.com>
+rhev-pm <rhev-pm@redhat.com>
+rhevm-staff <rhevm-staff@redhat.com>
+Shai Revivo <srevivo@redhat.com>
+Vijay Bellur <vbellur@redhat.com>
+
+
+-- Telefonat vorgehen....:
+
+Concernc - Constraint
+
+=> 30% ref-arch

@@ -1,0 +1,25 @@
+# Unable to get it working with the uri module
+#- uri:
+#    url: "https://192.168.103.20/foreman_tasks/api/tasks"
+#    validate_certs: no
+#    method: GET
+#    user: "admin"
+#    password: "{{ root_password }}"
+
+# check the API for total number of sync tasks that are active
+# ends when substring "total": 0 is found in output
+# runs for maximum 120 * 60 seconds = 2 hours
+- name: wait for all sync tasks to complete
+  uri: 
+    url: "https://{{ ansible_host }}/foreman_tasks/api/tasks?utf8=✓&search=label+%3D+Actions%3A%3AKatello%3A%3ARepository%3A%3ASync+and+state+%3D+running"
+    return_content: yes 
+    user: admin 
+    password: "{{ root_password }}"
+    validate_certs: no
+    force_basic_auth: yes
+  register: sync_tasks
+  changed_when: false
+  until: sync_tasks.json.total == 0
+  retries: 720
+  delay: 60
+
