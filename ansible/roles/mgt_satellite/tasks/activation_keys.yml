@@ -41,18 +41,50 @@
   register: assigned_subs
   changed_when: false
 
-- name: associate subscription to all activation keys
-  #command: hammer activation-key add-subscription --organization "{{ organization }}" --name "AK-{{ item.1.content_view }}-{{ item.0 }}" --subscription-id {{ sub_id.stdout }}
-  # command: hammer activation-key add-subscription --organization "{{ organization }}" --name "AK-{{ item.1.content_view }}-{{ item.0 }}" --subscription-id {{ (subscriptions.stdout | from_json | selectattr("Name","match", item.1.activation_key_subscription_regex) | map(attribute="ID") | list)[0] }}
-  # with_nested:
-  #   - "{{ current_lifecycle_environments.stdout_lines }}"
-  #   - "{{ content_config }}"
-  # when: "'AK-{{ item.1.content_view }}-{{ item.0 }}' not in current_activation_keys.stdout"
+- name: debug subscriptions
+  debug: 
+    var: subscriptions
 
-  #command: hammer activation-key add-subscription --organization "{{ organization }}" --name "AK-{{ item.item.1.content_view }}-{{ item.item.0 }}" --subscription-id {{ (subscriptions.stdout | from_json | selectattr("Name","match", item.item.1.activation_key_subscription_regex) | map(attribute="ID") | list)[0] }}
+- name: debug assigned_subs
+  debug: 
+    var: assigned_subs
+
+- name: debug A
+  # Liefert Liste mit den IDs der verfügbaren Subscriptions (2 bis 3-Stellige IDs)
+  debug:
+    msg: 'jinja2: {{ subscriptions.stdout | from_json | selectattr("Name","match", item.item.1.activation_key_subscription_regex) | map(attribute="ID") | join(" ") }}'
+  when: '(item.stdout_lines | length) < (subscriptions.stdout | from_json | selectattr("Name","match", item.item.1.activation_key_subscription_regex) | list | length)'
+  with_items: "{{ assigned_subs.results }}"
+
+- name: debug B
+  debug:
+    msg: "when left {{(item.stdout_lines | length) }}"
+  with_items: "{{ assigned_subs.results }}"
+
+- name: debug C
+  debug:
+    msg: 'when right {{ (subscriptions.stdout | from_json | selectattr("Name","match", item.item.1.activation_key_subscription_regex) | list | length) }}'
+  with_items: "{{ assigned_subs.results }}"
+
+
+# FIXME: activation key also needs gluster and rhev subscriptions!
+- name: associate subscription to all activation keys
+  # XXXXXXXXXXXXXXX
   shell: for sub in {{ subscriptions.stdout | from_json | selectattr("Name","match", item.item.1.activation_key_subscription_regex) | map(attribute="ID") | join(" ") }}; do hammer activation-key add-subscription --organization "{{ organization }}" --name "AK-{{ item.item.1.content_view }}-{{ item.item.0 }}" --subscription-id $sub; done
   when: '(item.stdout_lines | length) < (subscriptions.stdout | from_json | selectattr("Name","match", item.item.1.activation_key_subscription_regex) | list | length)'
   with_items: "{{ assigned_subs.results }}"
+
+# #####
+# ### subscriptions -> Enthält alle Verfügbaren Subs
+# ### 
+# ### 
+# ### assigned_subs -> 
+# ###  enthält unter item.item => unsere content_config
+# ###  enthält unter stdout => alles was SCHON assigned ist => NIX
+# ### 
+# ###          "_raw_params": "for sub in 73 23 2 152 153 154 155 156 157 158 159; do hammer activation-key add-subscription --organization \"Example Inc\" --name \"AK-all_and_newest-PROD\" --subscription-id $sub; done", 
+
+
 
 - name: override what content that is enabled
   command: hammer activation-key content-override --organization "{{ organization }}" --name "AK-{{ item.1.content_view }}-{{ item.0 }}" --content-label "{{ item.1.override }}" --value 1
@@ -60,3 +92,5 @@
     - "{{ current_lifecycle_environments.stdout_lines }}"
     - "{{ content_config }}"
   when: "'AK-{{ item.1.content_view }}-{{ item.0 }}' not in current_activation_keys.stdout"
+
+- fail:
