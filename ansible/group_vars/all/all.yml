@@ -235,3 +235,11 @@ gluster_volumes:
 gluster_host_options:
       - arg: rpc-auth-allow-insecure 
         val: on
+
+
+## for power switching
+fritzbox_url: "https://192.168.188.1"
+fritzbox_insecure: yes
+fritzbox_user: "{{ sec_fritzbox_user }}"
+fritzbox_password: "{{ sec_fritzbox_password }}"
+

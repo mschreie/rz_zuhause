@@ -70,6 +70,7 @@
 # FIXME: activation key also needs gluster and rhev subscriptions!
 - name: associate subscription to all activation keys
   # XXXXXXXXXXXXXXX
+  # will add the subs later in thegluster r rhev roles
   shell: for sub in {{ subscriptions.stdout | from_json | selectattr("Name","match", item.item.1.activation_key_subscription_regex) | map(attribute="ID") | join(" ") }}; do hammer activation-key add-subscription --organization "{{ organization }}" --name "AK-{{ item.item.1.content_view }}-{{ item.item.0 }}" --subscription-id $sub; done
   when: '(item.stdout_lines | length) < (subscriptions.stdout | from_json | selectattr("Name","match", item.item.1.activation_key_subscription_regex) | list | length)'
   with_items: "{{ assigned_subs.results }}"
@@ -93,4 +94,3 @@
     - "{{ content_config }}"
   when: "'AK-{{ item.1.content_view }}-{{ item.0 }}' not in current_activation_keys.stdout"
 
-- fail:

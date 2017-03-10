@@ -6,6 +6,8 @@
 # some changes mschreie@redhat.com
 # Fr 10. Mär 09:25:18 CET 2017, mschreie@redhat.com
 #   all config as parameters
+# Fr 10. Mär 22:12:13 CET 2017, mschreie@redhat.com
+#   select powerswitch by number or by part of the name 
 
 
 usage () {
@@ -132,14 +134,16 @@ for AIN in "${array[@]}" ;  do
    echo -e  "${YELLOW}Actor #$COUNTER ${NC}"
    switchpresent=0
    get_value getswitchname $AIN
-   echo -e  "${CYAN}Name: $RESULT ${NC}"
+   NAME="$RESULT"
+   echo -e  "${CYAN}Name: $NAME ${NC}"
    get_value getswitchpresent $AIN
    echo AIN: $AIN
    echo Connected: $RESULT
    if [ "$RESULT" = "1" ]; then
       # bei aktiven Schaltern 
       # Parameter verarbeiten, etwa: 1 on
-      if [ "$1" = "$COUNTER" ]; then
+      # XXXXXXXXXXXXXXX
+      if [[ "$1" = "$COUNTER" || "$NAME" =~ "$1" ]]; then
         if [ "$2" = "on" ]; then
           get_value setswitchon $AIN
       	echo "set #$COUNTER on"
