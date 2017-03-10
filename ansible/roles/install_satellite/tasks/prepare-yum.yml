@@ -26,6 +26,7 @@
 
 - name: update all packages
   yum: name=* state=latest
+  register: yum_update
   notify: 
     - Restart server
     - Wait for server to restart 

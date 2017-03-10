@@ -5,6 +5,7 @@
     - include: prepare-firewall.yml
     - include: prepare-ntp.yml
     - include: prepare-yum.yml
+    - include: ensureupdate-satellite6.yml
     - include: install-satellite6.yml
     - include: start_satellite.yml
     - include: adjust-nameresolution.yml
