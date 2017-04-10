@@ -7,6 +7,6 @@ ipaddress: 172.16.20.203
 reverse: 203.20.16.172.in-addr.arpa.
 ilo_name: gluster21-ilo
 ilo_ip: 172.16.10.203
-# ilo_mac:
+ilo_mac: 00:1e:0b:90:9d:c0
 ilo_reverse: 203.10.16.172.in-addr.arpa.
 

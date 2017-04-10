@@ -1,0 +1,69 @@
+# Configure a second DHCP service for the mgt-interface
+- name: create config directory
+  file: 
+    dest: "{{ dhcplocal_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 755
+    recurse: yes
+    # to achive selinux like this: system_u:object_r:dhcp_etc_t:s0
+    seuser: system_u
+    serole: object_r
+    setype: dhcp_etc_t
+    selevel: s0
+
+- name: create config file
+  template:
+    dest: "{{ dhcplocal_conf }}"
+    src: templates/dhcpd.conf.j2
+    owner: root
+    group: root
+    mode: 644
+    # to achive selinux like this: system_u:object_r:dhcp_etc_t:s0
+    seuser: system_u
+    serole: object_r
+    setype: dhcp_etc_t
+    selevel: s0
+
+- name: ensure unit file
+  template:
+    dest: "{{ dhcplocal_unitfile }}"
+    src: templates/dhcplocal.service.j2
+    owner: root
+    group: root
+    mode: 644
+    # to achive selinux like this: unconfined_u:object_r:systemd_unit_file_t:s0
+    seuser: unconfined_u
+    serole: object_r
+    setype: systemd_unit_file_t
+    selevel: s0
+  notify: 
+     - systemctl daemon-reload
+     - Restart dhcplocal
+
+- name: add ilo staticaly to dhcp
+  blockinfile:
+    dest: "{{ dhcplocal_hosts }}"
+    backup: true
+    create: yes
+    block: |
+      host {{ hostvars[item]['ilo_name'] }} {
+                    fixed-address {{ hostvars[item]['ilo_ip'] }};
+                    hardware ethernet {{ hostvars[item]['ilo_mac'] }};
+                  }
+    marker: "# {mark} Ansible managed block {{ hostvars[item]['ilo_name'] }}"
+  notify: 
+     - Restart dhcplocal
+  with_items: 
+     - "{{ groups['servers'] }}"
+
+- name: flush handlers
+  meta:
+    flush_handlers
+
+- name: start dhcplocal
+  service:
+    name: dhcplocal
+    enabled: yes
+    state: started

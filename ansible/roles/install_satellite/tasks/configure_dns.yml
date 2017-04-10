@@ -1,0 +1,54 @@
+# modify dns:
+#   add mgt-network information
+
+- name: add reverse subnet to dns
+  blockinfile:
+    dest: /etc/zones.conf
+    backup: true
+    block: |
+      zone "{{ item.reverse }}" {
+          type master;
+          file "/var/named/dynamic/db.{{ item.reverse }}";
+          update-policy {
+                  grant rndc-key zonesub ANY;
+          };
+      };
+    marker: "# {mark} Ansible managed block {{ item.reverse }}"
+  notify: Restart named
+  with_items:
+    - "{{ networks }}"
+  when: item.managed_by == 'ansible' 
+
+- name: flush handlers
+  meta: 
+    flush_handlers
+
+- name: check dns
+  shell: host {{ hostvars[item]['fqdn'] }}
+  register: dnsout
+  ignore_errors: yes
+  with_items: 
+     - "{{ groups['servers'] }}"
+  ##when: hostvars[item]['ilo_mac'] is defined
+
+- name: add ilo staticaly to dns
+  script: binary/named_update.sh {{ fqdn }}  {{ ipaddress }} {{ reverse }}  
+  # debug:
+  #   msg:  |
+  #     fqdn: {{ fqdn }}
+  #     ipaddress: {{ ipaddress }} 
+  #     reverse: {{ reverse }}  
+  vars:
+    fqdn: "{{ hostvars[item.item]['ilo_name'] }}.{{ dns_domain }}."
+    ipaddress: "{{ hostvars[item.item]['ilo_ip'] }}"
+    reverse: "{{ hostvars[item.item]['ilo_reverse'] }}"
+  notify: Restart named
+  with_items: 
+     - "{{ dnsout.results }}" 
+  when: item.stdout.find('{{ hostvars[item.item]['ilo_ip'] }}') == -1
+  ## when: item.stdout.find('{{ ipaddress }}') == -1
+ ##  run_once: true
+
+- name: flush handlers
+  meta: 
+    flush_handlers

@@ -1,0 +1,14 @@
+[Unit]
+Description=Local DHCPv4 Server Daemon
+Documentation=man:dhcpd(8) man:dhcpd.conf(5)
+Wants=network-online.target
+After=network-online.target
+After=time-sync.target
+
+[Service]
+Type=notify
+ExecStart=/usr/sbin/dhcpd -f -cf {{ dhcplocal_conf }}  -user dhcpd -group dhcpd --no-pid {% for item in networks %}{% if item.managed_by == 'ansible' %}
+{{ item.interface }} {% endif %}{% endfor %}
+
+[Install]
+WantedBy=multi-user.target

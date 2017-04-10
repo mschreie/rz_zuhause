@@ -88,6 +88,13 @@ mgt_upstream_router: 192.168.188.1
 #### depends on status / system 
 upstream_dns: [192.168.188.1]
 internal_dns: [ "{{ mgt_ip }}" ]
+internal_ntp: [ "{{ mgt_ip }}" ]
+
+
+dhcplocal_dir: /etc/dhcplocal
+dhcplocal_conf: "{{ dhcplocal_dir }}/dhcpd.conf"
+dhcplocal_hosts: "{{ dhcplocal_dir }}/dhcpd.hosts"
+dhcplocal_unitfile: /etc/systemd/system/dhcplocal.service
 
 
 user_name: ansible
