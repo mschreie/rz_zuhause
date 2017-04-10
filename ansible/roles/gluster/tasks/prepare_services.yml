@@ -5,6 +5,7 @@
     state: started 
     enabled: true
   with_items:
-    - "{{ services }}"
+    - "{{ gluster_services }}"
+##    - "{{ services }}"
 
 

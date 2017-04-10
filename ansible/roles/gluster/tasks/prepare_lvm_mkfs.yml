@@ -1,9 +1,28 @@
 ---
+- debug:
+   msg: "gluster_volumes: {{ gluster_volumes }}"
+
+- debug:
+   msg: "|
+      Number 1
+      item: {{ item }}"
+  with_items:
+     - "{{ gluster_volumes }}"
+
+- debug:
+   msg: "|
+      item.0: {{ item.0 }}
+      item.1: {{ item.1 }}"
+  with_subelements:
+     - "{{ gluster_volumes }}"
+     - bricks
+  when: item.1.hostname == ansible_hostname
+
 - name: create logical volumes
   lvol: vg=rhel lv={{ item.1.name }}  size={{ item.1.size }} state=present
   with_subelements:
      - "{{ gluster_volumes }}"
-     - "{{ gluster_volumes.bricks }}"
+     - bricks
   when: item.1.hostname == ansible_hostname
 
 
@@ -13,7 +32,7 @@
               opts="-i size=512"
   with_subelements:
      - "{{ gluster_volumes }}"
-     - "{{ gluster_volumes.bricks }}"
+     - bricks
   when: item.1.hostname == ansible_hostname
 
 - name: mount brick volume 
@@ -23,7 +42,7 @@
          state=mounted
   with_subelements:
      - "{{ gluster_volumes }}"
-     - "{{ gluster_volumes.bricks }}"
+     - bricks
   when: item.1.hostname == ansible_hostname
 
 - name: create mounted directory
@@ -31,5 +50,5 @@
         state=directory owner=root group=root mode=775
   with_subelements:
      - "{{ gluster_volumes }}"
-     - "{{ gluster_volumes.bricks }}"
+     - bricks
   when: item.1.hostname == ansible_hostname
