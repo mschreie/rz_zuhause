@@ -1,0 +1,44 @@
+# dhcpd.conf
+# {{ ansible_managed }}
+# 7911+1 as 7911 is in use already
+omapi-port 7912;
+
+default-lease-time 43200;
+max-lease-time 86400;
+
+ddns-update-style none;
+
+option domain-name "{{ dns_domain }}";
+option domain-name-servers {{ internal_dns|join(', ') }};
+option ntp-servers {{ internal_ntp|join(', ') }};
+
+allow booting;
+allow bootp;
+
+option fqdn.no-client-update    on;  # set the "O" and "S" flag bits
+option fqdn.rcode2            255;
+option pxegrub code 150 = text ;
+
+# PXE Handoff.
+next-server 172.16.20.1;
+filename "pxelinux.0";
+
+log-facility local7;
+
+include "{{ dhcplocal_dir }}/dhcpd.hosts";
+
+#################################
+{% for item in networks %} 
+{% if item.managed_by == 'ansible' %}
+subnet {{ item.ip }} netmask {{ item.netmask }} {
+      pool
+         {
+           range {{ item.range }};
+         }
+         option subnet-mask {{ item.netmask }};
+         option routers {{ item.gateway }};
+   }
+# {mark} Ansible managed block {{ item.ip }}"
+{% endif %}
+{% endfor %}
+

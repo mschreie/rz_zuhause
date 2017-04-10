@@ -1,6 +1,6 @@
 ---
 - name: Make sure services are started up
-  service: 
+  service:
     name: "{{ item }}"
     state: started 
     enabled: true

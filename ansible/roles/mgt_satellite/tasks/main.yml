@@ -1,4 +1,4 @@
-- block:
+##- block:
     - include: alter_kickstarttemplates.yml 
     - include: alter_partitiontemplates.yml
     - include: configure_installationmedia.yml

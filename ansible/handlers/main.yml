@@ -1,5 +1,4 @@
 ---
-- include: handlers/fritz.yml
 - name: Restart server
   command: sleep 2 && shutdown -r now "Reboot triggered by Ansible"
   async: 1
@@ -18,6 +17,8 @@
   service: name=cron state=restarted
 - name: Restart dhcpd
   service: name=dhcpd state=restarted
+- name: Restart dhcplocal
+  service: name=dhcplocal state=restarted
 - name: Restart named
   service: name=named state=restarted
 - name: systemctl daemon-reload

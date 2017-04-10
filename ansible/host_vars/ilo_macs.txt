@@ -7,3 +7,13 @@
 gluster11-ilo.example.com (172.16.10.101) at <incomplete> on vlan10
 
 
+host_vars/gluster11.yml:# ilo_mac:00:1e:0b:91:f2:d2
+host_vars/gluster12.yml:ilo_mac: 00:1c:c4:dd:d3:10 
+host_vars/gluster21.yml:# ilo_mac: 00:1e:0b:90:9d:c0
+host_vars/gluster22.yml:ilo_mac: 00:1f:29:e6:b4:86 
+host_vars/rhev11.yml:ilo_mac: 00:1B:78:76:b6:26
+host_vars/rhev12.yml:ilo_mac: 00:1e:0b:eb:27:f6 
+host_vars/rhev21.yml:# ilo_mac: 00:1c:c4:a6:9b:60
+host_vars/rhev22.yml:ilo_mac: 00:1e:0b:5f:4c:e4 
+
+
