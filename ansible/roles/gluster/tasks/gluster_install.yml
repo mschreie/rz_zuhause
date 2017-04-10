@@ -1,4 +1,14 @@
 ---
+- name: get poolid of gluster subscription
+  shell: "subscription-manager list --available | awk '/Subscription Name: .*{{ item }}/ { while ($0 !~ /Pool ID:/) { getline } { print $NF } } '"
+  register: poolids
+  with_items: "{{ subscriptions }}"
+
+- name: attach gluster subscription
+  shell: 'subscription-manager attach --pool={{ item.stdout }}'
+  with_items: "{{ poolids.results }}"
+  when: item.stdout is defined
+
 - name: enable gluster repos 
   shell: 'subscription-manager repos --disable="*" {% for repo in repos %} --enable="{{repo}}" {% endfor %}'
   when: repos is defined

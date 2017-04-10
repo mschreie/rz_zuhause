@@ -30,6 +30,9 @@ satellite_packages:
    - pulp-admin-client
    - puppet-foreman_scap_client
 
+gluster_subscriptions:
+   - Red Hat Gluster Storage
+
 gluster_client_repos:
    - rh-gluster-3-client-for-rhel-7-server-rpms 
    # - rh-gluster-3-samba-for-rhel-7-server-rpm
