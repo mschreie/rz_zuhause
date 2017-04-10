@@ -154,6 +154,8 @@ tmp_dir: /tmp
 #gluster_brickname: {{hostname}}:/gluster/bricks/{{name}}/mounted
 gluster_volumes:
   - name: left
+    replica: 3
+    arbiter: 1
     bricks:
       - hostname: gluster11
         name: left1
