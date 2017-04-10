@@ -13,6 +13,6 @@
  ## missing:
    # create ssh-key as root
    # deploy ssh-keys to all servers
-
+   # setup dhcp for ilo-LAN
 
 
