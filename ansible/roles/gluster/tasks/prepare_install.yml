@@ -1,0 +1,38 @@
+---
+- name: check whether subscription allready attached
+  shell: "subscription-manager list --consumed | grep 'Subscription Name: .*{{ item }}'"
+  ignore_errors: yes
+  register: consumed_subscription
+  with_items: "{{ subscriptions }}"
+
+- name: get poolid of gluster subscription
+  shell: "subscription-manager list --available | awk '/Subscription Name: .*{{ item.item }}/ { while ($0 !~ /Pool ID:/) { getline } { print $NF } } '"
+  register: poolids
+  # only for subscriptions needed which are not jet attached
+  when: item.failed is defined and item.failed
+  with_items: "{{ consumed_subscription.results }}"
+  # subscriptions found as attached will not be searcht in the available list hence stdout is not defined (only skipped and skip_reason)
+
+- name: attach gluster subscription
+  shell: 'subscription-manager attach --pool={{ item.stdout }}'
+  with_items: "{{ poolids.results }}"
+  # if stdout is not defined the subscription will not be needed (or maybe was not found?)
+  when: item.stdout is defined
+
+- name: enable gluster repos 
+  shell: 'subscription-manager repos --disable="*" {% for repo in repos %} --enable="{{repo}}" {% endfor %}'
+  when: repos is defined
+
+- name: yum clean repos 
+  shell: yum clean all
+    
+- name: install Gluster rpms
+  yum: name="{{ item }}" state=present
+  with_items: "{{ packages }}"
+
+- name: update all packages
+  yum: name=* state=latest
+  notify: 
+    - Restart server
+    - Wait for server to restart 
+
