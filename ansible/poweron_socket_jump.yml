@@ -1,0 +1,17 @@
+# reboot a system
+# from http://stackoverflow.com/questions/23877781/how-to-wait-for-server-restart-using-ansible/28070759#28070759
+
+- hosts: localhost
+  vars_files:
+    - vars/secret.yml
+  remote_user: root
+  gather_facts: False 
+  tasks:
+   - debug:
+       var: fritzbox_insecure 
+   - name: PowerOn the fritz power socket jump
+     shell: binary/smart_fritz.sh  -f "{{ fritzbox_url }}" -i -p "{{ fritzbox_password }}" -u "{{ fritzbox_user }}" jump on
+     when: fritzbox_insecure 
+   - name: PowerOn the fritz power socket jump
+     shell: binary/smart_fritz.sh  -f "{{ fritzbox_url }}" -p "{{ fritzbox_password }}" -u "{{ fritzbox_user }}" jump on
+     when: not fritzbox_insecure
