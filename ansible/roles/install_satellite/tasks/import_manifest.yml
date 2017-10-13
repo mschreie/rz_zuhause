@@ -1,5 +1,5 @@
 - name: download manifest
-  local_action: get_url url="{{ manifest_uri }}" dest="binary/{{ satellite_manifestfile }}" mode=0640
+  local_action: get_url url="{{ manifest_uri }}" dest="binary/{{ satellite_manifestfile }}" mode=0640 force=yes
 
 - name: copy-import-manifest
   copy:  
@@ -10,6 +10,17 @@
     mode: 0600
   register: manifest
 
+- debug:
+    msg: "manifest download results: {{ manifest }}" 
+
+
+## next command allways returns return code 0, even if there is no manifest to delete and error is stated...
+- name: delete manifest
+  command: 'hammer subscription delete-manifest --organization "{{ organization }}"' 
+  ignore_errors: yes
+  when: (republish is defined and republish) or manifest|changed 
+
+## next command allways returns return code 0, even if upload failed
 - name: upload manifest
   command: 'hammer subscription upload --organization "{{ organization }}" --file /root/{{ satellite_manifestfile }}'
   when: (republish is defined and republish) or manifest|changed 

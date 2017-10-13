@@ -5,9 +5,15 @@
   remote_user: root
   gather_facts: false
   roles:
-    - install_satellite
-    - backup_satellite
-    - mgt_satellite 
+    - role: install_satellite
+      tags:
+        - install
+    - role: backup_satellite
+      tags: 
+        - backup
+    - role: mgt_satellite 
+      tags: 
+        - configure
 
  ## FIXME:
  ## missing:

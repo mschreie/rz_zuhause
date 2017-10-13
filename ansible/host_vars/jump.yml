@@ -37,7 +37,7 @@ product_config:
     repos:
       - name: Red Hat Virtualization 4 Management Agents for RHEL 7 (RPMs)
         releasever: 7Server
-      - name: Red Hat Virtualization Manager 4.0 (RHEL 7 Server) (RPMs)
+      - name: Red Hat Virtualization Manager {{ rhv_version }} (RHEL 7 Server) (RPMs)
   - product: Red Hat Virtualization Host
     basearch: x86_64
     repos:
@@ -45,21 +45,21 @@ product_config:
   - product: Red Hat Gluster Storage Server for On-premise
     basearch: x86_64
     repos:
-      - name: Red Hat Gluster Storage 3.1 Server (RPMs)
+      - name: Red Hat Gluster Storage {{ gluster_version }} Server (RPMs)
         releasever: 7Server
-      - name: Red Hat Gluster Storage 3.1 Samba (for RHEL 7 Server) (RPMs)
+      - name: Red Hat Gluster Storage {{ gluster_version }} Samba (for RHEL 7 Server) (RPMs)
         releasever: 7Server
-      - name: Red Hat Gluster Storage 3.1 NFS (RPMs)
+      - name: Red Hat Gluster Storage {{ gluster_version }} NFS (RPMs)
         releasever: 7Server
   - product: Red Hat Gluster Storage Nagios Server
     basearch: x86_64
     repos:
-      - name: Red Hat Gluster Storage 3.1 Nagios (RPMs)
+      - name: Red Hat Gluster Storage {{ gluster_version }} Nagios (RPMs)
         releasever: 7Server
   - product: Red Hat Gluster Storage Management Console for RHEL Server
     basearch: x86_64
     repos:
-      - name: Red Hat Gluster Storage 3.1 Console (RPMs)
+      - name: Red Hat Gluster Storage {{ gluster_version }} Console (RPMs)
         releasever: 7Server
 
 # eventluell noetig....
@@ -97,19 +97,19 @@ content_config:
       - product: Red Hat Enterprise Virtualization
         repository: Red Hat Virtualization 4 Management Agents for RHEL 7 RPMs x86_64 7Server
       - product: Red Hat Enterprise Virtualization
-        repository: Red Hat Virtualization Manager 4.0 RHEL 7 Server RPMs x86_64
+        repository: Red Hat Virtualization Manager {{ rhv_version }} RHEL 7 Server RPMs x86_64
       - product: Red Hat Virtualization Host
         repository: Red Hat Virtualization Host 7 RPMs x86_64
       - product: Red Hat Gluster Storage Server for On-premise
-        repository: Red Hat Gluster Storage 3.1 Server RPMs x86_64 7Server
+        repository: Red Hat Gluster Storage {{ gluster_version }} Server RPMs x86_64 7Server
       - product: Red Hat Gluster Storage Server for On-premise
-        repository: Red Hat Gluster Storage 3.1 Samba for RHEL 7 Server RPMs x86_64 7Server
+        repository: Red Hat Gluster Storage {{ gluster_version }} Samba for RHEL 7 Server RPMs x86_64 7Server
       - product: Red Hat Gluster Storage Server for On-premise
-        repository: Red Hat Gluster Storage 3.1 NFS RPMs x86_64 7Server
+        repository: Red Hat Gluster Storage {{ gluster_version }} NFS RPMs x86_64 7Server
       - product: Red Hat Gluster Storage Nagios Server
-        repository: Red Hat Gluster Storage 3.1 Nagios RPMs x86_64 7Server
+        repository: Red Hat Gluster Storage {{ gluster_version }} Nagios RPMs x86_64 7Server
       - product: Red Hat Gluster Storage Management Console for RHEL Server
-        repository: Red Hat Gluster Storage 3.1 Console RPMs x86_64 7Server
+        repository: Red Hat Gluster Storage {{ gluster_version }} Console RPMs x86_64 7Server
 # eventluell noetig....
 #      - product: Red Hat Storage Native Client for RHEL 7 RPMs
 #        repository: Red Hat Storage Native Client for RHEL 7 RPMs x86_64 7Server

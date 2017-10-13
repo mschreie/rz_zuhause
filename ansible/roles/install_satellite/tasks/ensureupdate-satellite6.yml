@@ -2,10 +2,11 @@
 - name: check whether satellite installation did run before
   stat:
     path: /var/log/katello-installer/katello-installer.log
-  register: katello-installer_log
+  register: katello_installer_log
 
-# i'll run the upgrade if satellite is allready installed and if yum updated 
+
+# i will run the upgrade if satellite is allready installed and if yum updated
+
 - name: update satellite installation
   shell: satellite-installer --upgrade
-  when: yum_update.changed and katello-installer_log.stat.exists is defined and katello-installer_log.stat.exists == True 
-
+  when: yum_update is defined and yum_update.changed and katello_installer_log.stat.exists is defined and katello_installer_log.stat.exists == True

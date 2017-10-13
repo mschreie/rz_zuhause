@@ -6,8 +6,16 @@ organization: "Example Inc"
 organization_id: "Example_Inc"
 
 rhel_version: 7.2
+## rhel_version: 7.4
 satellite_version: 6.2
+## satellite_version: 6.3
 rhv_version: 4.0
+## rhv_version: 4.2
+## only finding 3 or 3.2 (later in the "other" tab of satellite
+## but 3.1 did seem to work up to now - anyway
+gluster_version: 3.1
+
+
 os_name: "RedHat {{ rhel_version }}"
 
 satellite_manifestfile: manifest.zip
